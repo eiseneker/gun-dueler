@@ -25,10 +25,14 @@ public class Bullet : MonoBehaviour {
 	
 	void OnTriggerEnter2D (Collider2D collision) {
 		Entity hitEntity = collision.gameObject.GetComponent<Entity>();
-		if(hitEntity && hitEntity.affinity != affinity){
-			IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
-			if(harmedObject != null){
-				harmedObject.ReceiveHit();
+		if(hitEntity){
+			if(hitEntity.affinity != affinity){
+				IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
+				if(harmedObject != null){
+					harmedObject.ReceiveHit();
+				}
+			}
+			if(collision.gameObject != owner && collision.gameObject.GetComponent<Bullet>() == null){
 				DestroyMe ();
 			}
 		}
