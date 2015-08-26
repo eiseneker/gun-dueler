@@ -24,7 +24,7 @@ public class Fleet : MonoBehaviour {
 	
 	void AddMinionsObject(){
 		minions = new GameObject("Minions");
-		Instantiate (minions, transform.position, Quaternion.identity);	
+		minions.transform.position = transform.position;
 		minions.transform.parent = transform;
 	}
 	

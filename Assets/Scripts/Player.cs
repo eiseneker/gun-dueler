@@ -13,10 +13,13 @@ public class Player : MonoBehaviour, IHarmable {
 	private PlayerHitState playerHitState;
 	private int currentBulletsInPlay = 0;
 	private bool reversePosition;
+	private GameObject body;
 	
 	void Start(){
 		playerHitState = new PlayerHitState(gameObject);
 		reversePosition = GetComponent<Entity>().reversePosition;
+		body = transform.Find ("Body").gameObject;
+		body.GetComponent<ParticleSystem>().startColor = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
 	}
 		
 	void Update () {
@@ -54,7 +57,7 @@ public class Player : MonoBehaviour, IHarmable {
 			Bullet bullet = bulletObject.GetComponent<Bullet>();
 			bullet.speed = bulletSpeed;
 			bullet.owner = gameObject;
-			bullet.GetComponent<Entity>().affinity = gameObject;
+			bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 			if(reversePosition) {
 				bullet.yVector = -1;
 			}

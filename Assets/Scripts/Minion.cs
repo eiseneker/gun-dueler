@@ -9,6 +9,12 @@ public class Minion : MonoBehaviour, IHarmable {
 	public GameObject formation;
 	
 	private float timeSinceLastFire;
+	private GameObject body;
+	
+	void Start() {
+		body = transform.Find ("Body").gameObject;
+		body.GetComponent<ParticleSystem>().startColor = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
+	}
 	
 	void Update () {
 		timeSinceLastFire += Time.deltaTime;
@@ -17,7 +23,7 @@ public class Minion : MonoBehaviour, IHarmable {
 	
 	public void ReceiveHit() {
 		formation.GetComponent<Formation>().MinionDestroyed();
-		Destroy(gameObject);
+		Destroy(transform.parent.gameObject);
 	}
 	
 	private void Fire () {
@@ -26,7 +32,7 @@ public class Minion : MonoBehaviour, IHarmable {
 			Bullet bullet = bulletObject.GetComponent<Bullet>();
 			bullet.speed = bulletSpeed;
 			bullet.owner = gameObject;
-			if(transform.rotation.z == 1) {
+			if(GetComponent<Entity>().reversePosition) {
 				bullet.yVector = -1;
 			}
 			timeSinceLastFire = 0f;

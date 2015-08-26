@@ -2,8 +2,8 @@
 using System.Collections;
 
 public class PlayerHitState : MonoBehaviour {
-	private float maxInvincibleTime = 2f;
-	private float maxCriticalTime = 2f;
+	private float maxInvincibleTime = 0.5f;
+	private float maxCriticalTime = 1.5f;
 	private Transform body;
 	private SpriteRenderer bodySprite;
 	private HitState currentHitState;
@@ -50,19 +50,20 @@ public class PlayerHitState : MonoBehaviour {
 	}
 	
 	private void SwitchToNotHit() {
-		UpdateColor (Color.white);		
 		currentHitTime = 0f;
 		currentHitState = HitState.NotHit;
+		player.GetComponent<Animator>().SetBool("Critical", false);
 	}
 	
 	private void SwitchToInvincible() {
-		UpdateColor (Color.blue);		
 		currentHitState = HitState.Invincible;
+		player.GetComponent<Animator>().SetBool("Invincible", true);
 	}
 	
 	private void SwitchToCritical() {
-		UpdateColor (Color.green);			
 		currentHitState = HitState.Critical;
+		player.GetComponent<Animator>().SetBool("Invincible", false);
+		player.GetComponent<Animator>().SetBool("Critical", true);
 	}
 	
 	private bool IsHit() {
@@ -79,9 +80,5 @@ public class PlayerHitState : MonoBehaviour {
 	
 	private bool HasHitTimeExpired() {
 		return(currentHitTime > maxCriticalTime + maxCriticalTime);
-	}
-	
-	private void UpdateColor(Color color){
-		bodySprite.color = color;
 	}
 }

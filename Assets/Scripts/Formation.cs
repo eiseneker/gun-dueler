@@ -4,7 +4,7 @@ using System.Collections;
 public class Formation : MonoBehaviour {
 	public float width = 10f;
 	public float height = 10f;
-	public GameObject minionPrefab;
+	public GameObject minionParentPrefab;
 	public float maxSpawnSetDelay;
 	public float spawnDelay = 0.5f;
 	public float currentSpawnSetDelay = 0f;
@@ -43,8 +43,9 @@ public class Formation : MonoBehaviour {
 		Transform freePosition = NextFreePosition();
 		
 		if(freePosition){
-			GameObject minion = Object.Instantiate(minionPrefab, freePosition.position, Quaternion.identity) as GameObject;
-			minion.transform.parent = freePosition;
+			GameObject minionParent = Object.Instantiate(minionParentPrefab, freePosition.position, Quaternion.Inverse (transform.rotation)) as GameObject;
+			minionParent.transform.parent = freePosition;
+			GameObject minion = minionParent.transform.Find ("Minion").gameObject;
 			minion.GetComponent<Entity>().affinity = affinity;
 			minion.GetComponent<Entity>().reversePosition = GetComponent<Entity>().reversePosition;
 			minion.GetComponent<Minion>().formation = gameObject;
