@@ -32,6 +32,8 @@ public class Player : MonoBehaviour, IHarmable {
 			yMovement *= -1;
 		}
 		
+		print (transform.position.x + "," + transform.position.y);
+		
 		if((transform.position.x > -8.67 && xMovement < 0) || (transform.position.x < 9.02 && xMovement > 0)){
 			transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
 		}
