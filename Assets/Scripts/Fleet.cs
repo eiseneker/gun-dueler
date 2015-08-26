@@ -6,6 +6,8 @@ public class Fleet : MonoBehaviour {
 	public GameObject flagShipPrefab;
 	public GameObject[] minionFormations;
 	public Color teamColor;
+	public float width;
+	public float height;
 	
 	private GameObject affinity;
 	private bool reversePosition;
@@ -22,6 +24,13 @@ public class Fleet : MonoBehaviour {
 		AddMinionFormation ();
 	}
 	
+	void OnDrawGizmos () {
+		Gizmos.DrawWireCube(
+			transform.position,
+			new Vector3(width, height)
+			);
+	}
+	
 	void AddMinionsObject(){
 		minions = new GameObject("Minions");
 		minions.transform.position = transform.position;
@@ -29,14 +38,14 @@ public class Fleet : MonoBehaviour {
 	}
 	
 	void AddFlagShip(){
-		flagShip = Instantiate (flagShipPrefab, transform.position, Quaternion.identity) as GameObject;
+		flagShip = Instantiate (flagShipPrefab, transform.Find ("Player Position").position, Quaternion.identity) as GameObject;
 		flagShip.transform.parent = transform;
 		flagShip.GetComponent<Entity>().affinity = gameObject;
 		flagShip.GetComponent<Entity>().reversePosition = GetComponent<Entity>().reversePosition;
 	}
 	
 	void AddMinionFormation(){
-		GameObject minionFormation  = Instantiate(minionFormations[0], transform.position, Quaternion.identity) as GameObject;
+		GameObject minionFormation  = Instantiate(minionFormations[0], transform.Find ("Formation Position").position, Quaternion.identity) as GameObject;
 		minionFormation.transform.parent = minions.transform;
 		minionFormation.GetComponent<Entity>().affinity = affinity;
 		minionFormation.GetComponent<Entity>().reversePosition = reversePosition;

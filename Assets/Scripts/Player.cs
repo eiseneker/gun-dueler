@@ -27,18 +27,21 @@ public class Player : MonoBehaviour, IHarmable {
 		float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
 		float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
 		
+		float moveFactor = 1;
+		
 		if(reversePosition) {
-			xMovement *= -1;
-			yMovement *= -1;
+			moveFactor = -1;
+			
 		}
 		
-		print (transform.position.x + "," + transform.position.y);
+		xMovement *= moveFactor;
+		yMovement *= moveFactor;
 		
-		if((transform.position.x > -8.67 && xMovement < 0) || (transform.position.x < 9.02 && xMovement > 0)){
+		if((transform.position.x > -4.3 && xMovement * moveFactor < 0) || (transform.position.x < 4.3 && xMovement * moveFactor > 0)){
 			transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
 		}
 		
-		if((transform.position.y > -4.90 && yMovement > 0) || (transform.position.y < 4.82 && yMovement < 0)){
+		if((transform.position.y > -4.90 && yMovement * moveFactor > 0) || (transform.position.y < 4.9 && yMovement * moveFactor < 0)){
 			transform.Translate(Vector3.down * yMovement * Time.deltaTime * speed);
 		}
 		
