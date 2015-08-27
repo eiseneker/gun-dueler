@@ -2,26 +2,19 @@
 using System.Collections;
 
 public class PlayerHitState : MonoBehaviour {
+	public GameObject player;
+
 	private float maxInvincibleTime = 0.5f;
 	private float maxCriticalTime = 1.5f;
-	private Transform body;
-	private SpriteRenderer bodySprite;
 	private HitState currentHitState;
 	private PlayerHitState playerHitState;
 	private float currentHitTime = 0f;
-	private GameObject player;
 	
 	private enum HitState
 	{
 		NotHit,
 		Invincible,
 		Critical
-	}
-
-	public PlayerHitState(GameObject inputPlayer){
-		player = inputPlayer;
-		body = player.transform.Find ("Body");
-		bodySprite = body.GetComponent<SpriteRenderer>();
 	}
 
 	public void RefreshHitState(){
