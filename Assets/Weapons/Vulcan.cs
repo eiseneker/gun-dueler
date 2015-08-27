@@ -6,10 +6,11 @@ public class Vulcan : MonoBehaviour {
 
 	private int currentBulletsInPlay = 0;
 	private float timeSinceLastFire;
-	private float fireDelay = 0.1f;
+	private float fireDelay = 0.3f;
 	private float bulletSpeed = 8;
 	private int maxBulletsInPlay = 8;
 	private GameObject bulletPrefab;
+	private float yVector = 1;
  
 	void Start () {
 		bulletPrefab = Resources.Load ("bullet") as GameObject;
@@ -27,8 +28,9 @@ public class Vulcan : MonoBehaviour {
 			bullet.weapon = this;
 			bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 			if(player.reversePosition) {
-				bullet.yVector = -1;
+				yVector = -1;
 			}
+			bullet.vector = Vector3.up * yVector;
 			RegisterBullet ();
 			timeSinceLastFire = 0f;
 		}

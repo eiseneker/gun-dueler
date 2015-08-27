@@ -31,7 +31,6 @@ public class HealthMeter : MonoBehaviour {
 	private Player GetPlayer() {
 		GameObject playerObject = GameObject.Find ("Player "+playerNumber+" Fleet/FlagShip(Clone)");
 		if(playerObject){
-			print ("got player for health");
 			return(playerObject.GetComponent<Player>());
 		}else{
 			return(null);

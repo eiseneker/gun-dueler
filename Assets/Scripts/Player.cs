@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour, IHarmable {
 	public float speed;
@@ -8,18 +9,27 @@ public class Player : MonoBehaviour, IHarmable {
 	public float maxHealth;
 	public bool reversePosition;
 	
+	public static List<GameObject> players = new List<GameObject>();
+	
 	private float currentHealth;
 	private PlayerHitState playerHitState;
 	private Vulcan vulcan;
+	private Shotgun shotgun;
+	private MagnetMissile magnetMissile;
 	private GameObject body;
 	private GameObject shieldObject;
 	private Shield shield;
 	
 	void Start(){
+		players.Add (gameObject);
 		playerHitState = gameObject.AddComponent ("PlayerHitState") as PlayerHitState;
 		playerHitState.player = gameObject;
 		vulcan = gameObject.AddComponent ("Vulcan") as Vulcan;
 		vulcan.player = this;
+		shotgun = gameObject.AddComponent ("Shotgun") as Shotgun;
+		shotgun.player = this;
+		magnetMissile = gameObject.AddComponent ("MagnetMissile") as MagnetMissile;
+		magnetMissile.player = this;
 		reversePosition = GetComponent<Entity>().reversePosition;
 		body = transform.Find ("Body").gameObject;
 		body.GetComponent<ParticleSystem>().startColor = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
@@ -50,9 +60,17 @@ public class Player : MonoBehaviour, IHarmable {
 			transform.Translate(Vector3.down * yMovement * Time.deltaTime * speed);
 		}
 		
-		if(Input.GetAxis ("Player"+playerNumber+"_Fire2") == 1){
+		if(Input.GetAxis ("Player"+playerNumber+"_Shotgun") == 1){
+			shotgun.Fire ();
+		}
+		
+		if(Input.GetAxis ("Player"+playerNumber+"_MagnetMissile") == 1){
+			magnetMissile.Fire ();
+		}
+		
+		if(Input.GetAxis ("Player"+playerNumber+"_Shield") == 1){
 			shield.ShieldUp();
-		}else if(Input.GetAxis ("Player"+playerNumber+"_Fire1") == 1){
+		}else if(Input.GetAxis ("Player"+playerNumber+"_Vulcan") == 1){
 			vulcan.Fire();
 			shield.ShieldDown();
 		}else{

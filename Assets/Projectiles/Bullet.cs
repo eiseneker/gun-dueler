@@ -2,9 +2,10 @@
 using System.Collections;
 
 public class Bullet : MonoBehaviour {
-	public float speed = 1f;
-	public float yVector = 1;
+	public float speed;
+	public Vector3 vector;
 	public Vulcan weapon;
+	public Shotgun specialWeapon;
 	public GameObject owner;
 	
 	private GameObject affinity;
@@ -13,7 +14,11 @@ public class Bullet : MonoBehaviour {
 	
 	void Start(){
 		if(owner == null) {
-			owner = weapon.player.gameObject;
+			if(weapon){
+				owner = weapon.player.gameObject;
+			}else if(specialWeapon){
+				owner = specialWeapon.player.gameObject;
+			}
 		}
 		affinity = owner.GetComponent<Entity>().affinity;
 		body = transform.Find("Body");
@@ -23,7 +28,7 @@ public class Bullet : MonoBehaviour {
 	}
 	
 	void Update () {
-		transform.Translate (Vector3.up * Time.deltaTime * speed * yVector);
+		transform.Translate (vector * Time.deltaTime * speed);
 	}
 	
 	void OnTriggerEnter2D (Collider2D collision) {

@@ -10,6 +10,7 @@ public class Minion : MonoBehaviour, IHarmable {
 	
 	private float timeSinceLastFire;
 	private GameObject body;
+	private float yVector = 1;
 	
 	void Start() {
 		body = transform.Find ("Body").gameObject;
@@ -33,8 +34,9 @@ public class Minion : MonoBehaviour, IHarmable {
 			bullet.speed = bulletSpeed;
 			bullet.owner = gameObject;
 			if(GetComponent<Entity>().reversePosition) {
-				bullet.yVector = -1;
+				yVector = -1;
 			}
+			bullet.vector = Vector3.up * yVector;
 			timeSinceLastFire = 0f;
 		}
 	}
