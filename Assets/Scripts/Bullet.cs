@@ -29,7 +29,7 @@ public class Bullet : MonoBehaviour {
 			if(hitEntity.affinity != affinity){
 				IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
 				if(harmedObject != null){
-					harmedObject.ReceiveHit();
+					harmedObject.ReceiveHit(1);
 				}
 			}
 			if(collision.gameObject != owner && collision.gameObject.GetComponent<Bullet>() == null){

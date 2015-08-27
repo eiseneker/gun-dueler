@@ -30,9 +30,13 @@ public class PlayerHitState : MonoBehaviour {
 	public void RegisterHit(){
 		if(currentHitState == HitState.NotHit) {
 			SwitchToInvincible();
-		}else if(currentHitState == HitState.Critical){
+		}else if(IsCritical ()){
 			Destroy (player);
 		}
+	}
+	
+	public bool IsCritical(){
+		return(currentHitState == HitState.Critical);
 	}
 	
 	private void AdvanceHitTime(){

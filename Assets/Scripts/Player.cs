@@ -9,7 +9,9 @@ public class Player : MonoBehaviour, IHarmable {
 	public float bulletSpeed;
 	public float fireDelay;
 	public GameObject shieldPrefab;
+	public float maxHealth;
 	
+	private float currentHealth;
 	private float timeSinceLastFire;
 	private PlayerHitState playerHitState;
 	private int currentBulletsInPlay = 0;
@@ -27,6 +29,7 @@ public class Player : MonoBehaviour, IHarmable {
 		shieldObject = Instantiate (shieldPrefab, transform.position, Quaternion.identity) as GameObject;
 		shieldObject.transform.parent = gameObject.transform;
 		shield = shieldObject.GetComponent<Shield>();
+		currentHealth = maxHealth;
 	}
 		
 	void Update () {
@@ -38,7 +41,6 @@ public class Player : MonoBehaviour, IHarmable {
 		
 		if(reversePosition) {
 			moveFactor = -1;
-			
 		}
 		
 		xMovement *= moveFactor;
@@ -60,13 +62,18 @@ public class Player : MonoBehaviour, IHarmable {
 		}else{
 			shield.ShieldDown();
 		}
+		
+		if(currentHealth <= 0){
+			Destroy (gameObject);
+		}
 	}
 	
-	public void ReceiveHit() {
+	public void ReceiveHit(float damage) {
 		if(shield.IsShieldUp()){
 			shield.DamageShield(20);
 		}else{
 			playerHitState.RegisterHit();
+			currentHealth -= damage;
 		}
 		
 	}
@@ -92,6 +99,14 @@ public class Player : MonoBehaviour, IHarmable {
 	
 	public void UnregisterBullet(){
 		currentBulletsInPlay--;
+	}
+	
+	public bool IsCritical(){
+		return(playerHitState.IsCritical());
+	}
+	
+	public float CurrentHealthRatio(){
+		return(currentHealth / maxHealth);
 	}
 	
 	private bool AtMaxBullets(){

@@ -21,7 +21,7 @@ public class Minion : MonoBehaviour, IHarmable {
 		Fire ();
 	}
 	
-	public void ReceiveHit() {
+	public void ReceiveHit(float damage) {
 		formation.GetComponent<Formation>().MinionDestroyed();
 		Destroy(transform.parent.gameObject);
 	}
