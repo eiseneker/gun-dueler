@@ -17,7 +17,7 @@ public class PlayerHitState : MonoBehaviour {
 		Critical
 	}
 
-	public void RefreshHitState(){
+	void Update(){
 		if(IsHit ()) {
 			if(HasHitTimeExpired ()){
 				SwitchToNotHit();

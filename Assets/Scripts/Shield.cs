@@ -63,5 +63,8 @@ public class Shield : MonoBehaviour {
 		return(shieldIsUp);
 	}
 	
+	public float CurrentHealthRatio(){
+		return(currentShieldHealth / maxShieldHealth);
+	}
 	
 }

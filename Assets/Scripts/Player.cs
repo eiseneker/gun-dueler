@@ -60,8 +60,6 @@ public class Player : MonoBehaviour, IHarmable {
 		}else{
 			shield.ShieldDown();
 		}
-		
-		playerHitState.RefreshHitState();
 	}
 	
 	public void ReceiveHit() {
