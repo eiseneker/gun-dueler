@@ -10,14 +10,12 @@ public class HealthMeter : MonoBehaviour {
 	private Transform healthText;
 	private Transform criticalText;
 
-	// Use this for initialization
 	void Start () {
 		filler = transform.Find ("Filler");
 		healthText = transform.Find ("Health Text");
 		criticalText = transform.Find ("Critical Text");
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		if(player == null) {
 			player = GetPlayer();

@@ -2,9 +2,9 @@
 using System.Collections;
 
 public class Bullet : MonoBehaviour {
-
 	public float speed = 1f;
 	public float yVector = 1;
+	public Vulcan weapon;
 	public GameObject owner;
 	
 	private GameObject affinity;
@@ -12,6 +12,9 @@ public class Bullet : MonoBehaviour {
 	private SpriteRenderer bodySprite;
 	
 	void Start(){
+		if(owner == null) {
+			owner = weapon.player.gameObject;
+		}
 		affinity = owner.GetComponent<Entity>().affinity;
 		body = transform.Find("Body");
 		bodySprite = body.GetComponent<SpriteRenderer>();
@@ -39,11 +42,8 @@ public class Bullet : MonoBehaviour {
 	}
 	
 	public void DestroyMe(){
-		if(owner){
-			Player player = owner.GetComponent<Player>();
-			if(player){
-				player.UnregisterBullet();
-			}
+		if(weapon){
+			weapon.UnregisterBullet();
 		}
 		Destroy(gameObject);
 	}

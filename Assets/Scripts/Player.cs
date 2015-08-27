@@ -4,18 +4,13 @@ using System.Collections;
 public class Player : MonoBehaviour, IHarmable {
 	public float speed;
 	public int playerNumber;
-	public GameObject bulletPrefab;
-	public int maxBulletsInPlay;
-	public float bulletSpeed;
-	public float fireDelay;
 	public GameObject shieldPrefab;
 	public float maxHealth;
+	public bool reversePosition;
 	
 	private float currentHealth;
-	private float timeSinceLastFire;
 	private PlayerHitState playerHitState;
-	private int currentBulletsInPlay = 0;
-	private bool reversePosition;
+	private Vulcan vulcan;
 	private GameObject body;
 	private GameObject shieldObject;
 	private Shield shield;
@@ -23,6 +18,8 @@ public class Player : MonoBehaviour, IHarmable {
 	void Start(){
 		playerHitState = gameObject.AddComponent ("PlayerHitState") as PlayerHitState;
 		playerHitState.player = gameObject;
+		vulcan = gameObject.AddComponent ("Vulcan") as Vulcan;
+		vulcan.player = this;
 		reversePosition = GetComponent<Entity>().reversePosition;
 		body = transform.Find ("Body").gameObject;
 		body.GetComponent<ParticleSystem>().startColor = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
@@ -33,7 +30,6 @@ public class Player : MonoBehaviour, IHarmable {
 	}
 		
 	void Update () {
-		timeSinceLastFire += Time.deltaTime;
 		float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
 		float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
 		
@@ -57,7 +53,7 @@ public class Player : MonoBehaviour, IHarmable {
 		if(Input.GetAxis ("Player"+playerNumber+"_Fire2") == 1){
 			shield.ShieldUp();
 		}else if(Input.GetAxis ("Player"+playerNumber+"_Fire1") == 1){
-			Fire();
+			vulcan.Fire();
 			shield.ShieldDown();
 		}else{
 			shield.ShieldDown();
@@ -78,29 +74,6 @@ public class Player : MonoBehaviour, IHarmable {
 		
 	}
 	
-	private void Fire () {
-		if(!AtMaxBullets() && timeSinceLastFire >= fireDelay){
-			GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity) as GameObject;
-			Bullet bullet = bulletObject.GetComponent<Bullet>();
-			bullet.speed = bulletSpeed;
-			bullet.owner = gameObject;
-			bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
-			if(reversePosition) {
-				bullet.yVector = -1;
-			}
-			RegisterBullet ();
-			timeSinceLastFire = 0f;
-		}
-	}
-	
-	public void RegisterBullet(){
-		currentBulletsInPlay++;
-	}
-	
-	public void UnregisterBullet(){
-		currentBulletsInPlay--;
-	}
-	
 	public bool IsCritical(){
 		return(playerHitState.IsCritical());
 	}
@@ -109,7 +82,4 @@ public class Player : MonoBehaviour, IHarmable {
 		return(currentHealth / maxHealth);
 	}
 	
-	private bool AtMaxBullets(){
-		return(currentBulletsInPlay >= maxBulletsInPlay);
-	}
 }
