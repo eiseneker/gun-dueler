@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour, IHarmable {
 	public float speed;
-	public int playerNumber;
 	public GameObject shieldPrefab;
 	public float maxHealth;
 	public bool reversePosition;
@@ -21,6 +20,7 @@ public class Player : MonoBehaviour, IHarmable {
 	private GameObject shieldObject;
 	private Shield shield;
 	private bool IsInputLocked = false;
+	private int playerNumber;
 	
 	void Start(){
 		players.Add (gameObject);
@@ -48,6 +48,8 @@ public class Player : MonoBehaviour, IHarmable {
 			float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
 			float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
 			
+			print (Input.GetAxis ("Player1_Y"));
+			
 			float moveFactor = 1;
 			
 			if(reversePosition) {
@@ -65,15 +67,15 @@ public class Player : MonoBehaviour, IHarmable {
 				transform.Translate(Vector3.down * yMovement * Time.deltaTime * speed);
 			}
 			
-			if(Input.GetAxis ("Player"+playerNumber+"_Shotgun") == 1){
+			if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
 				shotgun.Fire ();
-			}else if(Input.GetAxis ("Player"+playerNumber+"_MagnetMissile") == 1){
+			}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
 				magnetMissile.Fire ();
-			}else if(Input.GetAxis ("Player"+playerNumber+"_GigaBeam") == 1){
+			}else if(Input.GetAxis ("Player"+playerNumber+"_SuperWeapon") == 1){
 				gigaBeam.Fire ();
-			}else if(Input.GetAxis ("Player"+playerNumber+"_Shield") == 1){
+			}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
 				shield.ShieldUp();
-			}else if(Input.GetAxis ("Player"+playerNumber+"_Vulcan") == 1){
+			}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
 				vulcan.Fire();
 				shield.ShieldDown();
 			}else{
@@ -112,6 +114,10 @@ public class Player : MonoBehaviour, IHarmable {
 	
 	public void UnlockInputs(){
 		IsInputLocked = false;
+	}
+	
+	public void SetPlayerNumber(int inputPlayerNumber){
+		playerNumber = inputPlayerNumber;
 	}
 	
 }

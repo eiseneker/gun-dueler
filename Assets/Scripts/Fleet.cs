@@ -8,6 +8,7 @@ public class Fleet : MonoBehaviour {
 	public Color teamColor;
 	public float width;
 	public float height;
+	public int playerNumber;
 	
 	private GameObject affinity;
 	private bool reversePosition;
@@ -42,6 +43,7 @@ public class Fleet : MonoBehaviour {
 		flagShip.transform.parent = transform;
 		flagShip.GetComponent<Entity>().affinity = gameObject;
 		flagShip.GetComponent<Entity>().reversePosition = GetComponent<Entity>().reversePosition;
+		flagShip.GetComponent<Player>().SetPlayerNumber(playerNumber);
 	}
 	
 	void AddMinionFormation(){
