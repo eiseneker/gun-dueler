@@ -16,9 +16,11 @@ public class Player : MonoBehaviour, IHarmable {
 	private Vulcan vulcan;
 	private Shotgun shotgun;
 	private MagnetMissile magnetMissile;
+	private GigaBeam gigaBeam;
 	private GameObject body;
 	private GameObject shieldObject;
 	private Shield shield;
+	private bool IsInputLocked = false;
 	
 	void Start(){
 		players.Add (gameObject);
@@ -28,6 +30,8 @@ public class Player : MonoBehaviour, IHarmable {
 		vulcan.player = this;
 		shotgun = gameObject.AddComponent ("Shotgun") as Shotgun;
 		shotgun.player = this;
+		gigaBeam = gameObject.AddComponent ("GigaBeam") as GigaBeam;
+		gigaBeam.player = this;
 		magnetMissile = gameObject.AddComponent ("MagnetMissile") as MagnetMissile;
 		magnetMissile.player = this;
 		reversePosition = GetComponent<Entity>().reversePosition;
@@ -40,41 +44,43 @@ public class Player : MonoBehaviour, IHarmable {
 	}
 		
 	void Update () {
-		float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
-		float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
-		
-		float moveFactor = 1;
-		
-		if(reversePosition) {
-			moveFactor = -1;
-		}
-		
-		xMovement *= moveFactor;
-		yMovement *= moveFactor;
-		
-		if((transform.position.x > -4.3 && xMovement * moveFactor < 0) || (transform.position.x < 4.3 && xMovement * moveFactor > 0)){
-			transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
-		}
-		
-		if((transform.position.y > -4.90 && yMovement * moveFactor > 0) || (transform.position.y < 4.9 && yMovement * moveFactor < 0)){
-			transform.Translate(Vector3.down * yMovement * Time.deltaTime * speed);
-		}
-		
-		if(Input.GetAxis ("Player"+playerNumber+"_Shotgun") == 1){
-			shotgun.Fire ();
-		}
-		
-		if(Input.GetAxis ("Player"+playerNumber+"_MagnetMissile") == 1){
-			magnetMissile.Fire ();
-		}
-		
-		if(Input.GetAxis ("Player"+playerNumber+"_Shield") == 1){
-			shield.ShieldUp();
-		}else if(Input.GetAxis ("Player"+playerNumber+"_Vulcan") == 1){
-			vulcan.Fire();
-			shield.ShieldDown();
+		if(!IsInputLocked){
+			float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
+			float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
+			
+			float moveFactor = 1;
+			
+			if(reversePosition) {
+				moveFactor = -1;
+			}
+			
+			xMovement *= moveFactor;
+			yMovement *= moveFactor;
+			
+			if((transform.position.x > -4.3 && xMovement * moveFactor < 0) || (transform.position.x < 4.3 && xMovement * moveFactor > 0)){
+				transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
+			}
+			
+			if((transform.position.y > -4.90 && yMovement * moveFactor > 0) || (transform.position.y < 4.9 && yMovement * moveFactor < 0)){
+				transform.Translate(Vector3.down * yMovement * Time.deltaTime * speed);
+			}
+			
+			if(Input.GetAxis ("Player"+playerNumber+"_Shotgun") == 1){
+				shotgun.Fire ();
+			}else if(Input.GetAxis ("Player"+playerNumber+"_MagnetMissile") == 1){
+				magnetMissile.Fire ();
+			}else if(Input.GetAxis ("Player"+playerNumber+"_GigaBeam") == 1){
+				gigaBeam.Fire ();
+			}else if(Input.GetAxis ("Player"+playerNumber+"_Shield") == 1){
+				shield.ShieldUp();
+			}else if(Input.GetAxis ("Player"+playerNumber+"_Vulcan") == 1){
+				vulcan.Fire();
+				shield.ShieldDown();
+			}else{
+				shield.ShieldDown();
+			}
 		}else{
-			shield.ShieldDown();
+			shield.ShieldDown ();
 		}
 		
 		if(currentHealth <= 0){
@@ -98,6 +104,14 @@ public class Player : MonoBehaviour, IHarmable {
 	
 	public float CurrentHealthRatio(){
 		return(currentHealth / maxHealth);
+	}
+	
+	public void LockInputs(){
+		IsInputLocked = true;
+	}
+	
+	public void UnlockInputs(){
+		IsInputLocked = false;
 	}
 	
 }
