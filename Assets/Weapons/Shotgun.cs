@@ -1,14 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Shotgun : MonoBehaviour {
-	public Player player;
-	
-	private float timeSinceLastFire;
-	private float fireDelay = 3f;
+public class Shotgun : Weapon {
 	private float bulletSpeed = 7;
 	private GameObject bulletPrefab;
-	private float yVector = 1;
 	private Vector3[] bulletVectors = {
 		new Vector3(0.1f, 1, 0),
 		new Vector3(-0.1f, 1, 0),
@@ -18,31 +13,29 @@ public class Shotgun : MonoBehaviour {
 		new Vector3(-0.3f, .9f, 0),
 	};
 	
-	
-	void Start () {
-		timeSinceLastFire = fireDelay;
+	public Shotgun() {
+		fireDelay = 3f;
 		bulletPrefab = Resources.Load ("bullet") as GameObject;
 	}
 	
-	void Update () {
-		timeSinceLastFire += Time.deltaTime;
-	}
-	
 	public void Fire () {
-		if(timeSinceLastFire >= fireDelay){
+		if(CanFire ()){
 			foreach(Vector3 vector in bulletVectors){
-				GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity) as GameObject;
-				Bullet bullet = bulletObject.GetComponent<Bullet>();
+				BulletProjectile bullet = newProjectile();
 				bullet.speed = bulletSpeed;
-				bullet.specialWeapon = this;
+				bullet.weapon = this;
+				bullet.vector = vector;
 				bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
-				if(player.reversePosition) {
-					yVector = -1;
-				}
-				bullet.vector = vector * yVector;
+				RotateProjectile(bullet);
 			}
 			
 			timeSinceLastFire = 0f;
 		}
+	}
+	
+	private BulletProjectile newProjectile(){
+		GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity) as GameObject;
+		BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
+		return(bullet);
 	}
 }

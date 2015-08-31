@@ -1,41 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MagnetMissile : MonoBehaviour {
-	public Player player;
-	
-	private float timeSinceLastFire;
-	private float fireDelay = 3f;
+public class MagnetMissile : Weapon {
 	private float magnetSpeed = 7;
 	private GameObject magnetPrefab;
-	private float yVector = 1;
 	
-	
-	void Start () {
-		timeSinceLastFire = fireDelay;
+	public MagnetMissile() {
+		fireDelay = 3f;
 		magnetPrefab = Resources.Load ("magnet") as GameObject;
 	}
 	
-	void Update () {
-		timeSinceLastFire += Time.deltaTime;
-	}
-	
 	public void Fire () {
-		if(timeSinceLastFire >= fireDelay){
-			GameObject magnetObject = Instantiate(magnetPrefab, transform.position, Quaternion.identity) as GameObject;
-			Magnet magnet = magnetObject.GetComponent<Magnet>();
+		if(CanFire ()){
+			MagnetProjectile magnet = newProjectile();
 			magnet.speed = magnetSpeed;
-			magnet.specialWeapon = this;
+			magnet.weapon = this;
+			magnet.vector = Vector3.up;
 			magnet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
-			if(player.reversePosition) {
-				magnet.transform.eulerAngles = new Vector3(
-					magnet.transform.eulerAngles.x,
-					magnet.transform.eulerAngles.y,
-					magnet.transform.eulerAngles.z + 180);
-			}
-			magnet.vector = Vector3.up * yVector;
+			RotateProjectile(magnet);
 			
 			timeSinceLastFire = 0f;
 		}
+	}
+	
+	private MagnetProjectile newProjectile(){
+		GameObject magnetObject = Instantiate(magnetPrefab, transform.position, Quaternion.identity) as GameObject;
+		MagnetProjectile magnet = magnetObject.GetComponent<MagnetProjectile>();
+		return(magnet);
 	}
 }

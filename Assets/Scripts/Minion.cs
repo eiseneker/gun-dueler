@@ -30,7 +30,7 @@ public class Minion : MonoBehaviour, IHarmable {
 	private void Fire () {
 		if(timeSinceLastFire >= fireDelay){
 			GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity) as GameObject;
-			Bullet bullet = bulletObject.GetComponent<Bullet>();
+			BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
 			bullet.speed = bulletSpeed;
 			bullet.owner = gameObject;
 			if(GetComponent<Entity>().reversePosition) {

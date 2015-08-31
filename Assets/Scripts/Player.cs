@@ -47,9 +47,6 @@ public class Player : MonoBehaviour, IHarmable {
 		if(!IsInputLocked){
 			float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
 			float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
-			
-			print (Input.GetAxis ("Player1_Y"));
-			
 			float moveFactor = 1;
 			
 			if(reversePosition) {
