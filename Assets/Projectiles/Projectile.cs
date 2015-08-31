@@ -32,7 +32,7 @@ public class Projectile : MonoBehaviour {
 		if(hitEntity && hitEntity.affinity != affinity){
 			IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
 			if(harmedObject != null){
-				harmedObject.ReceiveHit(1);
+				harmedObject.ReceiveHit(1, owner);
 				if(destroysSelfOnHit) DestroyMe ();
 			}
 		}

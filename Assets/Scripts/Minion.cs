@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Minion : MonoBehaviour, IHarmable {
+public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	public float speed;
 	public GameObject bulletPrefab;
 	public float bulletSpeed;
@@ -22,8 +22,10 @@ public class Minion : MonoBehaviour, IHarmable {
 		Fire ();
 	}
 	
-	public void ReceiveHit(float damage) {
+	public void ReceiveHit(float damage, GameObject attackerObject) {
 		formation.GetComponent<Formation>().MinionDestroyed();
+		IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
+		attacker.RegisterSuccessfulAttack(10);
 		Destroy(transform.parent.gameObject);
 	}
 	
@@ -39,5 +41,9 @@ public class Minion : MonoBehaviour, IHarmable {
 			bullet.vector = Vector3.up * yVector;
 			timeSinceLastFire = 0f;
 		}
+	}
+	
+	public void RegisterSuccessfulAttack(float value){
+		//chuckle
 	}
 }

@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour, IHarmable {
+public class Player : MonoBehaviour, IHarmable, IAttacker {
 	public float speed;
 	public GameObject shieldPrefab;
 	public float maxHealth;
 	public bool reversePosition;
+	public float currentExValue = 0;
 	
 	public static List<GameObject> players = new List<GameObject>();
 	
@@ -21,6 +22,7 @@ public class Player : MonoBehaviour, IHarmable {
 	private Shield shield;
 	private bool IsInputLocked = false;
 	private int playerNumber;
+	private float maxExValue = 100;
 	
 	void Start(){
 		players.Add (gameObject);
@@ -69,7 +71,10 @@ public class Player : MonoBehaviour, IHarmable {
 			}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
 				magnetMissile.Fire ();
 			}else if(Input.GetAxis ("Player"+playerNumber+"_SuperWeapon") == 1){
-				gigaBeam.Fire ();
+				if(currentExValue >= maxExValue){
+					gigaBeam.Fire ();
+					currentExValue -= maxExValue;
+				}
 			}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
 				shield.ShieldUp();
 			}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
@@ -87,12 +92,14 @@ public class Player : MonoBehaviour, IHarmable {
 		}
 	}
 	
-	public void ReceiveHit(float damage) {
+	public void ReceiveHit(float damage, GameObject attackerObject) {
 		if(shield.IsShieldUp()){
 			shield.DamageShield(20);
 		}else{
 			playerHitState.RegisterHit();
 			currentHealth -= damage;
+			IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
+			attacker.RegisterSuccessfulAttack(25);
 		}
 		
 	}
@@ -105,6 +112,10 @@ public class Player : MonoBehaviour, IHarmable {
 		return(currentHealth / maxHealth);
 	}
 	
+	public float CurrentExRatio(){
+		return(currentExValue / maxExValue);
+	}
+	
 	public void LockInputs(){
 		IsInputLocked = true;
 	}
@@ -115,6 +126,10 @@ public class Player : MonoBehaviour, IHarmable {
 	
 	public void SetPlayerNumber(int inputPlayerNumber){
 		playerNumber = inputPlayerNumber;
+	}
+	
+	public void RegisterSuccessfulAttack(float value){
+		currentExValue = Mathf.Clamp (currentExValue + value, 0, maxExValue);
 	}
 	
 }

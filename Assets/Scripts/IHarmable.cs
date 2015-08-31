@@ -3,6 +3,6 @@ using System.Collections;
 
 interface IHarmable {
 
-	void ReceiveHit(float damage);
+	void ReceiveHit(float damage, GameObject attacker);
 	
 }
