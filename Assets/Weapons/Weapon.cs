@@ -39,13 +39,8 @@ public class Weapon : MonoBehaviour {
 		return(!AtMaxBullets () && HasFinishedCooldown ());
 	}
 	
-	protected void RotateProjectile(Projectile projectile){
-		if(player.reversePosition){
-			projectile.transform.eulerAngles = new Vector3(
-				projectile.transform.eulerAngles.x,
-				projectile.transform.eulerAngles.y,
-				projectile.transform.eulerAngles.z + 180);
-		}
+	protected void OrientProjectile(Projectile projectile){
+		if(player.reversePosition) projectile.RotateMe(180);
 	}
 	
 }

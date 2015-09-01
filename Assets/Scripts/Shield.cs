@@ -5,11 +5,13 @@ public class Shield : MonoBehaviour {
 	public float maxShieldHealth;
 	public float shieldHealthPerInterval;
 	public float maxBrokenShieldTime;
+	public Player player;
 
 	private bool shieldIsUp = false;
 	private float currentShieldHealth;
 	private float currentBrokenShieldTime;
 	private Transform body;
+	private bool ex = false;
 	
 	void Start() {
 		currentShieldHealth = maxShieldHealth;
@@ -18,7 +20,8 @@ public class Shield : MonoBehaviour {
 
 	void Update() {
 		if(shieldIsUp){
-			if(currentShieldHealth > 0){
+			print ("ex: " + ex);
+			if(!ex && currentShieldHealth > 0){
 				currentShieldHealth = Mathf.Clamp (currentShieldHealth - shieldHealthPerInterval, 0, maxShieldHealth);
 			}
 		}else{
@@ -45,7 +48,8 @@ public class Shield : MonoBehaviour {
 		ShieldDown ();
 	}
 	
-	public void ShieldUp() {
+	public void ShieldUp(bool exAttempt) {
+		ex = exAttempt && player.SpendEx(1);
 		if(currentBrokenShieldTime <= 0 && !shieldIsUp){
 			shieldIsUp = true;
 		}
@@ -57,6 +61,7 @@ public class Shield : MonoBehaviour {
 	
 	public void ShieldDown() {
 		shieldIsUp = false;
+		ex = false;
 	}
 	
 	public bool IsShieldUp() {

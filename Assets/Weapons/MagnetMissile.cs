@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class MagnetMissile : Weapon {
-	private float magnetSpeed = 7;
+	private float defaultSpeed = 8;
+	private float speed;
+
 	private GameObject magnetPrefab;
 	
 	public MagnetMissile() {
@@ -10,14 +12,33 @@ public class MagnetMissile : Weapon {
 		magnetPrefab = Resources.Load ("magnet") as GameObject;
 	}
 	
-	public void Fire () {
+	public void Fire (bool exAttempt) {
 		if(CanFire ()){
-			MagnetProjectile magnet = newProjectile();
-			magnet.speed = magnetSpeed;
+			bool ex = exAttempt && player.SpendEx(25);
+			MagnetProjectile magnet;
+			if(ex){
+				speed = defaultSpeed * 1.2f;
+			}else{
+				speed = defaultSpeed;
+			}
+		
+			if(ex){
+				magnet = newProjectile();
+				magnet.speed = speed;
+				magnet.weapon = this;
+				magnet.vector = Vector3.up;
+				magnet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
+				OrientProjectile(magnet);
+				magnet.RotateMe(-90);
+				magnet.defaultOrientation = false;
+			}
+			
+			magnet = newProjectile();
+			magnet.speed = speed;
 			magnet.weapon = this;
 			magnet.vector = Vector3.up;
 			magnet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
-			RotateProjectile(magnet);
+			OrientProjectile(magnet);
 			
 			timeSinceLastFire = 0f;
 		}

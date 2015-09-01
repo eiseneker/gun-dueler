@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Player : MonoBehaviour, IHarmable, IAttacker {
-	public float speed;
+	public float defaultSpeed;
 	public GameObject shieldPrefab;
 	public float maxHealth;
 	public bool reversePosition;
-	public float currentExValue = 0;
+	public float maxExValue = 100;
 	
 	public static List<GameObject> players = new List<GameObject>();
 	
@@ -22,9 +22,12 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 	private Shield shield;
 	private bool IsInputLocked = false;
 	private int playerNumber;
-	private float maxExValue = 100;
+	private bool exMode = false;
+	private float speed;
+	private float currentExValue = 100;
 	
 	void Start(){
+		speed = defaultSpeed;
 		players.Add (gameObject);
 		playerHitState = gameObject.AddComponent ("PlayerHitState") as PlayerHitState;
 		playerHitState.player = gameObject;
@@ -42,6 +45,7 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 		shieldObject = Instantiate (shieldPrefab, transform.position, Quaternion.identity) as GameObject;
 		shieldObject.transform.parent = gameObject.transform;
 		shield = shieldObject.GetComponent<Shield>();
+		shield.player = this;
 		currentHealth = maxHealth;
 	}
 		
@@ -58,6 +62,18 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 			xMovement *= moveFactor;
 			yMovement *= moveFactor;
 			
+			if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1){
+				EnterExMode();
+			}else{
+				ExitExMode();
+			}
+			
+			if((xMovement != 0 || yMovement != 0) && IsInExMode () && SpendEx (1)){
+				speed = defaultSpeed * 1.5f;
+			}else{
+				speed = defaultSpeed;
+			}
+			
 			if((transform.position.x > -4.3 && xMovement * moveFactor < 0) || (transform.position.x < 4.3 && xMovement * moveFactor > 0)){
 				transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
 			}
@@ -67,18 +83,15 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 			}
 			
 			if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
-				shotgun.Fire ();
+				shotgun.Fire (IsInExMode());
 			}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
-				magnetMissile.Fire ();
+				magnetMissile.Fire (IsInExMode());
 			}else if(Input.GetAxis ("Player"+playerNumber+"_SuperWeapon") == 1){
-				if(currentExValue >= maxExValue){
-					gigaBeam.Fire ();
-					currentExValue -= maxExValue;
-				}
+				gigaBeam.Fire ();
 			}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
-				shield.ShieldUp();
+				shield.ShieldUp(IsInExMode());
 			}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
-				vulcan.Fire();
+				vulcan.Fire(IsInExMode());
 				shield.ShieldDown();
 			}else{
 				shield.ShieldDown();
@@ -130,6 +143,27 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 	
 	public void RegisterSuccessfulAttack(float value){
 		currentExValue = Mathf.Clamp (currentExValue + value, 0, maxExValue);
+	}
+	
+	public bool SpendEx(float amount){
+		if(currentExValue >= amount){
+			currentExValue -= amount;
+			return(true);
+		}else{
+			return(false);
+		}
+	}
+	
+	private void EnterExMode(){
+		exMode = true;
+	}
+	
+	private void ExitExMode(){
+		exMode = false;
+	}
+	
+	private bool IsInExMode(){
+		return(exMode);
 	}
 	
 }

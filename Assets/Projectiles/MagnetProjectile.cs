@@ -4,6 +4,7 @@ using System.Collections;
 public class MagnetProjectile : Projectile {
 	public float speed;
 	public Vector3 vector;
+	public bool defaultOrientation = true;
 	
 	private Transform body;
 	private SpriteRenderer bodySprite;
@@ -23,8 +24,9 @@ public class MagnetProjectile : Projectile {
 	void Update () {
 		if(!targetFound){
 			if(IsTargetNearby(target)){
+				float rotationFactor;
 				targetFound = true;
-				float rotationFactor = -90;
+				rotationFactor = -90;
 				if(IsTargetToMyLeft()) rotationFactor *= -1;
 				RotateMe(rotationFactor);
 			}
@@ -46,22 +48,44 @@ public class MagnetProjectile : Projectile {
 		return(null);
 	}
 	
-	private void RotateMe(float rotationFactor){
-		transform.eulerAngles = new Vector3(
-			transform.eulerAngles.x,
-			transform.eulerAngles.y,
-			transform.eulerAngles.z + rotationFactor);
-	}
-	
 	private bool IsTargetToMyLeft(){
-		return(
-			(target.transform.position.x < gameObject.transform.position.x && transform.eulerAngles.z == 0) ||
-			(target.transform.position.x > gameObject.transform.position.x && transform.eulerAngles.z.ToString () == "180")
-		);
+		bool isLeft;
+		
+		if(defaultOrientation){
+			isLeft = (target.transform.position.x < gameObject.transform.position.x && FacingUp ()) ||
+				(target.transform.position.x > gameObject.transform.position.x && FacingDown ());
+		}else{
+			isLeft = (target.transform.position.y > gameObject.transform.position.y && FacingRight ()) ||
+				(target.transform.position.y < gameObject.transform.position.y && FacingLeft ());
+		}
+	
+		return(isLeft);
 	}
 	
 	private bool IsTargetNearby(GameObject target){
-		float distance = Mathf.Abs(target.transform.position.y - gameObject.transform.position.y);
+		float distance;
+		if(defaultOrientation){
+			distance = Mathf.Abs(target.transform.position.y - gameObject.transform.position.y);
+		}else{
+			distance = Mathf.Abs(target.transform.position.x - gameObject.transform.position.x);
+		}
 		return(distance >= 0 && distance <= 0.2);
+		
+	}
+	
+	private bool FacingRight(){
+		return(transform.eulerAngles.z > 225 && transform.eulerAngles.z < 315);
+	}
+	
+	private bool FacingDown(){
+		return(transform.eulerAngles.z > 135 && transform.eulerAngles.z < 225);
+	}
+	
+	private bool FacingLeft(){
+		return(transform.eulerAngles.z > 45 && transform.eulerAngles.z < 135);
+	}
+	
+	private bool FacingUp(){
+		return(transform.eulerAngles.z > 315 && transform.eulerAngles.z < 45);
 	}
 }

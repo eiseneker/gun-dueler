@@ -9,12 +9,12 @@ public class GigaBeam : Weapon {
 	}
 	
 	public void Fire () {
-		if(CanFire ()){
+		if(CanFire () && player.SpendEx(player.maxExValue)){
 			GameObject laserObject = Instantiate(laserPrefab, transform.position, Quaternion.identity) as GameObject;
 			GigaBeamProjectile laser = laserObject.transform.Find ("GigaLaser").GetComponent<GigaBeamProjectile>();
 			laser.weapon = this;
 			laser.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
-			RotateProjectile(laser);
+			OrientProjectile(laser);
 			timeSinceLastFire = 0f;
 		}
 	}

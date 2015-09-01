@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class Shotgun : Weapon {
-	private float bulletSpeed = 7;
+	private float defaultSpeed = 8;
+	private float speed;
+	
 	private GameObject bulletPrefab;
 	private Vector3[] bulletVectors = {
 		new Vector3(0.1f, 1, 0),
@@ -18,18 +20,29 @@ public class Shotgun : Weapon {
 		bulletPrefab = Resources.Load ("bullet") as GameObject;
 	}
 	
-	public void Fire () {
+	public void Fire (bool exAttempt) {
 		if(CanFire ()){
+			bool ex = exAttempt && player.SpendEx(25);
+			if(ex){
+				speed = defaultSpeed * 1.5f;
+			}else{
+				speed = defaultSpeed;
+			}
+		
 			foreach(Vector3 vector in bulletVectors){
 				BulletProjectile bullet = newProjectile();
-				bullet.speed = bulletSpeed;
+				bullet.speed = speed;
 				bullet.weapon = this;
 				bullet.vector = vector;
 				bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
-				RotateProjectile(bullet);
+				OrientProjectile(bullet);
 			}
 			
-			timeSinceLastFire = 0f;
+			if(ex){
+				timeSinceLastFire = fireDelay / 2;
+			}else{
+				timeSinceLastFire = 0f;
+			}
 		}
 	}
 	
