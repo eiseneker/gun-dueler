@@ -24,8 +24,12 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	
 	public void ReceiveHit(float damage, GameObject attackerObject) {
 		formation.GetComponent<Formation>().MinionDestroyed();
-		IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
-		attacker.RegisterSuccessfulAttack(10);
+		if(attackerObject){
+			IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
+			if(attacker != null){
+				attacker.RegisterSuccessfulAttack(10);
+			}
+		}
 		Destroy(transform.parent.gameObject);
 	}
 	

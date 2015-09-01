@@ -22,7 +22,7 @@ public class Fleet : MonoBehaviour {
 		
 		AddMinionsObject ();
 		AddFlagShip();
-		AddMinionFormation ();
+		AddMinionFormation (0);
 	}
 	
 	void OnDrawGizmos () {
@@ -46,8 +46,8 @@ public class Fleet : MonoBehaviour {
 		flagShip.GetComponent<Player>().SetPlayerNumber(playerNumber);
 	}
 	
-	void AddMinionFormation(){
-		GameObject minionFormation  = Instantiate(minionFormations[0], transform.Find ("Formation Position").position, Quaternion.identity) as GameObject;
+	public void AddMinionFormation(int index){
+		GameObject minionFormation  = Instantiate(minionFormations[index], transform.Find ("Formation Position").position, Quaternion.identity) as GameObject;
 		minionFormation.transform.parent = minions.transform;
 		minionFormation.GetComponent<Entity>().affinity = affinity;
 		minionFormation.GetComponent<Entity>().reversePosition = reversePosition;
