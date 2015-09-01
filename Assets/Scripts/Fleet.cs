@@ -4,6 +4,7 @@ using System.Collections;
 public class Fleet : MonoBehaviour {
 
 	public GameObject flagShipPrefab;
+	public GameObject corePrefab;
 	public GameObject[] minionFormations;
 	public Color teamColor;
 	public float width;
@@ -14,6 +15,7 @@ public class Fleet : MonoBehaviour {
 	private bool reversePosition;
 	private GameObject minions;
 	private GameObject flagShip;
+	private GameObject core;
 
 	void Start () {
 		affinity = gameObject;
@@ -22,6 +24,7 @@ public class Fleet : MonoBehaviour {
 		
 		AddMinionsObject ();
 		AddFlagShip();
+		AddCore();
 		AddMinionFormation (0);
 	}
 	
@@ -44,6 +47,12 @@ public class Fleet : MonoBehaviour {
 		flagShip.GetComponent<Entity>().affinity = gameObject;
 		flagShip.GetComponent<Entity>().reversePosition = GetComponent<Entity>().reversePosition;
 		flagShip.GetComponent<Player>().SetPlayerNumber(playerNumber);
+	}
+	
+	void AddCore(){
+		core = Instantiate (corePrefab, transform.Find ("Core Position").position, Quaternion.identity) as GameObject;
+		core.transform.parent = transform;
+		core.GetComponent<Entity>().affinity = gameObject;
 	}
 	
 	public void AddMinionFormation(int index){

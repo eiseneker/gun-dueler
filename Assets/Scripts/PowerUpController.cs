@@ -24,6 +24,7 @@ public class PowerUpController : MonoBehaviour {
 		GameObject powerUp = Instantiate (powerUpPrefab, transform.position, Quaternion.identity) as GameObject;
 		int level = spawnLevelProbabilities[Random.Range (0, spawnLevelProbabilities.Length)];
 		powerUp.GetComponent<PowerUp>().level = level;
+		powerUp.transform.parent = transform;
 		IncrementPowerUps();
 	}
 	

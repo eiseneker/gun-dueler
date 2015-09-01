@@ -15,6 +15,7 @@ public class BulletProjectile : Projectile {
 		bodySprite = body.GetComponent<SpriteRenderer>();
 		bodySprite.color = GetTeamColor();
 		transform.parent = owner.transform.root.Find ("Bullets");
+		print (affinity);
 	}
 	
 	void Update () {
