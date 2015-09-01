@@ -16,6 +16,9 @@ public class Fleet : MonoBehaviour {
 	private GameObject minions;
 	private GameObject flagShip;
 	private GameObject core;
+	
+	private float maxPlayerRespawnTime = 5;
+	private float currentPlayerRespawnTime;
 
 	void Start () {
 		affinity = gameObject;
@@ -26,6 +29,16 @@ public class Fleet : MonoBehaviour {
 		AddFlagShip();
 		AddCore();
 		AddMinionFormation (0);
+	}
+	
+	void Update() {
+		if(flagShip == null){
+			if(currentPlayerRespawnTime >= maxPlayerRespawnTime){
+				AddFlagShip ();
+			}else{
+				currentPlayerRespawnTime += Time.deltaTime;
+			}
+		}
 	}
 	
 	void OnDrawGizmos () {
@@ -47,6 +60,8 @@ public class Fleet : MonoBehaviour {
 		flagShip.GetComponent<Entity>().affinity = gameObject;
 		flagShip.GetComponent<Entity>().reversePosition = GetComponent<Entity>().reversePosition;
 		flagShip.GetComponent<Player>().SetPlayerNumber(playerNumber);
+		currentPlayerRespawnTime = 0;
+		
 	}
 	
 	void AddCore(){
