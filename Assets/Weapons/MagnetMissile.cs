@@ -16,13 +16,10 @@ public class MagnetMissile : Weapon {
 		if(CanFire ()){
 			bool ex = exAttempt && player.SpendEx(25);
 			MagnetProjectile magnet;
-			if(ex){
-				speed = defaultSpeed * 1.2f;
-			}else{
-				speed = defaultSpeed;
-			}
+			speed = defaultSpeed;
 		
 			if(ex){
+				speed *= 1.2f;
 				magnet = newProjectile();
 				magnet.speed = speed;
 				magnet.weapon = this;

@@ -21,18 +21,18 @@ public class Vulcan : Weapon {
 		if(CanFire ()){
 			bool ex = exAttempt && player.SpendEx(1);
 			
-			BulletProjectile bullet = newProjectile();
+			speed = defaultSpeed;
+			fireDelay = defaultFireDelay;
+			maxBulletsInPlay = defaultMaxBulletsInPlay;
 			
 			if(ex){
-				maxBulletsInPlay = defaultMaxBulletsInPlay * 2;
-				fireDelay = defaultFireDelay / 1.5f;
-				speed = defaultSpeed * 1.5f;
-			}else{
-				speed = defaultSpeed;
-				fireDelay = defaultFireDelay;
-				maxBulletsInPlay = defaultMaxBulletsInPlay;
+				maxBulletsInPlay *= 2;
+				fireDelay /= 1.5f;
+				speed *= 1.5f;
 			}
 			
+			BulletProjectile bullet = newProjectile();
+		
 			bullet.speed = speed;
 			bullet.weapon = this;
 			bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;

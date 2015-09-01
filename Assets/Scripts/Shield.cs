@@ -20,7 +20,6 @@ public class Shield : MonoBehaviour {
 
 	void Update() {
 		if(shieldIsUp){
-			print ("ex: " + ex);
 			if(!ex && currentShieldHealth > 0){
 				currentShieldHealth = Mathf.Clamp (currentShieldHealth - shieldHealthPerInterval, 0, maxShieldHealth);
 			}

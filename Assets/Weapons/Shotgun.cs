@@ -23,11 +23,8 @@ public class Shotgun : Weapon {
 	public void Fire (bool exAttempt) {
 		if(CanFire ()){
 			bool ex = exAttempt && player.SpendEx(25);
-			if(ex){
-				speed = defaultSpeed * 1.5f;
-			}else{
-				speed = defaultSpeed;
-			}
+			speed = defaultSpeed;
+			if(ex) speed *= 1.5f;
 		
 			foreach(Vector3 vector in bulletVectors){
 				BulletProjectile bullet = newProjectile();
@@ -38,11 +35,7 @@ public class Shotgun : Weapon {
 				OrientProjectile(bullet);
 			}
 			
-			if(ex){
-				timeSinceLastFire = fireDelay / 2;
-			}else{
-				timeSinceLastFire = 0f;
-			}
+			timeSinceLastFire = ex ? fireDelay / 2 : 0;
 		}
 	}
 	
