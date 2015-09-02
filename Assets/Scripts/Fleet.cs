@@ -10,11 +10,12 @@ public class Fleet : MonoBehaviour {
 	public float width;
 	public float height;
 	public int playerNumber;
+	public GameObject flagShip;
 	
 	private GameObject affinity;
 	private bool reversePosition;
 	private GameObject minions;
-	private GameObject flagShip;
+	
 	private GameObject core;
 	
 	private float maxPlayerRespawnTime = 5;

@@ -45,7 +45,7 @@ public class Formation : MonoBehaviour {
 		if(freePosition){
 			GameObject minionParent = Object.Instantiate(minionParentPrefab, freePosition.position, Quaternion.Inverse (transform.rotation)) as GameObject;
 			minionParent.transform.parent = freePosition;
-			GameObject minion = minionParent.transform.Find ("Minion").gameObject;
+			GameObject minion = minionParent.transform.Find ("Ship").gameObject;
 			minion.GetComponent<Entity>().affinity = affinity;
 			minion.GetComponent<Entity>().reversePosition = GetComponent<Entity>().reversePosition;
 			minion.GetComponent<Minion>().formation = gameObject;

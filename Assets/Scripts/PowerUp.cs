@@ -13,7 +13,6 @@ public class PowerUp : MonoBehaviour {
 	private Color[] colors = { Color.yellow, Color.red };
 	
 	void Start(){
-		print (level);
 		maxRotationTimer = Random.Range (1f, 5f);
 		transform.Find("Body").GetComponent<SpriteRenderer>().color = colors[level - 1];
 	}

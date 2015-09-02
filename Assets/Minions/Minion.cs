@@ -12,13 +12,16 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	private GameObject body;
 	private float yVector = 1;
 	
+	protected float timeSinceStart = 0;
+	
 	void Start() {
 		body = transform.Find ("Body").gameObject;
 		body.GetComponent<ParticleSystem>().startColor = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
 	}
 	
-	void Update () {
+	public virtual void Update () {
 		timeSinceLastFire += Time.deltaTime;
+		timeSinceStart += Time.deltaTime;
 		Fire ();
 	}
 	
@@ -33,21 +36,26 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 		Destroy(transform.parent.gameObject);
 	}
 	
+	public void RegisterSuccessfulAttack(float value){
+		//chuckle
+	}
+	
+	protected void FaceObject(GameObject inputObject){
+		Vector3 distance = inputObject.transform.position - transform.position;
+		distance.Normalize();
+		
+		float zRotation = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg;
+		transform.rotation = Quaternion.Euler(0f, 0f, zRotation - 90);
+	}
+	
 	private void Fire () {
 		if(timeSinceLastFire >= fireDelay){
-			GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity) as GameObject;
+			GameObject bulletObject = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
 			BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
 			bullet.speed = bulletSpeed;
 			bullet.owner = gameObject;
-			if(GetComponent<Entity>().reversePosition) {
-				yVector = -1;
-			}
-			bullet.vector = Vector3.up * yVector;
+			bullet.vector = Vector3.up;
 			timeSinceLastFire = 0f;
 		}
-	}
-	
-	public void RegisterSuccessfulAttack(float value){
-		//chuckle
 	}
 }

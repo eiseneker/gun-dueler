@@ -6,6 +6,8 @@ public class Entity : MonoBehaviour {
 	public GameObject affinity;
 	public bool reversePosition;
 	
+	private GameObject enemyPlayer;
+	
 	void Start(){
 		SetRotation ();
 	}
@@ -17,5 +19,27 @@ public class Entity : MonoBehaviour {
 				gameObject.transform.eulerAngles.y,
 				gameObject.transform.eulerAngles.z + 180);
 		}
+	}
+	
+	public GameObject EnemyPlayer(){
+		GameObject player = enemyPlayer;
+		if(player == null && GetComponent<Fleet>() == null){
+			player = affinity.GetComponent<Entity>().EnemyPlayer() ;
+		}
+		if(player == null){
+			player = FindEnemyPlayer();
+		}
+		enemyPlayer = player;
+		return(player);
+	}
+	
+	private GameObject FindEnemyPlayer(){
+		print ("finding!!!!");
+		foreach(GameObject player in Player.players){
+			if(player != affinity.GetComponent<Fleet>().flagShip) {
+				return(player);
+			}
+		}
+		return(null);
 	}
 }

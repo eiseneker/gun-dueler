@@ -28,6 +28,7 @@ public class CoreSentry : MonoBehaviour {
 			bullet.owner = gameObject;
 			
 			Vector3 direction = target.transform.position - transform.position;
+			direction.Normalize();
 			bullet.vector = direction;
 		}
 	}
