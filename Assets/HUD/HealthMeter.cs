@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ExMeter : MonoBehaviour {
+public class HealthMeter : MonoBehaviour {
 	public int playerNumber;
 	
 	private Player player;
 	private float meterRatio;
 	private Transform filler;
-	private Transform exText;
-	private Transform superText;
+	private Transform healthText;
+	private Transform criticalText;
 
 	void Start () {
 		filler = transform.Find ("Filler");
-		exText = transform.Find ("Ex Text");
-		superText = transform.Find ("Super Text");
+		healthText = transform.Find ("Health Text");
+		criticalText = transform.Find ("Critical Text");
 	}
 	
 	void Update () {
@@ -21,15 +21,15 @@ public class ExMeter : MonoBehaviour {
 			player = GetPlayer();
 			meterRatio = 1;
 		}else{
-			meterRatio = player.CurrentExRatio();
-			exText.gameObject.SetActive(meterRatio < 1);
-			superText.gameObject.SetActive(meterRatio >= 1);
+			meterRatio = player.CurrentHealthRatio();
+			healthText.gameObject.SetActive(!player.IsCritical());
+			criticalText.gameObject.SetActive(player.IsCritical());
 		}
 		filler.localScale = new Vector3(meterRatio, 1, 1);
 	}
 	
 	private Player GetPlayer() {
-		GameObject playerObject = GameObject.Find ("Player "+playerNumber+" Fleet/FlagShip(Clone)");
+		GameObject playerObject = GameObject.Find ("Player "+playerNumber+" Fleet/Player(Clone)");
 		if(playerObject){
 			return(playerObject.GetComponent<Player>());
 		}else{

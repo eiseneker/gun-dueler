@@ -31,7 +31,7 @@ public class ShieldMeter : MonoBehaviour {
 	}
 	
 	private Shield GetShield() {
-		GameObject shieldObject = GameObject.Find ("Player "+playerNumber+" Fleet/FlagShip(Clone)/Shield(Clone)");
+		GameObject shieldObject = GameObject.Find ("Player "+playerNumber+" Fleet/Player(Clone)/Shield(Clone)");
 		if(shieldObject){
 			return(shieldObject.GetComponent<Shield>());
 		}else{

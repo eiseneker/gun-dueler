@@ -3,14 +3,14 @@ using System.Collections;
 
 public class Fleet : MonoBehaviour {
 
-	public GameObject flagShipPrefab;
+	public GameObject playerPrefab;
 	public GameObject corePrefab;
 	public GameObject[] minionFormations;
 	public Color teamColor;
 	public float width;
 	public float height;
 	public int playerNumber;
-	public GameObject flagShip;
+	public GameObject player;
 	
 	private GameObject affinity;
 	private bool reversePosition;
@@ -27,15 +27,15 @@ public class Fleet : MonoBehaviour {
 		GetComponent<Entity>().affinity = gameObject;
 		
 		AddMinionsObject ();
-		AddFlagShip();
+		AddPlayer();
 		AddCore();
 		AddMinionFormation (0);
 	}
 	
 	void Update() {
-		if(flagShip == null){
+		if(player == null){
 			if(currentPlayerRespawnTime >= maxPlayerRespawnTime){
-				AddFlagShip ();
+				AddPlayer ();
 			}else{
 				currentPlayerRespawnTime += Time.deltaTime;
 			}
@@ -55,12 +55,12 @@ public class Fleet : MonoBehaviour {
 		minions.transform.parent = transform;
 	}
 	
-	void AddFlagShip(){
-		flagShip = Instantiate (flagShipPrefab, transform.Find ("Player Position").position, Quaternion.identity) as GameObject;
-		flagShip.transform.parent = transform;
-		flagShip.GetComponent<Entity>().affinity = gameObject;
-		flagShip.GetComponent<Entity>().reversePosition = GetComponent<Entity>().reversePosition;
-		flagShip.GetComponent<Player>().SetPlayerNumber(playerNumber);
+	void AddPlayer(){
+		player = Instantiate (playerPrefab, transform.Find ("Player Position").position, Quaternion.identity) as GameObject;
+		player.transform.parent = transform;
+		player.GetComponent<Entity>().affinity = gameObject;
+		player.GetComponent<Entity>().reversePosition = GetComponent<Entity>().reversePosition;
+		player.GetComponent<Player>().SetPlayerNumber(playerNumber);
 		currentPlayerRespawnTime = 0;
 		
 	}
