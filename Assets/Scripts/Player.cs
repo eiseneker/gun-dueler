@@ -41,7 +41,12 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 		magnetMissile.player = this;
 		reversePosition = GetComponent<Entity>().reversePosition;
 		body = transform.Find ("Body").gameObject;
-		body.GetComponent<ParticleSystem>().startColor = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
+		foreach(Transform child in body.transform){
+			Exhaust exhaust = child.GetComponent<Exhaust>();
+			if(exhaust){
+				exhaust.SetColor(GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor);
+			}
+		}
 		shieldObject = Instantiate (shieldPrefab, transform.position, Quaternion.identity) as GameObject;
 		shieldObject.transform.parent = gameObject.transform;
 		shield = shieldObject.GetComponent<Shield>();

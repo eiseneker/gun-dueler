@@ -16,7 +16,12 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	
 	void Start() {
 		body = transform.Find ("Body").gameObject;
-		body.GetComponent<ParticleSystem>().startColor = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
+		foreach(Transform child in body.transform){
+			Exhaust exhaust = child.GetComponent<Exhaust>();
+			if(exhaust){
+				exhaust.SetColor(GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor);
+			}
+		}
 	}
 	
 	public virtual void Update () {

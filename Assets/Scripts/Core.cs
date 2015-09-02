@@ -9,6 +9,8 @@ public class Core : MonoBehaviour, IHarmable {
 	void Start () {
 		currentHealth = maxHealth;
 		transform.Find ("Sentry").GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
+		Transform body = transform.Find ("Body");
+		body.GetComponent<SpriteRenderer>().color = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
 	}
 	
 	public void ReceiveHit(float damage, GameObject attackerObject) {
