@@ -8,6 +8,7 @@ public class Vulcan : Weapon {
 	
 	private GameObject bulletPrefab;
 	private float speed;
+	private AudioClip soundClip;
 	
 	
 	public Vulcan(){
@@ -15,10 +16,13 @@ public class Vulcan : Weapon {
 		fireDelay = defaultFireDelay;
 		speed = defaultSpeed;
 		bulletPrefab = Resources.Load ("bullet") as GameObject;
+		soundClip = Resources.Load<AudioClip>("Vulcan");
+		print (soundClip);
 	}
  
 	public void Fire (bool exAttempt) {
 		if(CanFire ()){
+			AudioSource.PlayClipAtPoint(soundClip, transform.position);
 			bool ex = exAttempt && player.SpendEx(1);
 			
 			speed = defaultSpeed;
