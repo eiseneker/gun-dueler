@@ -8,7 +8,6 @@ public class Core : MonoBehaviour, IHarmable {
 	public int enemyPlayerNumber = 0;
 
 	void Start () {
-		print ("core started...");
 		currentHealth = maxHealth;
 		transform.Find ("Sentry").GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 		Transform body = transform.Find ("Body");
@@ -37,7 +36,6 @@ public class Core : MonoBehaviour, IHarmable {
 	}
 	
 	private void FetchEnemyPlayer(){
-		print ("fetching...");
 		GameObject enemyPlayer = GetComponent<Entity>().EnemyPlayer();
 		if(enemyPlayer){
 			enemyPlayerNumber = enemyPlayer.GetComponent<Entity>().affinity.GetComponent<Fleet>().playerNumber;
