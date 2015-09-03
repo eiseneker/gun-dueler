@@ -13,7 +13,6 @@ public class Exhaust : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		sprite = transform.Find ("Body").GetComponent<SpriteRenderer>();
-		print ("Start " + transform.parent);
 	}
 	
 	// Update is called once per frame

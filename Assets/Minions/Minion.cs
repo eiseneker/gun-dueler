@@ -10,7 +10,6 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	
 	private float timeSinceLastFire;
 	private GameObject body;
-	private float yVector = 1;
 	
 	protected float timeSinceStart = 0;
 	

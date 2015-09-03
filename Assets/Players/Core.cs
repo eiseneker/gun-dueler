@@ -17,7 +17,6 @@ public class Core : MonoBehaviour, IHarmable {
 		currentHealth -= damage;
 		IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
 		attacker.RegisterSuccessfulAttack(5);
-		print (currentHealth);
 		if(currentHealth <= 0){
 			Destroy (gameObject);
 		}
