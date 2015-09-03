@@ -71,10 +71,11 @@ public class Fleet : MonoBehaviour {
 		core.GetComponent<Entity>().affinity = gameObject;
 	}
 	
-	public void AddMinionFormation(int index){
+	public GameObject AddMinionFormation(int index){
 		GameObject minionFormation  = Instantiate(minionFormations[index], transform.Find ("Formation Position").position, Quaternion.identity) as GameObject;
 		minionFormation.transform.parent = minions.transform;
 		minionFormation.GetComponent<Entity>().affinity = affinity;
 		minionFormation.GetComponent<Entity>().reversePosition = reversePosition;
+		return(minionFormation);
 	}
 }

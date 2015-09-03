@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MagnetProjectile : Projectile {
+public class MagnetProjectile : Projectile, IShreddable {
 	public float speed;
 	public Vector3 vector;
 	public bool defaultOrientation = true;

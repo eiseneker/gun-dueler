@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BulletProjectile : Projectile {
+public class BulletProjectile : Projectile, IShreddable {
 	public float speed;
 	public Vector3 vector;
 	

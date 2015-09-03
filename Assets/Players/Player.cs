@@ -116,9 +116,11 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 		}else{
 			playerHitState.RegisterHit();
 			currentHealth -= damage;
-			IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
-			if(attacker != null){
-				attacker.RegisterSuccessfulAttack(25);
+			if(attackerObject){
+				IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
+				if(attacker != null){
+					attacker.RegisterSuccessfulAttack(25);
+				}
 			}
 		}
 		

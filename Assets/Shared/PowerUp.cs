@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class PowerUp : MonoBehaviour {
+public class PowerUp : MonoBehaviour, IShreddable {
 
 	public int level;
+	public GameObject powerUpPositionObject;
 
 	private float speed = 0.5f;
 	private float rotationsPerSecond = 30f;
@@ -12,9 +14,20 @@ public class PowerUp : MonoBehaviour {
 	private float rotationFactor;
 	private Color[] colors = { Color.yellow, Color.red };
 	
+	public void SetPowerUpPosition(GameObject inputPosition){
+		powerUpPositionObject = inputPosition;
+	}
+	
+	public void DestroyMe(){
+		PowerUpController.DecrementPowerUps();
+		Destroy (gameObject);
+	}
+	
 	void Start(){
 		maxRotationTimer = Random.Range (1f, 5f);
 		transform.Find("Body").GetComponent<SpriteRenderer>().color = colors[level - 1];
+		List<PowerUpPosition> openPositions = PowerUpController.openPowerUpPositions;
+		powerUpPositionObject = PowerUpController.openPowerUpPositions[Random.Range (0, openPositions.Count)].gameObject;
 	}
 
 	void Update(){
@@ -28,7 +41,6 @@ public class PowerUp : MonoBehaviour {
 		}
 	
 		float probability = rotationsPerSecond * Time.deltaTime;
-		
 		if(Random.value < probability){
 			transform.Rotate(0, 0, rotationFactor);
 		}
@@ -38,14 +50,16 @@ public class PowerUp : MonoBehaviour {
 
 	void OnTriggerEnter2D (Collider2D collision) {
 		Player player = collision.gameObject.GetComponent<Player>();
-		
+		PowerUpPosition powerUpPosition = powerUpPositionObject.GetComponent<PowerUpPosition>();
 		if(player){
-			Fleet fleet = player.GetComponent<Entity>().affinity.GetComponent<Fleet>();
-			fleet.AddMinionFormation(level);
-			Destroy (gameObject);
-			PowerUpController.DecrementPowerUps();
+		 	if(!powerUpPosition.IsTaken ()){
+				Fleet fleet = player.GetComponent<Entity>().affinity.GetComponent<Fleet>();
+				GameObject minionFormation = fleet.AddMinionFormation(level);
+				minionFormation.transform.position = powerUpPosition.transform.position;
+				powerUpPosition.TakePosition();
+			}
+			DestroyMe ();
 		}
-		
 	}
 	
 	
