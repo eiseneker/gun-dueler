@@ -11,7 +11,7 @@ public class PowerUpController : MonoBehaviour {
 	private int[] spawnLevelProbabilities = { 1, 2, 2, 2 };
 	
 	void Update () {
-		if(LevelController.gameStarted && activePowerUpCount < 1){
+		if(GameController.gameStarted && activePowerUpCount < 1){
 			float probability = spawnsPerSecond * Time.deltaTime;
 			
 			if(Random.value < probability){

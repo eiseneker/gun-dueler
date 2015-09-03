@@ -17,7 +17,6 @@ public class Vulcan : Weapon {
 		speed = defaultSpeed;
 		bulletPrefab = Resources.Load ("bullet") as GameObject;
 		soundClip = Resources.Load<AudioClip>("Vulcan");
-		print (soundClip);
 	}
  
 	public void Fire (bool exAttempt) {

@@ -34,7 +34,7 @@ public class Entity : MonoBehaviour {
 	}
 	
 	private GameObject FindEnemyPlayer(){
-		print ("finding!!!!");
+		print (Player.players.Count);
 		foreach(GameObject player in Player.players){
 			if(player != affinity.GetComponent<Fleet>().player) {
 				return(player);
