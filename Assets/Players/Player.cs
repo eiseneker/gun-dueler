@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Player : MonoBehaviour, IHarmable, IAttacker {
-	public float defaultSpeed;
 	public GameObject shieldPrefab;
 	public float maxHealth;
 	public bool reversePosition;
@@ -25,6 +24,7 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 	private bool exMode = false;
 	private float speed;
 	private float currentExValue = 100;
+	private float defaultSpeed = 5.1f;
 	
 	void Start(){
 		speed = defaultSpeed;
@@ -79,11 +79,11 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 				speed = defaultSpeed;
 			}
 			
-			if((transform.position.x > -4.3 && xMovement * moveFactor < 0) || (transform.position.x < 4.3 && xMovement * moveFactor > 0)){
+			if((transform.position.x > -5 && xMovement * moveFactor < 0) || (transform.position.x < 5 && xMovement * moveFactor > 0)){
 				transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
 			}
 			
-			if((transform.position.y > -4.90 && yMovement * moveFactor > 0) || (transform.position.y < 4.9 && yMovement * moveFactor < 0)){
+			if((transform.position.y > -6.25f && yMovement * moveFactor > 0) || (transform.position.y < 6.25f && yMovement * moveFactor < 0)){
 				transform.Translate(Vector3.down * yMovement * Time.deltaTime * speed);
 			}
 			
