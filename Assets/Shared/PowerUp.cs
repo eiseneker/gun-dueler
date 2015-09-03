@@ -7,7 +7,7 @@ public class PowerUp : MonoBehaviour, IShreddable {
 	public int level;
 	public GameObject powerUpPositionObject;
 
-	private float speed = 0.5f;
+	private float speed = 1.2f;
 	private float rotationsPerSecond = 30f;
 	private float maxRotationTimer;
 	private float currentRotationTimer;
@@ -34,7 +34,7 @@ public class PowerUp : MonoBehaviour, IShreddable {
 		transform.Translate (Vector3.up * Time.deltaTime * speed);
 		if(currentRotationTimer <= 0){
 			rotationFactor = Random.Range (-4f, 4f);
-			maxRotationTimer = Random.Range (1f, 5f);
+			maxRotationTimer = Random.Range (1f, 10f);
 			currentRotationTimer = maxRotationTimer;
 		}else{
 			currentRotationTimer -= Time.deltaTime;

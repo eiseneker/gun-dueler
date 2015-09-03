@@ -7,10 +7,9 @@ public class PowerUpController : MonoBehaviour {
 	
 	public GameObject powerUpPrefab;
 	
-	private float spawnsPerSecond = 1f;
-	
+	private float spawnsPerSecond = 0.1f;
 	private int[] spawnLevelProbabilities = { 1, 2, 2, 2 };
-	
+	private float[] rotations = { 1, 0 };
 	public static List<PowerUpPosition> openPowerUpPositions = new List<PowerUpPosition>();
 	
 	void Start(){
@@ -35,8 +34,9 @@ public class PowerUpController : MonoBehaviour {
 	}
 	
 	void SpawnPowerUp(){
-		print ("spawning a power up...");
-		GameObject powerUp = Instantiate (powerUpPrefab, transform.position, Quaternion.identity) as GameObject;
+		Quaternion rotation = new Quaternion();
+		rotation.z = rotations[Random.Range (0, rotations.Length)];
+		GameObject powerUp = Instantiate (powerUpPrefab, transform.position, rotation) as GameObject;
 		int level = spawnLevelProbabilities[Random.Range (0, spawnLevelProbabilities.Length)];
 		powerUp.GetComponent<PowerUp>().level = level;
 		powerUp.transform.parent = transform;
