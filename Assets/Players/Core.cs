@@ -3,20 +3,36 @@ using System.Collections;
 
 public class Core : MonoBehaviour, IHarmable {
 
-	private float currentHealth;
-	private float maxHealth = 5;
 	public int enemyPlayerNumber = 0;
 
+	private float currentHealth;
+	private float maxHealth = 5;
+	private Color teamColor;
+	private Transform body;
+	private SpriteRenderer bodySprite;
+	private float maxDamageAnimationTimer = 0.1f;
+	private float currentDamageAnimationTimer;
+	private Color whiteColor = new Color(1, 1, 1);
+	
+
 	void Start () {
+		currentDamageAnimationTimer = maxDamageAnimationTimer;
 		currentHealth = maxHealth;
 		transform.Find ("Sentry").GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
-		Transform body = transform.Find ("Body");
-		body.GetComponent<SpriteRenderer>().color = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
+		body = transform.Find ("Body");
+		bodySprite = body.GetComponent<SpriteRenderer>();
+		teamColor = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
 	}
 	
 	void Update(){
+		currentDamageAnimationTimer += Time.deltaTime;
 		if(enemyPlayerNumber == 0){
 			FetchEnemyPlayer();
+		}
+		if(currentDamageAnimationTimer < maxDamageAnimationTimer){
+			bodySprite.color = whiteColor;
+		}else{
+			bodySprite.color = teamColor;
 		}
 	}
 	
@@ -24,6 +40,7 @@ public class Core : MonoBehaviour, IHarmable {
 		currentHealth -= damage;
 		IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
 		attacker.RegisterSuccessfulAttack(5);
+		currentDamageAnimationTimer = 0;
 		if(currentHealth <= 0){
 			DestroyMe ();
 		}
