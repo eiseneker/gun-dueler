@@ -22,6 +22,7 @@ public class Formation : MonoBehaviour {
 	}
 	
 	void Update () {
+		print (minionCount);
 		currentSpawnSetDelay += Time.deltaTime;
 		if(CanRespawn ()){
 			respawnsRemaining -= 1;
@@ -53,6 +54,7 @@ public class Formation : MonoBehaviour {
 	public void MinionDestroyed() {
 		minionCount -= 1;
 		if(minionCount <= 0 && respawnsRemaining <= 0){
+			print ("goooo bye-bye!");
 			Destroy (gameObject);
 		}else if(currentSpawnSetDelay >= maxFormationSpawnDelay){
 			currentSpawnSetDelay = 0f;
@@ -75,6 +77,7 @@ public class Formation : MonoBehaviour {
 		minion.GetComponent<Entity>().affinity = affinity;
 		minion.GetComponent<Entity>().reversePosition = GetComponent<Entity>().reversePosition;
 		minion.GetComponent<Minion>().formation = gameObject;
+		print ("incrementing minion count!");
 		minionCount += 1;
 	}
 	

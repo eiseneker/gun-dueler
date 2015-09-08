@@ -24,7 +24,7 @@ public class CoreSentry : MonoBehaviour {
 			GameObject bulletPrefab = Resources.Load ("Bullet") as GameObject;
 			GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity) as GameObject;
 			BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
-			bullet.speed = 2f;
+			bullet.speed = 3f;
 			bullet.owner = gameObject;
 			
 			Vector3 direction = target.transform.position - transform.position;

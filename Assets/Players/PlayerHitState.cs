@@ -34,8 +34,6 @@ public class PlayerHitState : MonoBehaviour {
 		isHit = true;
 		if(currentHitState == HitState.Normal) {
 			SwitchToInvincible();
-		}else if(IsCritical ()){
-			player.GetComponent<Player>().DestroyMe();
 		}
 	}
 	

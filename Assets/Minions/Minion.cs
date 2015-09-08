@@ -56,7 +56,6 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	
 	public void ReceiveHit(float damage, GameObject attackerObject) {
 		IAttacker attacker;
-		formation.GetComponent<Formation>().MinionDestroyed();
 		if(attackerObject){
 			attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
 			if(attacker != null){
@@ -73,6 +72,8 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 			if(attacker != null){
 				attacker.RegisterSuccessfulDestroy(5);
 			}
+			formation.GetComponent<Formation>().MinionDestroyed();
+			
 			Destroy(transform.parent.gameObject);
 			GameObject explosion = Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity) as GameObject;
 			explosion.transform.localScale -= new Vector3(0.5f, 0.5f, 0);

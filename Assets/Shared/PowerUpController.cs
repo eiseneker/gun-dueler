@@ -7,7 +7,7 @@ public class PowerUpController : MonoBehaviour {
 	
 	public GameObject powerUpPrefab;
 	
-	private float spawnsPerSecond = 0.1f;
+	private float spawnsPerSecond = 0.5f;
 	private int[] spawnLevelProbabilities = { 1, 2, 2, 2 };
 	private float[] rotations = { 1, 0 };
 	public static List<PowerUpPosition> openPowerUpPositions = new List<PowerUpPosition>();

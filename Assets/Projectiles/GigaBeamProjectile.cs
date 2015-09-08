@@ -37,4 +37,8 @@ public class GigaBeamProjectile : Projectile {
 	void OnTriggerStay2D (Collider2D collision) {
 		DetermineHit(collision, false);
 	}
+	
+	protected override float DamageValue(){
+		return(.25f);
+	}
 }

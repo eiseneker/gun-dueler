@@ -23,7 +23,7 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 	private int playerNumber;
 	private bool exMode = false;
 	private float speed;
-	private float currentExValue = 0;
+	private float currentExValue = 100;
 	private float defaultSpeed = 5.1f;
 	
 	void Start(){
@@ -111,6 +111,7 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 	public void ReceiveHit(float damage, GameObject attackerObject) {
 		if(shield.IsShieldUp()){
 			shield.DamageShield(20);
+			currentExValue += 4;
 		}else{
 			playerHitState.RegisterHit();
 			currentHealth -= damage;
@@ -121,7 +122,8 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 				}
 			}
 			
-			if(currentHealth <= 0){
+			if(currentHealth <= 0 || playerHitState.IsCritical ()){
+				DestroyMe();
 				if(attackerObject){
 					IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
 					if(attacker != null){
