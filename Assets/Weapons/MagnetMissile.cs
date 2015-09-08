@@ -27,6 +27,12 @@ public class MagnetMissile : Weapon {
 				magnet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 				OrientProjectile(magnet);
 				magnet.RotateMe(-90);
+				if(player.FacingUp() && player.transform.position.x > player.GetComponent<Entity>().EnemyPlayer().transform.position.x){
+					magnet.RotateMe(180);
+				}
+				if(player.FacingDown() && player.transform.position.x < player.GetComponent<Entity>().EnemyPlayer().transform.position.x){
+					magnet.RotateMe(180);
+				}
 				magnet.defaultOrientation = false;
 			}
 			

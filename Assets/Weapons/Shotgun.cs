@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Shotgun : Weapon {
-	private float defaultSpeed = 8;
+	private float defaultSpeed = 7;
 	private float speed;
 	
 	private GameObject bulletPrefab;
@@ -16,7 +16,7 @@ public class Shotgun : Weapon {
 	};
 	
 	public Shotgun() {
-		fireDelay = 3f;
+		fireDelay = 2f;
 		bulletPrefab = Resources.Load ("bullet") as GameObject;
 	}
 	

@@ -176,6 +176,22 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 		}
 	}
 	
+	public bool FacingRight(){
+		return(transform.eulerAngles.z > 225 && transform.eulerAngles.z < 315);
+	}
+	
+	public bool FacingDown(){
+		return(transform.eulerAngles.z > 135 && transform.eulerAngles.z < 225);
+	}
+	
+	public bool FacingLeft(){
+		return(transform.eulerAngles.z > 45 && transform.eulerAngles.z < 135);
+	}
+	
+	public bool FacingUp(){
+		return(transform.eulerAngles.z == 0 || transform.eulerAngles.z > 315 && transform.eulerAngles.z < 45);
+	}
+	
 	public void DestroyMe(){
 		Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity);
 		players.Remove (gameObject);
