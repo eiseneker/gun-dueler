@@ -12,7 +12,7 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	private float timeSinceLastFire;
 	private GameObject body;
 	private SpriteRenderer bodySprite;
-	private float maxHealth = 5;
+	private float maxHealth = 3;
 	private float currentHealth;
 	private float maxDamageAnimationTimer = 0.1f;
 	private float currentDamageAnimationTimer;
