@@ -4,7 +4,7 @@ using System.Collections;
 public class Vulcan : Weapon {
 	private float defaultSpeed = 7;
 	private float defaultFireDelay = 0.10f;
-	private int defaultMaxBulletsInPlay = 3;
+	private int defaultMaxBulletsInPlay = 4;
 	
 	private GameObject bulletPrefab;
 	private float speed;
@@ -31,6 +31,12 @@ public class Vulcan : Weapon {
 			if(ex){
 				maxBulletsInPlay *= 2;
 				fireDelay /= 1.5f;
+				speed *= 1.5f;
+			}
+			print (player.FacingUp ());
+			print (player.yMovement);
+			if(player.yMovement < 0){
+				print ("increased speed");
 				speed *= 1.5f;
 			}
 			

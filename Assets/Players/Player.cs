@@ -7,6 +7,8 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 	public float maxHealth;
 	public bool reversePosition;
 	public float maxExValue = 100;
+	public float yMovement;
+	public float xMovement;
 	
 	public static List<GameObject> players = new List<GameObject>();
 	
@@ -57,8 +59,8 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 		
 	void Update () {
 		if(!IsInputLocked){
-			float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
-			float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
+			xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
+			yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
 			float moveFactor = 1;
 			
 			if(reversePosition) {

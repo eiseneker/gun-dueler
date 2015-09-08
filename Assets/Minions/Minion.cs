@@ -18,7 +18,7 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	private float currentDamageAnimationTimer;
 	private Color normalColor;
 	private Color whiteColor = new Color(1, 0, 0);
-	private float firesPerSecond = 1f;
+	private float firesPerSecond = .5f;
 	
 	protected float timeSinceStart = 0;
 	
