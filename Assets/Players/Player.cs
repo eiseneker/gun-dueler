@@ -176,6 +176,7 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 	
 	public void DestroyMe(){
 		Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity);
+		players.Remove (gameObject);
 		Destroy (gameObject);
 	}
 	
