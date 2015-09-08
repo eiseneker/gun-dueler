@@ -23,7 +23,6 @@ public class PowerUpController : MonoBehaviour {
 	}
 	
 	void Update () {
-		print (activePowerUpCount);
 		if(GameController.gameStarted && activePowerUpCount < 1){
 			float probability = spawnsPerSecond * Time.deltaTime;
 			

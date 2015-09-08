@@ -18,6 +18,7 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	private float currentDamageAnimationTimer;
 	private Color normalColor;
 	private Color whiteColor = new Color(1, 0, 0);
+	private float firesPerSecond = 1f;
 	
 	protected float timeSinceStart = 0;
 	
@@ -45,7 +46,12 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 		}else{
 			bodySprite.color = normalColor;
 		}
-		Fire ();
+		
+		float probability = firesPerSecond * Time.deltaTime;
+		
+		if(Random.value < probability){
+			Fire ();
+		}
 	}
 	
 	public void ReceiveHit(float damage, GameObject attackerObject) {
