@@ -6,7 +6,7 @@ public class Core : MonoBehaviour, IHarmable {
 	public int enemyPlayerNumber = 0;
 
 	private float currentHealth;
-	private float maxHealth = 5;
+	private float maxHealth = 100;
 	private Color teamColor;
 	private Transform body;
 	private SpriteRenderer bodySprite;

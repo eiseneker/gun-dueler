@@ -23,7 +23,7 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 	private int playerNumber;
 	private bool exMode = false;
 	private float speed;
-	private float currentExValue = 100;
+	private float currentExValue = 0;
 	private float defaultSpeed = 5.1f;
 	
 	void Start(){

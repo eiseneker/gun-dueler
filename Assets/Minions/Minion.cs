@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 
 public class Minion : MonoBehaviour, IHarmable, IAttacker {
@@ -10,10 +11,20 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	
 	private float timeSinceLastFire;
 	private GameObject body;
+	private SpriteRenderer bodySprite;
+	private float maxHealth = 5;
+	private float currentHealth;
+	private float maxDamageAnimationTimer = 0.1f;
+	private float currentDamageAnimationTimer;
+	private Color normalColor;
+	private Color whiteColor = new Color(1, 0, 0);
 	
 	protected float timeSinceStart = 0;
 	
+	
 	void Start() {
+		currentDamageAnimationTimer = maxDamageAnimationTimer;
+		currentHealth = maxHealth;
 		body = transform.Find ("Body").gameObject;
 		foreach(Transform child in body.transform){
 			Exhaust exhaust = child.GetComponent<Exhaust>();
@@ -21,11 +32,19 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 				exhaust.SetColor(GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor);
 			}
 		}
+		bodySprite = body.GetComponent<SpriteRenderer>();
+		normalColor = bodySprite.color;
 	}
 	
 	public virtual void Update () {
 		timeSinceLastFire += Time.deltaTime;
 		timeSinceStart += Time.deltaTime;
+		currentDamageAnimationTimer += Time.deltaTime;
+		if(currentDamageAnimationTimer < maxDamageAnimationTimer){
+			bodySprite.color = whiteColor;
+		}else{
+			bodySprite.color = normalColor;
+		}
 		Fire ();
 	}
 	
@@ -37,7 +56,11 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 				attacker.RegisterSuccessfulAttack(10);
 			}
 		}
-		Destroy(transform.parent.gameObject);
+		currentHealth -= damage;
+		currentDamageAnimationTimer = 0;
+		if(currentHealth <= 0){
+			Destroy(transform.parent.gameObject);
+		}
 	}
 	
 	public void RegisterSuccessfulAttack(float value){
