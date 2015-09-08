@@ -8,6 +8,8 @@ public class BulletProjectile : Projectile, IShreddable {
 	private Transform body;
 	private SpriteRenderer bodySprite;
 	
+	protected float damage = 4;
+	
 	public override void Start(){
 		base.Start();
 		affinity = owner.GetComponent<Entity>().affinity;
@@ -23,6 +25,10 @@ public class BulletProjectile : Projectile, IShreddable {
 	
 	void OnTriggerEnter2D (Collider2D collision) {
 		DetermineHit (collision, true);
+	}
+	
+	protected override float DamageValue(){
+		return(1);
 	}
 	
 }

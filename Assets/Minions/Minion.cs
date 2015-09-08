@@ -49,21 +49,33 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	}
 	
 	public void ReceiveHit(float damage, GameObject attackerObject) {
+		IAttacker attacker;
 		formation.GetComponent<Formation>().MinionDestroyed();
 		if(attackerObject){
-			IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
+			attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
 			if(attacker != null){
-				attacker.RegisterSuccessfulAttack(10);
+				attacker.RegisterSuccessfulAttack(0);
 			}
+		}
+		if(attackerObject.GetComponent<Minion>()){
+			damage /= 2;
 		}
 		currentHealth -= damage;
 		currentDamageAnimationTimer = 0;
 		if(currentHealth <= 0){
+			attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
+			if(attacker != null){
+				attacker.RegisterSuccessfulDestroy(5);
+			}
 			Destroy(transform.parent.gameObject);
 		}
 	}
 	
 	public void RegisterSuccessfulAttack(float value){
+		//chuckle
+	}
+	
+	public void RegisterSuccessfulDestroy(float value){
 		//chuckle
 	}
 	

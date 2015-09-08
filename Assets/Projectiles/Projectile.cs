@@ -32,7 +32,7 @@ public class Projectile : MonoBehaviour {
 		if(hitEntity && hitEntity.affinity != affinity){
 			IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
 			if(harmedObject != null){
-				harmedObject.ReceiveHit(1, owner);
+				harmedObject.ReceiveHit(DamageValue (), owner);
 				if(destroysSelfOnHit) DestroyMe ();
 			}
 		}
@@ -43,5 +43,9 @@ public class Projectile : MonoBehaviour {
 			transform.eulerAngles.x,
 			transform.eulerAngles.y,
 			transform.eulerAngles.z + degrees);
+	}
+	
+	protected virtual float DamageValue(){
+		return(1);
 	}
 }

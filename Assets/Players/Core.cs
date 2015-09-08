@@ -6,7 +6,7 @@ public class Core : MonoBehaviour, IHarmable {
 	public int enemyPlayerNumber = 0;
 
 	private float currentHealth;
-	private float maxHealth = 100;
+	private float maxHealth = 50;
 	private Color teamColor;
 	private Transform body;
 	private SpriteRenderer bodySprite;
@@ -39,11 +39,15 @@ public class Core : MonoBehaviour, IHarmable {
 	public void ReceiveHit(float damage, GameObject attackerObject) {
 		currentHealth -= damage;
 		IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
-		attacker.RegisterSuccessfulAttack(5);
+		attacker.RegisterSuccessfulAttack(0);
 		currentDamageAnimationTimer = 0;
 		if(currentHealth <= 0){
 			DestroyMe ();
 		}
+	}
+	
+	public float CurrentHealthRatio(){
+		return(currentHealth / maxHealth);
 	}
 	
 	private void DestroyMe(){

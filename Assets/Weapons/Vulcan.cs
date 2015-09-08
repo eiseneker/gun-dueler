@@ -2,9 +2,9 @@
 using System.Collections;
 
 public class Vulcan : Weapon {
-	private float defaultSpeed = 8;
-	private float defaultFireDelay = 0.3f;
-	private int defaultMaxBulletsInPlay = 8;
+	private float defaultSpeed = 10;
+	private float defaultFireDelay = 0.1f;
+	private int defaultMaxBulletsInPlay = 10;
 	
 	private GameObject bulletPrefab;
 	private float speed;

@@ -105,9 +105,6 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 			shield.ShieldDown ();
 		}
 		
-		if(currentHealth <= 0){
-			Destroy (gameObject);
-		}
 	}
 	
 	public void ReceiveHit(float damage, GameObject attackerObject) {
@@ -119,8 +116,18 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 			if(attackerObject){
 				IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
 				if(attacker != null){
-					attacker.RegisterSuccessfulAttack(25);
+					attacker.RegisterSuccessfulAttack(5);
 				}
+			}
+			
+			if(currentHealth <= 0){
+				if(attackerObject){
+					IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
+					if(attacker != null){
+						attacker.RegisterSuccessfulDestroy(25);
+					}
+				}
+				Destroy (gameObject);
 			}
 		}
 		
@@ -151,6 +158,10 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 	}
 	
 	public void RegisterSuccessfulAttack(float value){
+		currentExValue = Mathf.Clamp (currentExValue + value, 0, maxExValue);
+	}
+	
+	public void RegisterSuccessfulDestroy(float value){
 		currentExValue = Mathf.Clamp (currentExValue + value, 0, maxExValue);
 	}
 	
