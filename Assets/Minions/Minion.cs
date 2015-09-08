@@ -68,6 +68,8 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 				attacker.RegisterSuccessfulDestroy(5);
 			}
 			Destroy(transform.parent.gameObject);
+			GameObject explosion = Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity) as GameObject;
+			explosion.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 		}
 	}
 	

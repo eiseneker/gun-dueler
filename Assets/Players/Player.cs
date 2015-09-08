@@ -52,6 +52,7 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 		shield = shieldObject.GetComponent<Shield>();
 		shield.player = this;
 		currentHealth = maxHealth;
+		playerHitState.SwitchToInvincible();
 	}
 		
 	void Update () {
@@ -127,7 +128,6 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 						attacker.RegisterSuccessfulDestroy(25);
 					}
 				}
-				Destroy (gameObject);
 			}
 		}
 		
@@ -172,6 +172,11 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 		}else{
 			return(false);
 		}
+	}
+	
+	public void DestroyMe(){
+		Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity);
+		Destroy (gameObject);
 	}
 	
 	private void EnterExMode(){

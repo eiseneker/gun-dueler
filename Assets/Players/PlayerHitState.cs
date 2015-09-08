@@ -8,30 +8,34 @@ public class PlayerHitState : MonoBehaviour {
 	private float maxCriticalTime = 1.5f;
 	private HitState currentHitState;
 	private PlayerHitState playerHitState;
-	private float currentHitTime = 0f;
+	private float currentStateTime = 0f;
+	private bool isHit = false;
 	
 	private enum HitState
 	{
-		NotHit,
+		Normal,
 		Invincible,
 		Critical
 	}
 
 	void Update(){
-		if(IsHit ()) {
+		if(isHit) {
 			if(HasHitTimeExpired ()){
 				SwitchToNotHit();
 			}else{
-				AdvanceHitTime();
+				AdvanceStateTime();
 			}
+		}else if(currentHitState == HitState.Invincible){
+			AdvanceStateTime();
 		}
 	}
 	
 	public void RegisterHit(){
-		if(currentHitState == HitState.NotHit) {
+		isHit = true;
+		if(currentHitState == HitState.Normal) {
 			SwitchToInvincible();
 		}else if(IsCritical ()){
-			Destroy (player);
+			player.GetComponent<Player>().DestroyMe();
 		}
 	}
 	
@@ -39,22 +43,28 @@ public class PlayerHitState : MonoBehaviour {
 		return(currentHitState == HitState.Critical);
 	}
 	
-	private void AdvanceHitTime(){
-		currentHitTime += Time.deltaTime;
+	public void SwitchToInvincible() {
+		currentHitState = HitState.Invincible;
+		player.GetComponent<Animator>().SetBool("Invincible", true);
+	}
+	
+	private void AdvanceStateTime(){
+		currentStateTime += Time.deltaTime;
 		if(IsInvincible() && HasInvincibleTimeExpired()){
-			SwitchToCritical();
+			if(isHit){
+				SwitchToCritical();
+			}else{
+				SwitchToNotHit();
+			}
 		}
 	}
 	
 	private void SwitchToNotHit() {
-		currentHitTime = 0f;
-		currentHitState = HitState.NotHit;
+		isHit = false;
+		currentStateTime = 0f;
+		currentHitState = HitState.Normal;
+		player.GetComponent<Animator>().SetBool("Invincible", false);
 		player.GetComponent<Animator>().SetBool("Critical", false);
-	}
-	
-	private void SwitchToInvincible() {
-		currentHitState = HitState.Invincible;
-		player.GetComponent<Animator>().SetBool("Invincible", true);
 	}
 	
 	private void SwitchToCritical() {
@@ -63,19 +73,15 @@ public class PlayerHitState : MonoBehaviour {
 		player.GetComponent<Animator>().SetBool("Critical", true);
 	}
 	
-	private bool IsHit() {
-		return(currentHitState != HitState.NotHit);
-	}
-	
 	private bool IsInvincible() {
 		return(currentHitState == HitState.Invincible);
 	}
 	
 	private bool HasInvincibleTimeExpired() {
-		return(currentHitTime > maxInvincibleTime);
+		return(currentStateTime > maxInvincibleTime);
 	}
 	
 	private bool HasHitTimeExpired() {
-		return(currentHitTime > maxCriticalTime + maxCriticalTime);
+		return(currentStateTime > maxCriticalTime + maxCriticalTime);
 	}
 }
