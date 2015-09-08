@@ -52,12 +52,15 @@ public class MagnetProjectile : Projectile, IShreddable {
 		bool isLeft;
 		
 		if(defaultOrientation){
+			print ("yes: " + FacingUp ());
 			isLeft = (target.transform.position.x < gameObject.transform.position.x && FacingUp ()) ||
 				(target.transform.position.x > gameObject.transform.position.x && FacingDown ());
 		}else{
 			isLeft = (target.transform.position.y > gameObject.transform.position.y && FacingRight ()) ||
 				(target.transform.position.y < gameObject.transform.position.y && FacingLeft ());
 		}
+		
+		print ("isLeft: " + transform.eulerAngles.z + " ... " + transform.eulerAngles.z);
 	
 		return(isLeft);
 	}
@@ -86,6 +89,6 @@ public class MagnetProjectile : Projectile, IShreddable {
 	}
 	
 	private bool FacingUp(){
-		return(transform.eulerAngles.z > 315 && transform.eulerAngles.z < 45);
+		return(transform.eulerAngles.z == 0 || transform.eulerAngles.z > 315 && transform.eulerAngles.z < 45);
 	}
 }
