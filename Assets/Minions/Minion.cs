@@ -10,13 +10,12 @@ public class Minion : Agent, IAttacker {
 	public GameObject formation;
 	
 	private float timeSinceLastFire;
-	private float firesPerSecond = 2f;
-	private DamageBehavior damageBehavior;
 	
+	protected DamageBehavior damageBehavior;
 	protected float timeSinceStart = 0;
 	
 	
-	void Start() {
+	public virtual void Start() {
 		damageBehavior = GetComponent<DamageBehavior>();
 		GenerateExhaust();
 	}
@@ -25,13 +24,6 @@ public class Minion : Agent, IAttacker {
 		timeSinceLastFire += Time.deltaTime;
 		timeSinceStart += Time.deltaTime;
 		
-		float probability = firesPerSecond * Time.deltaTime;
-		
-		if(Random.value < probability){
-			Fire ();
-		}
-		
-		transform.Translate(Vector3.up * Time.deltaTime);
 	}
 	
 	public override void ReceiveHit(float damage, GameObject attackerObject) {
@@ -51,7 +43,7 @@ public class Minion : Agent, IAttacker {
 	public void RegisterSuccessfulDestroy(float value){
 	}
 	
-	private void Fire () {
+	protected void Fire () {
 		if(timeSinceLastFire >= fireDelay){
 			CreateBullet ();
 			timeSinceLastFire = 0f;
@@ -68,7 +60,7 @@ public class Minion : Agent, IAttacker {
 		}
 	}
 	
-	private void DestroyMe(){
+	protected void DestroyMe(){
 		Destroy(transform.parent.gameObject);
 		GameObject explosion = Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity) as GameObject;
 		explosion.transform.localScale -= new Vector3(0.5f, 0.5f, 0);

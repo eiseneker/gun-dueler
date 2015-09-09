@@ -34,4 +34,12 @@ public class DamageBehavior : MonoBehaviour {
 		return(currentHealth / maxHealth);
 	}
 	
+	public void HealToFull(){
+		currentHealth = maxHealth;
+	}
+	
+	public void IncreaseMaxHealth(float health){
+		maxHealth += health;
+	}
+	
 }

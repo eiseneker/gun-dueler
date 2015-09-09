@@ -6,9 +6,12 @@ public class SpawnTurret : Agent {
 	private float spawnsPerSecond = 0.075f;
 	private int[] spawnLevelProbabilities = { 0, 0, 0, 1 };
 	private bool disabled = false;
-	private float[] spawnLevelInterval = { 1, 1.1f, 1.2f, 1.3f, 1.4f, 1.5f, 1.6f };
+	private float[] spawnLevelInterval = { 0.1f, 0.2f, .3f, .4f, .5f, .6f, .7f };
+	private float spawnInterval = 2f;
 	private DamageBehavior damageBehavior;
 	private SpriteRenderer bodySprite;
+	private float maxSpawnCooldown = 5;
+	private float currentSpawnCooldown;
 	
 	public GameObject[] minionPrefabs;
 	public int level;
@@ -19,11 +22,13 @@ public class SpawnTurret : Agent {
 	}
 	
 	void Update () {
+		currentSpawnCooldown += Time.deltaTime;
 		if(GameController.gameStarted && !disabled){
-			float probability = spawnsPerSecond * Time.deltaTime * spawnLevelInterval[level - 1];
+			float probability = spawnsPerSecond * Time.deltaTime * spawnLevelInterval[level - 1] * spawnInterval;
 			
-			if(Random.value < probability){
+			if(Random.value < probability && currentSpawnCooldown >= maxSpawnCooldown){
 				SpawnMinion ();
+				currentSpawnCooldown = 0;
 			}
 		}
 		bodySprite.color = NormalColor();
@@ -60,7 +65,13 @@ public class SpawnTurret : Agent {
 	}
 	
 	private Color NormalColor(){
-		float hurtRatio = damageBehavior.CurrentHealthRatio();
-		return(new Color(1, hurtRatio, hurtRatio));
+		float healthRatio = damageBehavior.CurrentHealthRatio();
+		Color color;
+		if(healthRatio > 0){
+			color = new Color(1, healthRatio, healthRatio);
+		}else{
+			color = new Color(0.3f, 0.3f, 0.3f);
+		}
+		return(color);
 	}
 }

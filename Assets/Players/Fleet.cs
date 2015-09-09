@@ -66,13 +66,13 @@ public class Fleet : MonoBehaviour {
 	}
 	
 	void AddCore(){
-		core = Instantiate (corePrefab, transform.Find ("Core Position").position, Quaternion.identity) as GameObject;
+		core = Instantiate (corePrefab, transform.Find ("Ship Border").Find ("Core Position").position, Quaternion.identity) as GameObject;
 		core.transform.parent = transform;
 		core.GetComponent<Entity>().affinity = gameObject;
 	}
 	
 	void AddSpawnTurrets(){
-		foreach(Transform child in transform.Find ("Spawn Turret Positions")){
+		foreach(Transform child in transform.Find ("Ship Border").Find ("Spawn Turret Positions")){
 			GameObject spawnTurret  = Instantiate(spawnTurretPrefab, child.position, Quaternion.identity) as GameObject;
 			spawnTurret.GetComponent<Entity>().affinity = affinity;
 			spawnTurret.GetComponent<Entity>().reversePosition = reversePosition;
