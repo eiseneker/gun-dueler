@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Minion : MonoBehaviour, IHarmable, IAttacker {
+public class Minion : Agent, IAttacker {
 	public float speed;
 	public GameObject bulletPrefab;
 	public float bulletSpeed;
@@ -10,104 +10,75 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	public GameObject formation;
 	
 	private float timeSinceLastFire;
-	private GameObject body;
-	private SpriteRenderer bodySprite;
-	private float maxHealth = 3;
-	private float currentHealth;
-	private float maxDamageAnimationTimer = 0.1f;
-	private float currentDamageAnimationTimer;
-	private Color normalColor;
-	private Color whiteColor = new Color(1, 0, 0);
 	private float firesPerSecond = 2f;
+	private DamageBehavior damageBehavior;
 	
 	protected float timeSinceStart = 0;
 	
 	
 	void Start() {
-		currentDamageAnimationTimer = maxDamageAnimationTimer;
-		currentHealth = maxHealth;
-		body = transform.Find ("Body").gameObject;
-		foreach(Transform child in body.transform){
-			Exhaust exhaust = child.GetComponent<Exhaust>();
-			if(exhaust){
-				exhaust.SetColor(GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor);
-			}
-		}
-		bodySprite = body.GetComponent<SpriteRenderer>();
-		normalColor = bodySprite.color;
+		damageBehavior = GetComponent<DamageBehavior>();
+		GenerateExhaust();
 	}
 	
 	public virtual void Update () {
 		timeSinceLastFire += Time.deltaTime;
 		timeSinceStart += Time.deltaTime;
-		currentDamageAnimationTimer += Time.deltaTime;
-		if(currentDamageAnimationTimer < maxDamageAnimationTimer){
-			bodySprite.color = whiteColor;
-		}else{
-			bodySprite.color = normalColor;
-		}
 		
 		float probability = firesPerSecond * Time.deltaTime;
 		
 		if(Random.value < probability){
 			Fire ();
 		}
+		
 		transform.Translate(Vector3.up * Time.deltaTime);
 	}
 	
-	public void ReceiveHit(float damage, GameObject attackerObject) {
-		IAttacker attacker;
-		if(attackerObject){
-			attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
-			if(attacker != null){
-				attacker.RegisterSuccessfulAttack(0);
-			}
-		}
-		if(attackerObject.GetComponent<Minion>()){
-			damage /= 2;
-		}
-		currentHealth -= damage;
-		currentDamageAnimationTimer = 0;
-		if(currentHealth <= 0){
-			attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
-			if(attacker != null){
-				attacker.RegisterSuccessfulDestroy(5);
-			}
-			formation.GetComponent<Formation>().MinionDestroyed();
-			
-			Destroy(transform.parent.gameObject);
-			GameObject explosion = Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity) as GameObject;
-			explosion.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
+	public override void ReceiveHit(float damage, GameObject attackerObject) {
+		IAttacker attacker = ResolveAttacker(attackerObject);
+		if(attackerObject && attackerObject.GetComponent<Minion>()) damage /= 2;
+		if(attacker != null) attacker.RegisterSuccessfulAttack(0);
+		damageBehavior.ReceiveDamage(damage);
+		if(damageBehavior.CurrentHealthRatio() <= 0){
+			if(attacker != null) attacker.RegisterSuccessfulDestroy(5);
+			DestroyMe ();
 		}
 	}
 	
 	public void RegisterSuccessfulAttack(float value){
-		//chuckle
 	}
 	
 	public void RegisterSuccessfulDestroy(float value){
-		//chuckle
-	}
-	
-	protected void FaceObject(GameObject inputObject){
-		Vector3 distance = inputObject.transform.position - transform.position;
-		distance.Normalize();
-		
-		float zRotation = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg;
-		transform.rotation = Quaternion.Euler(0f, 0f, zRotation - 90);
 	}
 	
 	private void Fire () {
-		GameObject enemyPlayer = GetComponent<Entity>().EnemyPlayer();
-//		if(Mathf.Abs (transform.position.x - enemyPlayer.transform.position.x) < 2){
-			if(timeSinceLastFire >= fireDelay){
-				GameObject bulletObject = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
-				BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
-				bullet.speed = bulletSpeed;
-				bullet.owner = gameObject;
-				bullet.vector = Vector3.up;
-				timeSinceLastFire = 0f;
+		if(timeSinceLastFire >= fireDelay){
+			CreateBullet ();
+			timeSinceLastFire = 0f;
+		}
+	}
+	
+	private void GenerateExhaust(){
+		GameObject body = transform.Find ("Body").gameObject;
+		foreach(Transform child in body.transform){
+			Exhaust exhaust = child.GetComponent<Exhaust>();
+			if(exhaust){
+				exhaust.SetColor(GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor);
 			}
-//		}
+		}
+	}
+	
+	private void DestroyMe(){
+		Destroy(transform.parent.gameObject);
+		GameObject explosion = Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity) as GameObject;
+		explosion.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
+	}
+	
+	private void CreateBullet(){
+		GameObject bulletObject = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
+		BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
+		bullet.speed = bulletSpeed;
+		bullet.owner = gameObject;
+		bullet.vector = Vector3.up;
 	}
 }

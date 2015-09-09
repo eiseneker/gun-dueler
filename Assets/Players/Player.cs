@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour, IHarmable, IAttacker {
+public class Player : Agent, IAttacker {
 	public GameObject shieldPrefab;
 	public float maxHealth;
 	public bool reversePosition;
@@ -27,6 +27,7 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 	private float speed;
 	private float currentExValue = 100;
 	private float defaultSpeed = 5.1f;
+	private DamageBehavior damageBehavior;
 	
 	void Start(){
 		speed = defaultSpeed;
@@ -55,6 +56,7 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 		shield.player = this;
 		currentHealth = maxHealth;
 		playerHitState.SwitchToInvincible();
+		damageBehavior = GetComponent<DamageBehavior>();
 	}
 		
 	void Update () {
@@ -110,28 +112,21 @@ public class Player : MonoBehaviour, IHarmable, IAttacker {
 		
 	}
 	
-	public void ReceiveHit(float damage, GameObject attackerObject) {
+	public override void ReceiveHit(float damage, GameObject attackerObject) {
+		IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
+		
 		if(shield.IsShieldUp()){
 			shield.DamageShield(20);
 			currentExValue += 4;
 		}else{
 			playerHitState.RegisterHit();
-			currentHealth -= damage;
-			if(attackerObject){
-				IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
-				if(attacker != null){
-					attacker.RegisterSuccessfulAttack(5);
-				}
-			}
+			damageBehavior.ReceiveDamage(damage);
+			
+			if(attacker != null) attacker.RegisterSuccessfulAttack(5);
 			
 			if(currentHealth <= 0 || playerHitState.IsCritical ()){
 				DestroyMe();
-				if(attackerObject){
-					IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
-					if(attacker != null){
-						attacker.RegisterSuccessfulDestroy(25);
-					}
-				}
+				if(attacker != null) attacker.RegisterSuccessfulDestroy(25);
 			}
 		}
 		

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-interface IAttacker {
+public interface IAttacker {
 
 	void RegisterSuccessfulAttack(float value);
 	

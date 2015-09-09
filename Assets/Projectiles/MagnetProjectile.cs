@@ -52,16 +52,13 @@ public class MagnetProjectile : Projectile, IShreddable {
 		bool isLeft;
 		
 		if(defaultOrientation){
-			print ("yes: " + FacingUp ());
-			isLeft = (target.transform.position.x < gameObject.transform.position.x && FacingUp ()) ||
-				(target.transform.position.x > gameObject.transform.position.x && FacingDown ());
+			isLeft = (target.transform.position.x < gameObject.transform.position.x && OrientationHelper.FacingUp (transform)) ||
+				(target.transform.position.x > gameObject.transform.position.x && OrientationHelper.FacingDown (transform));
 		}else{
-			isLeft = (target.transform.position.y > gameObject.transform.position.y && FacingRight ()) ||
-				(target.transform.position.y < gameObject.transform.position.y && FacingLeft ());
+			isLeft = (target.transform.position.y > gameObject.transform.position.y && OrientationHelper.FacingRight (transform)) ||
+				(target.transform.position.y < gameObject.transform.position.y && OrientationHelper.FacingLeft (transform));
 		}
 		
-		print ("isLeft: " + transform.eulerAngles.z + " ... " + transform.eulerAngles.z);
-	
 		return(isLeft);
 	}
 	
@@ -72,23 +69,7 @@ public class MagnetProjectile : Projectile, IShreddable {
 		}else{
 			distance = Mathf.Abs(target.transform.position.x - gameObject.transform.position.x);
 		}
-		return(distance >= 0 && distance <= 0.2);
+		return(distance >= 0 && distance <= 0.2);	
 		
-	}
-	
-	private bool FacingRight(){
-		return(transform.eulerAngles.z > 225 && transform.eulerAngles.z < 315);
-	}
-	
-	private bool FacingDown(){
-		return(transform.eulerAngles.z > 135 && transform.eulerAngles.z < 225);
-	}
-	
-	private bool FacingLeft(){
-		return(transform.eulerAngles.z > 45 && transform.eulerAngles.z < 135);
-	}
-	
-	private bool FacingUp(){
-		return(transform.eulerAngles.z == 0 || transform.eulerAngles.z > 315 && transform.eulerAngles.z < 45);
 	}
 }

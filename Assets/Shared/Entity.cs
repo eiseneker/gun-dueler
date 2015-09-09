@@ -33,6 +33,14 @@ public class Entity : MonoBehaviour {
 		return(player);
 	}
 	
+	public void FaceObject(GameObject inputObject){
+		Vector3 distance = inputObject.transform.position - transform.position;
+		distance.Normalize();
+		
+		float zRotation = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg;
+		transform.rotation = Quaternion.Euler(0f, 0f, zRotation - 90);
+	}
+	
 	private GameObject FindEnemyPlayer(){
 		foreach(GameObject player in Player.players){
 			if(player != affinity.GetComponent<Fleet>().player) {

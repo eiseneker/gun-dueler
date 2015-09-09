@@ -10,12 +10,10 @@ public class Exhaust : MonoBehaviour {
 	private bool isAppliedColorSet = false;
 	private bool isColorChanged = false;
 
-	// Use this for initialization
 	void Start () {
 		sprite = transform.Find ("Body").GetComponent<SpriteRenderer>();
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		Color tempColor = sprite.color;
 		tempColor.a = 1;

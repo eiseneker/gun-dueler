@@ -33,10 +33,7 @@ public class Vulcan : Weapon {
 				fireDelay /= 1.5f;
 				speed *= 1.5f;
 			}
-			print (player.FacingUp ());
-			print (player.yMovement);
 			if(player.yMovement < 0){
-				print ("increased speed");
 				speed *= 1.5f;
 			}
 			

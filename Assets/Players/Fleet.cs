@@ -72,12 +72,11 @@ public class Fleet : MonoBehaviour {
 	}
 	
 	void AddSpawnTurrets(){
-		print ("spawning turrets!");
 		foreach(Transform child in transform.Find ("Spawn Turret Positions")){
-			print ("spawn...");
 			GameObject spawnTurret  = Instantiate(spawnTurretPrefab, child.position, Quaternion.identity) as GameObject;
 			spawnTurret.GetComponent<Entity>().affinity = affinity;
 			spawnTurret.GetComponent<Entity>().reversePosition = reversePosition;
+			spawnTurret.GetComponent<SpawnTurret>().level = child.GetComponent<Position>().level;
 		}
 		
 	}

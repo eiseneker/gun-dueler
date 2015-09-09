@@ -10,7 +10,6 @@ public class GigaBeamProjectile : Projectile {
 	private float maxLifespan = 3f;
 	private float lifespan = 0f;
 	
-	// Use this for initialization
 	public override void Start () {	
 		base.Start();
 		GetComponent<SpriteRenderer>().color = GetTeamColor ();
@@ -18,7 +17,6 @@ public class GigaBeamProjectile : Projectile {
 		owner.GetComponent<Player>().LockInputs();
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		if(owner == null){
 			Destroy (gameObject);

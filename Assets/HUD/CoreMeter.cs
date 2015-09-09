@@ -31,7 +31,6 @@ public class CoreMeter : MonoBehaviour {
 	private Core GetCore() {
 		GameObject coreObject = GameObject.Find ("Player "+playerNumber+" Fleet/Core(Clone)");
 		if(coreObject){
-			print ("found core!");
 			return(coreObject.GetComponent<Core>());
 		}else{
 			return(null);

@@ -53,7 +53,7 @@ public class PowerUp : MonoBehaviour, IShreddable {
 		PowerUpPosition powerUpPosition = powerUpPositionObject.GetComponent<PowerUpPosition>();
 		if(player){
 		 	if(!powerUpPosition.IsTaken ()){
-				Fleet fleet = player.GetComponent<Entity>().affinity.GetComponent<Fleet>();
+//				Fleet fleet = player.GetComponent<Entity>().affinity.GetComponent<Fleet>();
 //				GameObject minionFormation = fleet.AddMinionFormation(level);
 //				minionFormation.transform.position = powerUpPosition.transform.position;
 				powerUpPosition.TakePosition();

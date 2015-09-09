@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Position : MonoBehaviour {
 
-	
+	public int level;
 
 	//develompent only
 

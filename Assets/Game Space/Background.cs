@@ -14,7 +14,6 @@ public class Background : MonoBehaviour {
 	void Update () {
 		pos += .004f;
 		
-		
 		Transform quad = transform.Find ("Gravel");
 		quad.renderer.material.mainTextureOffset = new Vector2(0, pos);
 	}
