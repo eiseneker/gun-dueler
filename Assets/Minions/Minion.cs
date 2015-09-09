@@ -18,7 +18,7 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	private float currentDamageAnimationTimer;
 	private Color normalColor;
 	private Color whiteColor = new Color(1, 0, 0);
-	private float firesPerSecond = .5f;
+	private float firesPerSecond = 2f;
 	
 	protected float timeSinceStart = 0;
 	
@@ -97,13 +97,16 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	}
 	
 	private void Fire () {
-		if(timeSinceLastFire >= fireDelay){
-			GameObject bulletObject = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
-			BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
-			bullet.speed = bulletSpeed;
-			bullet.owner = gameObject;
-			bullet.vector = Vector3.up;
-			timeSinceLastFire = 0f;
+		GameObject enemyPlayer = GetComponent<Entity>().EnemyPlayer();
+		if(Mathf.Abs (transform.position.x - enemyPlayer.transform.position.x) < 2){
+			if(timeSinceLastFire >= fireDelay){
+				GameObject bulletObject = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
+				BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
+				bullet.speed = bulletSpeed;
+				bullet.owner = gameObject;
+				bullet.vector = Vector3.up;
+				timeSinceLastFire = 0f;
+			}
 		}
 	}
 }
