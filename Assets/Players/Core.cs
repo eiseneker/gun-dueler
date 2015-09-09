@@ -6,11 +6,13 @@ public class Core : Agent {
 	public int enemyPlayerNumber = 0;
 
 	private DamageBehavior damageBehavior;
+	private Fleet fleet;
 
 	void Start () {
+		fleet = GetComponent<Entity>().affinity.GetComponent<Fleet>();
 		damageBehavior = GetComponent<DamageBehavior>();
 		transform.Find ("Sentry").GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
-		transform.Find ("Body").GetComponent<SpriteRenderer>().color = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
+		transform.Find ("Body").GetComponent<SpriteRenderer>().color = fleet.teamColor;
 	}
 	
 	void Update(){
@@ -22,8 +24,9 @@ public class Core : Agent {
 	public override void ReceiveHit(float damage, GameObject attackerObject) {
 		IAttacker attacker = ResolveAttacker(attackerObject);
 		if(attacker != null) attacker.RegisterSuccessfulAttack(0);
-		damageBehavior.ReceiveDamage(damage);
-		if(CurrentHealthRatio() <= 0){
+		damageBehavior.ReceiveDamage(0);
+		fleet.ReceiveDamage(damage);
+		if(fleet.CurrentHealthRatio() <= 0){
 			DestroyMe ();
 		}
 	}

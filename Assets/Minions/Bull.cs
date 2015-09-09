@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Bull : Minion {
 	GameObject enemyPlayer;
-	private float speed;
 	
 	public override void Start(){
 		base.Start();

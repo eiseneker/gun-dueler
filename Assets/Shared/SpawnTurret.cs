@@ -6,7 +6,6 @@ public class SpawnTurret : Agent {
 	private float spawnsPerSecond = 0.075f;
 	private int[] spawnLevelProbabilities = { 0, 0, 0, 1 };
 	private bool disabled = false;
-	private float[] spawnLevelInterval = { 0.1f, 0.2f, .3f, .4f, .5f, .6f, .7f };
 	private float spawnInterval = 2f;
 	private DamageBehavior damageBehavior;
 	private SpriteRenderer bodySprite;
@@ -24,7 +23,8 @@ public class SpawnTurret : Agent {
 	void Update () {
 		currentSpawnCooldown += Time.deltaTime;
 		if(GameController.gameStarted && !disabled){
-			float probability = spawnsPerSecond * Time.deltaTime * spawnLevelInterval[level - 1] * spawnInterval;
+			print (level);
+			float probability = spawnsPerSecond * Time.deltaTime * spawnInterval;
 			
 			if(Random.value < probability && currentSpawnCooldown >= maxSpawnCooldown){
 				SpawnMinion ();

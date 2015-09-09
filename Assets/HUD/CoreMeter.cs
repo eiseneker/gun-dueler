@@ -4,7 +4,7 @@ using System.Collections;
 public class CoreMeter : MonoBehaviour {
 	public int playerNumber;
 	
-	private Core core;
+	private Fleet fleet;
 	private float meterRatio;
 	private Transform filler;
 	private Transform dangerText;
@@ -17,21 +17,21 @@ public class CoreMeter : MonoBehaviour {
 	}
 	
 	void Update () {
-		if(core == null) {
-			core = GetCore();
+		if(fleet == null) {
+			fleet = GetFleet();
 			meterRatio = 1;
 		}else{
-			meterRatio = core.CurrentHealthRatio();
+			meterRatio = fleet.CurrentHealthRatio();
 			dangerText.gameObject.SetActive(meterRatio <= 0.1f);
 			coreText.gameObject.SetActive(meterRatio > 0.1f);
 		}
 		filler.localScale = new Vector3(meterRatio, 1, 1);
 	}
 	
-	private Core GetCore() {
-		GameObject coreObject = GameObject.Find ("Player "+playerNumber+" Fleet/Core(Clone)");
-		if(coreObject){
-			return(coreObject.GetComponent<Core>());
+	private Fleet GetFleet() {
+		GameObject fleetObject = GameObject.Find ("Player "+playerNumber+" Fleet");
+		if(fleetObject){
+			return(fleetObject.GetComponent<Fleet>());
 		}else{
 			return(null);
 		}
