@@ -52,6 +52,7 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 		if(Random.value < probability){
 			Fire ();
 		}
+		transform.Translate(Vector3.up * Time.deltaTime);
 	}
 	
 	public void ReceiveHit(float damage, GameObject attackerObject) {
@@ -98,7 +99,7 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 	
 	private void Fire () {
 		GameObject enemyPlayer = GetComponent<Entity>().EnemyPlayer();
-		if(Mathf.Abs (transform.position.x - enemyPlayer.transform.position.x) < 2){
+//		if(Mathf.Abs (transform.position.x - enemyPlayer.transform.position.x) < 2){
 			if(timeSinceLastFire >= fireDelay){
 				GameObject bulletObject = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
 				BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
@@ -107,6 +108,6 @@ public class Minion : MonoBehaviour, IHarmable, IAttacker {
 				bullet.vector = Vector3.up;
 				timeSinceLastFire = 0f;
 			}
-		}
+//		}
 	}
 }

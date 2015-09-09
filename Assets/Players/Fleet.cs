@@ -5,12 +5,12 @@ public class Fleet : MonoBehaviour {
 
 	public GameObject playerPrefab;
 	public GameObject corePrefab;
-	public GameObject[] minionFormations;
 	public Color teamColor;
 	public float width;
 	public float height;
 	public int playerNumber;
 	public GameObject player;
+	public GameObject spawnTurretPrefab;
 	
 	private GameObject affinity;
 	private bool reversePosition;
@@ -29,7 +29,7 @@ public class Fleet : MonoBehaviour {
 		AddMinionsObject ();
 		AddPlayer();
 		AddCore();
-		AddMinionFormation (0);
+		AddSpawnTurrets();
 	}
 	
 	void Update() {
@@ -71,11 +71,14 @@ public class Fleet : MonoBehaviour {
 		core.GetComponent<Entity>().affinity = gameObject;
 	}
 	
-	public GameObject AddMinionFormation(int index){
-		GameObject minionFormation  = Instantiate(minionFormations[index], transform.Find ("Formation Position").position, Quaternion.identity) as GameObject;
-		minionFormation.transform.parent = minions.transform;
-		minionFormation.GetComponent<Entity>().affinity = affinity;
-		minionFormation.GetComponent<Entity>().reversePosition = reversePosition;
-		return(minionFormation);
+	void AddSpawnTurrets(){
+		print ("spawning turrets!");
+		foreach(Transform child in transform.Find ("Spawn Turret Positions")){
+			print ("spawn...");
+			GameObject spawnTurret  = Instantiate(spawnTurretPrefab, child.position, Quaternion.identity) as GameObject;
+			spawnTurret.GetComponent<Entity>().affinity = affinity;
+			spawnTurret.GetComponent<Entity>().reversePosition = reversePosition;
+		}
+		
 	}
 }
