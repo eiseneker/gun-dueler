@@ -2,17 +2,13 @@
 using System.Collections;
 
 public class Shotgun : Weapon {
-	private float defaultSpeed = 7;
+	private float defaultSpeed = 9;
 	private float speed;
 	
 	private GameObject bulletPrefab;
-	private Vector3[] bulletVectors = {
-		new Vector3(0.1f, 1, 0),
-		new Vector3(-0.1f, 1, 0),
-		new Vector3(0.2f, .95f, 0),
-		new Vector3(-0.2f, .95f, 0),
-		new Vector3(0.3f, .9f, 0),
-		new Vector3(-0.3f, .9f, 0),
+	
+	private float[] angles = {
+		10, 25
 	};
 	
 	public Shotgun() {
@@ -26,17 +22,28 @@ public class Shotgun : Weapon {
 			speed = defaultSpeed;
 			if(ex) speed *= 1.5f;
 		
-			foreach(Vector3 vector in bulletVectors){
-				BulletProjectile bullet = newProjectile();
-				bullet.speed = speed;
-				bullet.weapon = this;
-				bullet.vector = vector;
-				bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
-				OrientProjectile(bullet);
+			foreach(float angle in angles){
+				CreateBullet (angle, Vector3.down);
+				CreateBullet (-angle, Vector3.down);
+				if(ex){
+					CreateBullet (angle, Vector3.up);
+					CreateBullet (-angle, Vector3.up);
+				}
 			}
 			
 			timeSinceLastFire = ex ? fireDelay / 2 : 0;
 		}
+	}
+	
+	
+	private void CreateBullet(float angle, Vector3 vector){
+		BulletProjectile bullet = newProjectile();
+		bullet.speed = speed;
+		bullet.weapon = this;
+		bullet.vector = vector;
+		bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
+		OrientProjectile(bullet);
+		bullet.RotateMe (angle);
 	}
 	
 	private BulletProjectile newProjectile(){

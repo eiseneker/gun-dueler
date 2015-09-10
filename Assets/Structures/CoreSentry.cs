@@ -20,6 +20,8 @@ public class CoreSentry : MonoBehaviour {
 	
 	public void Fire (GameObject target) {
 		if(timeSinceLastFire >= fireDelay){
+			print ("firing");
+		
 			timeSinceLastFire = 0f;
 			GameObject bulletPrefab = Resources.Load ("Bullet") as GameObject;
 			GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity) as GameObject;

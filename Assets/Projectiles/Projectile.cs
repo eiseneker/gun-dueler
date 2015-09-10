@@ -38,7 +38,8 @@ public class Projectile : MonoBehaviour {
 				harmedObject.ReceiveHit(DamageValue (), owner);
 				if(destroysSelfOnHit) DestroyMe ();
 			}
-		}else if(hitEntity.gameObject != owner){
+		}else if(hitEntity && hitEntity.gameObject != owner && hitEntity.GetComponent<Projectile>() == null && hitEntity.GetComponent<Core>() == null){
+			print (hitEntity.gameObject + " vs. " + owner);
 			if(DestroysSelfOnFriendlyHit()) DestroyMe ();
 		}
 	}
