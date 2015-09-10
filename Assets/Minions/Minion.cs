@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Minion : Agent, IAttacker {
+public class Minion : Agent, IAttacker, IShreddable {
 	public float speed;
 	public GameObject bulletPrefab;
 	public float bulletSpeed;
@@ -60,7 +60,7 @@ public class Minion : Agent, IAttacker {
 		}
 	}
 	
-	protected void DestroyMe(){
+	public void DestroyMe(){
 		Destroy(transform.parent.gameObject);
 		GameObject explosion = Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity) as GameObject;
 		explosion.transform.localScale -= new Vector3(0.5f, 0.5f, 0);

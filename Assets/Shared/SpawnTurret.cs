@@ -11,6 +11,7 @@ public class SpawnTurret : Agent {
 	private SpriteRenderer bodySprite;
 	private float maxSpawnCooldown = 5;
 	private float currentSpawnCooldown;
+	private GameObject minionsObject;
 	
 	public GameObject[] minionPrefabs;
 	public int level;
@@ -18,12 +19,12 @@ public class SpawnTurret : Agent {
 	void Start(){
 		damageBehavior = GetComponent<DamageBehavior>();
 		bodySprite = transform.Find ("Body").GetComponent<SpriteRenderer>();
+		minionsObject = GameObject.Find ("Minions");
 	}
 	
 	void Update () {
 		currentSpawnCooldown += Time.deltaTime;
-		if(GameController.gameStarted && !disabled){
-			print (level);
+		if(GameController.gameStarted && !disabled && transform.position.x > -5 && transform.position.x < 5){
 			float probability = spawnsPerSecond * Time.deltaTime * spawnInterval;
 			
 			if(Random.value < probability && currentSpawnCooldown >= maxSpawnCooldown){
@@ -38,7 +39,7 @@ public class SpawnTurret : Agent {
 		Quaternion rotation = new Quaternion();
 		int level = spawnLevelProbabilities[Random.Range (0, spawnLevelProbabilities.Length)];
 		GameObject minion = Instantiate (minionPrefabs[level], transform.position, rotation) as GameObject;
-		minion.transform.parent = transform;
+		minion.transform.parent = minionsObject.transform;
 		minion.transform.Find ("Ship").GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 		if(GetComponent<Entity>().reversePosition){
 			minion.transform.rotation = Quaternion.Euler(0f, 0f, 180);
