@@ -47,9 +47,7 @@ public class Fleet : MonoBehaviour {
 	
 	void Update() {
 		if(player == null){
-			if(currentPlayerRespawnTime >= maxPlayerRespawnTime){
-				AddPlayer ();
-			}else{
+			if(currentPlayerRespawnTime < maxPlayerRespawnTime){
 				currentPlayerRespawnTime += Time.deltaTime;
 			}
 		}
@@ -77,14 +75,15 @@ public class Fleet : MonoBehaviour {
 		minions.transform.parent = transform;
 	}
 	
-	void AddPlayer(){
+	public GameObject AddPlayer(){
 		player = Instantiate (playerPrefab, transform.Find ("Player Position").position, Quaternion.identity) as GameObject;
 		player.transform.parent = transform;
 		player.GetComponent<Entity>().affinity = gameObject;
 		player.GetComponent<Entity>().reversePosition = GetComponent<Entity>().reversePosition;
 		player.GetComponent<Player>().SetPlayerNumber(playerNumber);
 		currentPlayerRespawnTime = 0;
-		
+		ResetPlayerRespawn();
+		return(player);
 	}
 	
 	void AddStructure(Vector3 structurePosition, GameObject structurePrefab){
@@ -103,6 +102,14 @@ public class Fleet : MonoBehaviour {
 			AddStructure (position, structure);
 			index++;
 		}
+	}
+	
+	public bool PlayerCanRespawn(){
+		return(currentPlayerRespawnTime >= maxPlayerRespawnTime);
+	}
+	
+	private void ResetPlayerRespawn(){
+		currentPlayerRespawnTime = 0;
 	}
 	
 	public void ReceiveDamage(float damage){

@@ -8,6 +8,8 @@ public class SpawnTurret : Agent {
 	private SpriteRenderer bodySprite;
 	private float currentSpawnCooldown;
 	private GameObject minionsObject;
+	private GameObject player;
+	private Fleet fleet;
 	
 	public GameObject minionPrefab;
 	public float maxSpawnCooldown;
@@ -16,13 +18,20 @@ public class SpawnTurret : Agent {
 		damageBehavior = GetComponent<DamageBehavior>();
 		bodySprite = transform.Find ("Body").GetComponent<SpriteRenderer>();
 		minionsObject = GameObject.Find ("Minions");
+		fleet = GetComponent<Entity>().affinity.GetComponent<Fleet>();
 	}
 	
 	void Update () {
 		currentSpawnCooldown += Time.deltaTime;
 		if(GameController.gameStarted && !disabled && transform.position.x > -5 && transform.position.x < 5){
 			if(currentSpawnCooldown >= maxSpawnCooldown){
-				SpawnMinion ();
+				if(fleet.player == null && fleet.PlayerCanRespawn()){
+					GameObject player = fleet.AddPlayer();
+					player.transform.position = transform.position;
+					player.rigidbody2D.AddForce(new Vector2(0, 1));
+				}else{
+					SpawnMinion ();
+				}
 				currentSpawnCooldown = 0;
 			}
 		}

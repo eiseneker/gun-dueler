@@ -28,6 +28,8 @@ public class Player : Agent, IAttacker {
 	private float currentExValue = 100;
 	private float defaultSpeed = 5.1f;
 	private DamageBehavior damageBehavior;
+	private float currentJustRespawned;
+	private float maxJustRespawned = 0.25f;
 	
 	void Start(){
 		speed = defaultSpeed;
@@ -60,56 +62,60 @@ public class Player : Agent, IAttacker {
 	}
 		
 	void Update () {
-		if(!IsInputLocked){
-			xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
-			yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
-			float moveFactor = 1;
-			
-			if(reversePosition) {
-				moveFactor = -1;
-			}
-			
-			xMovement *= moveFactor;
-			yMovement *= moveFactor;
-			
-			if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1){
-				EnterExMode();
+		if(currentJustRespawned >= maxJustRespawned){
+			if(!IsInputLocked){
+				xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
+				yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
+				float moveFactor = 1;
+				
+				if(reversePosition) {
+					moveFactor = -1;
+				}
+				
+				xMovement *= moveFactor;
+				yMovement *= moveFactor;
+				
+				if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1){
+					EnterExMode();
+				}else{
+					ExitExMode();
+				}
+				
+				if((xMovement != 0 || yMovement != 0) && IsInExMode () && SpendEx (1)){
+					speed = defaultSpeed * 1.5f;
+				}else{
+					speed = defaultSpeed;
+				}
+				
+				if((transform.position.x > -5 && xMovement * moveFactor < 0) || (transform.position.x < 5 && xMovement * moveFactor > 0)){
+					transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
+				}
+				
+				if((transform.position.y > -6.25f && yMovement * moveFactor > 0) || (transform.position.y < 6.25f && yMovement * moveFactor < 0)){
+					transform.Translate(Vector3.down * yMovement * Time.deltaTime * speed);
+				}
+				
+				if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
+					shotgun.Fire (IsInExMode());
+				}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
+					magnetMissile.Fire (IsInExMode());
+				}else if(Input.GetAxis ("Player"+playerNumber+"_SuperWeapon") == 1){
+					gigaBeam.Fire ();
+				}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
+					shield.ShieldUp(IsInExMode());
+				}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
+					vulcan.Fire(IsInExMode());
+					shield.ShieldDown();
+				}else{
+					shield.ShieldDown();
+				}
 			}else{
-				ExitExMode();
-			}
-			
-			if((xMovement != 0 || yMovement != 0) && IsInExMode () && SpendEx (1)){
-				speed = defaultSpeed * 1.5f;
-			}else{
-				speed = defaultSpeed;
-			}
-			
-			if((transform.position.x > -5 && xMovement * moveFactor < 0) || (transform.position.x < 5 && xMovement * moveFactor > 0)){
-				transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
-			}
-			
-			if((transform.position.y > -6.25f && yMovement * moveFactor > 0) || (transform.position.y < 6.25f && yMovement * moveFactor < 0)){
-				transform.Translate(Vector3.down * yMovement * Time.deltaTime * speed);
-			}
-			
-			if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
-				shotgun.Fire (IsInExMode());
-			}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
-				magnetMissile.Fire (IsInExMode());
-			}else if(Input.GetAxis ("Player"+playerNumber+"_SuperWeapon") == 1){
-				gigaBeam.Fire ();
-			}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
-				shield.ShieldUp(IsInExMode());
-			}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
-				vulcan.Fire(IsInExMode());
-				shield.ShieldDown();
-			}else{
-				shield.ShieldDown();
+				shield.ShieldDown ();
 			}
 		}else{
-			shield.ShieldDown ();
+			transform.Translate (Vector3.up * Time.deltaTime * speed);
+			currentJustRespawned += Time.deltaTime;
 		}
-		
 	}
 	
 	public override void ReceiveHit(float damage, GameObject attackerObject) {
