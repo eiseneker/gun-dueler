@@ -26,6 +26,7 @@ public class Fleet : MonoBehaviour {
 	private ArrayList structureList = new ArrayList();
 	private ArrayList structuresInPlay = new ArrayList();
 	private GameObject shipBorder;
+	private float rotationFactor = -0.5f;
 
 	void Start () {
 		structureList.AddRange (structures);
@@ -53,12 +54,25 @@ public class Fleet : MonoBehaviour {
 		}
 		GameObject lastStructure = structuresInPlay[structures.Length - 1] as GameObject;
 		GameObject firstStructure = structuresInPlay[0] as GameObject;
-		shipBorder.transform.Translate(Vector3.right * Time.deltaTime * .5f);
-		if(lastStructure.transform.position.x > 6 && !reversePosition || lastStructure.transform.position.x < -6 && reversePosition){
-			structuresInPlay.Remove (lastStructure);
-			structuresInPlay.Insert (0, lastStructure);
-			Vector3 firstPosition = firstStructure.transform.localPosition;
-			lastStructure.transform.localPosition = new Vector3(firstPosition.x - structureSpacing, firstPosition.y, 0);
+		
+		rotationFactor = Mathf.Clamp (rotationFactor - Input.GetAxis ("Player"+playerNumber+"_MoveFleetLeft")/10 + Input.GetAxis ("Player"+playerNumber+"_MoveFleetRight")/10, -5, 5);
+		
+		shipBorder.transform.Translate(Vector3.right * Time.deltaTime * rotationFactor);
+		
+		if(rotationFactor > 0){
+			if(lastStructure.transform.position.x > 6 && !reversePosition || lastStructure.transform.position.x < -6 && reversePosition){
+				structuresInPlay.Remove (lastStructure);
+				structuresInPlay.Insert (0, lastStructure);
+				Vector3 firstPosition = firstStructure.transform.localPosition;
+				lastStructure.transform.localPosition = new Vector3(firstPosition.x - structureSpacing, firstPosition.y, 0);
+			}
+		}else{
+			if(firstStructure.transform.position.x < -6 && !reversePosition || firstStructure.transform.position.x > 6 && reversePosition){
+				structuresInPlay.Remove (firstStructure);
+				structuresInPlay.Add (firstStructure);
+				Vector3 lastPosition = lastStructure.transform.localPosition;
+				firstStructure.transform.localPosition = new Vector3(lastPosition.x + structureSpacing, lastPosition.y, 0);
+			}
 		}
 	}
 	

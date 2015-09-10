@@ -91,7 +91,7 @@ public class Player : Agent, IAttacker {
 					transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
 				}
 				
-				if((transform.position.y > -6.25f && yMovement * moveFactor > 0) || (transform.position.y < 6.25f && yMovement * moveFactor < 0)){
+				if((transform.position.y > -5.5f && yMovement * moveFactor > 0) || (transform.position.y < 5.5f && yMovement * moveFactor < 0)){
 					transform.Translate(Vector3.down * yMovement * Time.deltaTime * speed);
 				}
 				

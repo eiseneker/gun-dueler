@@ -33,8 +33,14 @@ public class Sheep : Minion {
 						Destroy (gameObject);
 					}
 				}
+				skipDestroyOnMerge = false;
+			}else{
+				IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
+				if(harmedObject != null){
+					harmedObject.ReceiveHit(1, gameObject);
+				}
+				DestroyMe();
 			}
-			skipDestroyOnMerge = false;
 		}
 	}
 	

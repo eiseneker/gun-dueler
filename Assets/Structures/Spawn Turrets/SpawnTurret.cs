@@ -34,6 +34,8 @@ public class SpawnTurret : Agent {
 				}
 				currentSpawnCooldown = 0;
 			}
+		}else{
+			currentSpawnCooldown = 0;
 		}
 		bodySprite.color = NormalColor();
 	}
