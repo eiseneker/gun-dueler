@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CoreSentry : MonoBehaviour {
+public class CoreSentry : MonoBehaviour, IProjectilePassable {
 
 	private float timeSinceLastFire;
 	private float fireDelay = .1f;
@@ -20,8 +20,6 @@ public class CoreSentry : MonoBehaviour {
 	
 	public void Fire (GameObject target) {
 		if(timeSinceLastFire >= fireDelay){
-			print ("firing");
-		
 			timeSinceLastFire = 0f;
 			GameObject bulletPrefab = Resources.Load ("Bullet") as GameObject;
 			GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity) as GameObject;

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Core : Agent {
+public class Core : Agent, IProjectilePassable {
 
 	public int enemyPlayerNumber = 0;
 

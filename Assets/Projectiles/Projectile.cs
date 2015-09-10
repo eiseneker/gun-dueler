@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Projectile : MonoBehaviour {
+public class Projectile : MonoBehaviour, IProjectilePassable {
 	public GameObject owner;
 	public Weapon weapon;
 	
@@ -38,9 +38,11 @@ public class Projectile : MonoBehaviour {
 				harmedObject.ReceiveHit(DamageValue (), owner);
 				if(destroysSelfOnHit) DestroyMe ();
 			}
-		}else if(hitEntity && hitEntity.gameObject != owner && hitEntity.GetComponent<Projectile>() == null && hitEntity.GetComponent<Core>() == null){
-			print (hitEntity.gameObject + " vs. " + owner);
-			if(DestroysSelfOnFriendlyHit()) DestroyMe ();
+		}else if(hitEntity && hitEntity.gameObject != owner){
+			IProjectilePassable iProjectilePassable = collision.gameObject.GetComponent(typeof(IProjectilePassable)) as IProjectilePassable;
+			if(iProjectilePassable == null){
+				if(DestroysSelfOnFriendlyHit()) DestroyMe ();
+			}
 		}
 	}
 	
