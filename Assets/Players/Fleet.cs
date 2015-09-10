@@ -12,29 +12,28 @@ public class Fleet : MonoBehaviour {
 	public int playerNumber;
 	public GameObject player;
 	public GameObject spawnTurretPrefab;
+	public GameObject[] structures;
 
 	private float maxHealth = 50;
 	private float currentHealth;	
-	private GameObject affinity;
 	private bool reversePosition;
 	private GameObject minions;
 	private GameObject core;
 	private float maxPlayerRespawnTime = 5;
 	private float currentPlayerRespawnTime;
-	private int structureCount = 12;
 	private float structureSpacing = 2;
 	private ArrayList structurePositions = new ArrayList();
-	private int coreInterval = 5;
+	private ArrayList structureList = new ArrayList();
+	private ArrayList structuresInPlay = new ArrayList();
 	private GameObject shipBorder;
-	private ArrayList structures = new ArrayList();
-	private float lastStructureX;
 
 	void Start () {
-		for(int i = 0 - structureCount/2; i < structureCount/2; i++){
+		structureList.AddRange (structures);
+	
+		for(int i = 0 - structures.Length/2; i < structures.Length/2; i++){
 			structurePositions.Add (i * structureSpacing);
 		}
 	
-		affinity = gameObject;
 		reversePosition = GetComponent<Entity>().reversePosition;
 		currentHealth = maxHealth;
 		shipBorder = transform.Find ("Ship Border").gameObject;
@@ -44,8 +43,6 @@ public class Fleet : MonoBehaviour {
 		AddMinionsObject ();
 		AddPlayer();
 		AddStructures();
-		
-		lastStructureX = shipBorder.transform.position.x;
 	}
 	
 	void Update() {
@@ -56,12 +53,12 @@ public class Fleet : MonoBehaviour {
 				currentPlayerRespawnTime += Time.deltaTime;
 			}
 		}
-		GameObject lastStructure = structures[structures.Count - 1] as GameObject;
-		GameObject firstStructure = structures[0] as GameObject;
+		GameObject lastStructure = structuresInPlay[structures.Length - 1] as GameObject;
+		GameObject firstStructure = structuresInPlay[0] as GameObject;
 		shipBorder.transform.Translate(Vector3.right * Time.deltaTime * .5f);
 		if(lastStructure.transform.position.x > 6 && !reversePosition || lastStructure.transform.position.x < -6 && reversePosition){
-			structures.Remove (lastStructure);
-			structures.Insert (0, lastStructure);
+			structuresInPlay.Remove (lastStructure);
+			structuresInPlay.Insert (0, lastStructure);
 			Vector3 firstPosition = firstStructure.transform.localPosition;
 			lastStructure.transform.localPosition = new Vector3(firstPosition.x - structureSpacing, firstPosition.y, 0);
 		}
@@ -90,33 +87,20 @@ public class Fleet : MonoBehaviour {
 		
 	}
 	
-	void AddCore(Vector3 structurePosition){
-		core = Instantiate (corePrefab, Vector3.zero, Quaternion.identity) as GameObject;
-		core.transform.parent = shipBorder.transform;
-		core.transform.localPosition = structurePosition;
-		core.GetComponent<Entity>().affinity = gameObject;
-		core.GetComponent<Entity>().reversePosition = reversePosition;
-		structures.Add (core);
-	}
-	
-	void AddSpawnTurret(Vector3 structurePosition){
-		GameObject spawnTurret  = Instantiate(spawnTurretPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-		spawnTurret.transform.parent = shipBorder.transform;
-		spawnTurret.transform.localPosition = structurePosition;
-		spawnTurret.GetComponent<Entity>().affinity = affinity;
-		spawnTurret.GetComponent<Entity>().reversePosition = reversePosition;
-		structures.Add (spawnTurret);
+	void AddStructure(Vector3 structurePosition, GameObject structurePrefab){
+		GameObject structure = Instantiate (structurePrefab, Vector3.zero, Quaternion.identity) as GameObject;
+		structure.transform.parent = shipBorder.transform;
+		structure.transform.localPosition = structurePosition;
+		structure.GetComponent<Entity>().affinity = gameObject;
+		structure.GetComponent<Entity>().reversePosition = reversePosition;
+		structuresInPlay.Add (structure);
 	}
 	
 	void AddStructures(){
-		int index = 1;
-		foreach(float structurePosition in structurePositions){
-			Vector3 position = new Vector3(structurePosition, 0, 0);
-			if(index % coreInterval == 0){
-				AddCore (position);
-			}else{
-				AddSpawnTurret(position);
-			}
+		int index = 0;
+		foreach(GameObject structure in structureList){
+			Vector3 position = new Vector3((float)structurePositions[index], 0, 0);
+			AddStructure (position, structure);
 			index++;
 		}
 	}

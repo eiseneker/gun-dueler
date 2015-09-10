@@ -3,18 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class SpawnTurret : Agent {
-	private float spawnsPerSecond = 0.075f;
-	private int[] spawnLevelProbabilities = { 0, 0, 0, 1 };
 	private bool disabled = false;
-	private float spawnInterval = 2f;
 	private DamageBehavior damageBehavior;
 	private SpriteRenderer bodySprite;
-	private float maxSpawnCooldown = 5;
 	private float currentSpawnCooldown;
 	private GameObject minionsObject;
 	
-	public GameObject[] minionPrefabs;
-	public int level;
+	public GameObject minionPrefab;
+	public float maxSpawnCooldown;
 	
 	void Start(){
 		damageBehavior = GetComponent<DamageBehavior>();
@@ -25,9 +21,7 @@ public class SpawnTurret : Agent {
 	void Update () {
 		currentSpawnCooldown += Time.deltaTime;
 		if(GameController.gameStarted && !disabled && transform.position.x > -5 && transform.position.x < 5){
-			float probability = spawnsPerSecond * Time.deltaTime * spawnInterval;
-			
-			if(Random.value < probability && currentSpawnCooldown >= maxSpawnCooldown){
+			if(currentSpawnCooldown >= maxSpawnCooldown){
 				SpawnMinion ();
 				currentSpawnCooldown = 0;
 			}
@@ -37,8 +31,7 @@ public class SpawnTurret : Agent {
 	
 	void SpawnMinion(){
 		Quaternion rotation = new Quaternion();
-		int level = spawnLevelProbabilities[Random.Range (0, spawnLevelProbabilities.Length)];
-		GameObject minion = Instantiate (minionPrefabs[level], transform.position, rotation) as GameObject;
+		GameObject minion = Instantiate (minionPrefab, transform.position, rotation) as GameObject;
 		minion.transform.parent = minionsObject.transform;
 		minion.transform.Find ("Ship").GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 		if(GetComponent<Entity>().reversePosition){

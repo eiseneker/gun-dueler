@@ -24,16 +24,18 @@ public class Sheep : Minion {
 	}
 	
 	void OnTriggerEnter2D (Collider2D collider){
-		if(collider.GetComponent<Entity>().affinity == GetComponent<Entity>().affinity){
-			Sheep sheep = collider.GetComponent<Sheep>();
-			if(sheep){
-				sheep.Upgrade();
-				if(!skipDestroyOnMerge){
-					Destroy (gameObject);
+		if(collider.GetComponent<Entity>()){
+			if(collider.GetComponent<Entity>().affinity == GetComponent<Entity>().affinity){
+				Sheep sheep = collider.GetComponent<Sheep>();
+				if(sheep){
+					sheep.Upgrade();
+					if(!skipDestroyOnMerge){
+						Destroy (gameObject);
+					}
 				}
 			}
+			skipDestroyOnMerge = false;
 		}
-		skipDestroyOnMerge = false;
 	}
 	
 	protected void Upgrade(){
