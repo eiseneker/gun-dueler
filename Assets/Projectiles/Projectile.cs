@@ -38,6 +38,8 @@ public class Projectile : MonoBehaviour {
 				harmedObject.ReceiveHit(DamageValue (), owner);
 				if(destroysSelfOnHit) DestroyMe ();
 			}
+		}else if(hitEntity.gameObject != owner){
+			if(DestroysSelfOnFriendlyHit()) DestroyMe ();
 		}
 	}
 	
@@ -50,5 +52,9 @@ public class Projectile : MonoBehaviour {
 	
 	protected virtual float DamageValue(){
 		return(1);
+	}
+	
+	protected virtual bool DestroysSelfOnFriendlyHit(){
+		return(true);
 	}
 }

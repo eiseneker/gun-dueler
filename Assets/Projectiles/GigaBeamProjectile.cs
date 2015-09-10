@@ -39,4 +39,8 @@ public class GigaBeamProjectile : Projectile {
 	protected override float DamageValue(){
 		return(.25f);
 	}
+	
+	protected override bool DestroysSelfOnFriendlyHit(){
+		return(false);
+	}
 }
