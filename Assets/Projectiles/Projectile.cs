@@ -14,6 +14,9 @@ public class Projectile : MonoBehaviour {
 			}
 		}
 		affinity = owner.GetComponent<Entity>().affinity;
+		if(weapon == null){
+			transform.Find ("Body").gameObject.layer = LayerMask.NameToLayer("Player " + (3 - affinity.GetComponent<Fleet>().playerNumber) + " Visible");
+		}
 	}
 	
 	public void DestroyMe(){

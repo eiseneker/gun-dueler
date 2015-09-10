@@ -21,9 +21,9 @@ public class Bull : Minion {
 		transform.Translate(Vector3.up * Time.deltaTime * speed);
 	}
 	
-	private void OnTriggerEnter2D(Collider2D collider){
-		if(collider.gameObject == enemyPlayer){
-			IHarmable harmedObject = collider.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
+	private void OnCollisionEnter2D(Collision2D collision){
+		if(collision.gameObject.GetComponent<Entity>().affinity != GetComponent<Entity>().affinity){
+			IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
 			if(harmedObject != null){
 				harmedObject.ReceiveHit(1, gameObject);
 			}

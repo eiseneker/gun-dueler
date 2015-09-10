@@ -23,10 +23,10 @@ public class Sheep : Minion {
 		}
 	}
 	
-	void OnTriggerEnter2D (Collider2D collider){
-		if(collider.GetComponent<Entity>()){
-			if(collider.GetComponent<Entity>().affinity == GetComponent<Entity>().affinity){
-				Sheep sheep = collider.GetComponent<Sheep>();
+	void OnCollisionEnter2D (Collision2D collision){
+		if(collision.gameObject.GetComponent<Entity>()){
+			if(collision.gameObject.GetComponent<Entity>().affinity == GetComponent<Entity>().affinity){
+				Sheep sheep = collision.gameObject.GetComponent<Sheep>();
 				if(sheep){
 					sheep.Upgrade();
 					if(!skipDestroyOnMerge){
@@ -44,5 +44,6 @@ public class Sheep : Minion {
 		damageBehavior.HealToFull();
 		firesPerSecond += 1;
 		transform.localScale += new Vector3(0.1f, 0.1f, 0);
+		rigidbody2D.mass += 100;
 	}
 }
