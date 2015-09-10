@@ -63,6 +63,7 @@ public class SpawnTurret : Agent {
 	}
 	
 	private void DestroyMe(){
+		fleet.ReceiveDamage(5);
 		GameObject explosion = Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity) as GameObject;
 		explosion.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 	}
