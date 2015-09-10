@@ -23,7 +23,7 @@ public class SpawnTurret : Agent {
 	
 	void Update () {
 		currentSpawnCooldown += Time.deltaTime;
-		if(GameController.gameStarted && !disabled && transform.position.x > -5 && transform.position.x < 5){
+		if(GameController.gameStarted && !disabled && transform.position.x > -4.8 && transform.position.x < 4.8){
 			if(currentSpawnCooldown >= maxSpawnCooldown){
 				if(fleet.player == null && fleet.PlayerCanRespawn()){
 					GameObject player = fleet.AddPlayer();

@@ -7,12 +7,14 @@ public class Core : Agent {
 
 	private DamageBehavior damageBehavior;
 	private Fleet fleet;
+	private CoreSentry coreSentry;
 
 	void Start () {
 		fleet = GetComponent<Entity>().affinity.GetComponent<Fleet>();
 		damageBehavior = GetComponent<DamageBehavior>();
 		transform.Find ("Sentry").GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 		transform.Find ("Body").GetComponent<SpriteRenderer>().color = fleet.teamColor;
+		coreSentry = transform.Find ("Sentry").GetComponent<CoreSentry>();
 	}
 	
 	void Update(){
@@ -23,7 +25,10 @@ public class Core : Agent {
 	
 	public override void ReceiveHit(float damage, GameObject attackerObject) {
 		IAttacker attacker = ResolveAttacker(attackerObject);
-		if(attacker != null) attacker.RegisterSuccessfulAttack(0);
+		if(attacker != null) {
+			coreSentry.Fire (attackerObject);
+			attacker.RegisterSuccessfulAttack(0);
+		}
 		damageBehavior.ReceiveDamage(0);
 		fleet.ReceiveDamage(damage);
 		if(fleet.CurrentHealthRatio() <= 0){

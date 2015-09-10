@@ -18,13 +18,13 @@ public class CoreSentry : MonoBehaviour {
 		timeSinceLastFire += Time.deltaTime;
 	}
 	
-	private void Fire (GameObject target) {
+	public void Fire (GameObject target) {
 		if(timeSinceLastFire >= fireDelay){
 			timeSinceLastFire = 0f;
 			GameObject bulletPrefab = Resources.Load ("Bullet") as GameObject;
 			GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity) as GameObject;
 			BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
-			bullet.speed = 3f;
+			bullet.speed = 8f;
 			bullet.owner = gameObject;
 			
 			Vector3 direction = target.transform.position - transform.position;
