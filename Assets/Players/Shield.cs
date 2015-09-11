@@ -12,6 +12,7 @@ public class Shield : MonoBehaviour {
 	private float currentBrokenShieldTime;
 	private Transform body;
 	private bool ex = false;
+	private bool usesExNatively = true;
 	
 	void Start() {
 		currentShieldHealth = maxShieldHealth;
@@ -19,20 +20,22 @@ public class Shield : MonoBehaviour {
 	}
 
 	void Update() {
-		if(shieldIsUp){
-			if(!ex && currentShieldHealth > 0){
-				currentShieldHealth = Mathf.Clamp (currentShieldHealth - shieldHealthPerInterval, 0, maxShieldHealth);
+		if(!usesExNatively){
+			if(shieldIsUp){
+				if(!ex && currentShieldHealth > 0){
+					currentShieldHealth = Mathf.Clamp (currentShieldHealth - shieldHealthPerInterval, 0, maxShieldHealth);
+				}
+			}else{
+				if(currentShieldHealth < maxShieldHealth){
+					currentShieldHealth = Mathf.Clamp (currentShieldHealth + shieldHealthPerInterval, 0, maxShieldHealth);
+				}
 			}
-		}else{
-			if(currentShieldHealth < maxShieldHealth){
-				currentShieldHealth = Mathf.Clamp (currentShieldHealth + shieldHealthPerInterval, 0, maxShieldHealth);
+			if(ShieldIsBroken ()){
+				currentBrokenShieldTime = Mathf.Clamp (currentBrokenShieldTime - Time.deltaTime, 0, maxBrokenShieldTime);
 			}
-		}
-		if(ShieldIsBroken ()){
-			currentBrokenShieldTime = Mathf.Clamp (currentBrokenShieldTime - Time.deltaTime, 0, maxBrokenShieldTime);
-		}
-		if(currentShieldHealth <= 0){
-			BreakShield ();
+			if(currentShieldHealth <= 0){
+				BreakShield ();
+			}
 		}
 		
 		body.gameObject.SetActive (shieldIsUp);		
@@ -48,9 +51,13 @@ public class Shield : MonoBehaviour {
 	}
 	
 	public void ShieldUp(bool exAttempt) {
-		ex = exAttempt && player.SpendEx(1);
-		if(currentBrokenShieldTime <= 0 && !shieldIsUp){
-			shieldIsUp = true;
+		if(usesExNatively){
+			shieldIsUp = player.SpendEx(1 * Time.deltaTime);
+		}else{
+			ex = exAttempt && player.SpendEx(1);
+			if(currentBrokenShieldTime <= 0 && !shieldIsUp){
+				shieldIsUp = true;
+			}
 		}
 	}
 	
