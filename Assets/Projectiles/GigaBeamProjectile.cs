@@ -15,6 +15,7 @@ public class GigaBeamProjectile : Projectile {
 		GetComponent<SpriteRenderer>().color = GetTeamColor ();
 		transform.parent.parent = owner.transform.root.Find ("Bullets");
 		owner.GetComponent<Player>().LockInputs();
+		owner.GetComponent<Player>().LockExGain();
 	}
 	
 	void Update () {
@@ -28,6 +29,7 @@ public class GigaBeamProjectile : Projectile {
 			Destroy (gameObject);
 			if(owner){
 				owner.GetComponent<Player>().UnlockInputs();
+				owner.GetComponent<Player>().UnlockExGain();
 			}
 		}
 	}

@@ -21,6 +21,7 @@ public class Player : Agent, IAttacker {
 	private GameObject shieldObject;
 	private Shield shield;
 	private bool IsInputLocked = false;
+	private bool isExGainLocked = false;
 	private int playerNumber;
 	private bool exMode = false;
 	private float speed;
@@ -57,6 +58,7 @@ public class Player : Agent, IAttacker {
 		playerHitState.SwitchToInvincible();
 		damageBehavior = GetComponent<DamageBehavior>();
 		currentExValue = GetComponent<Entity>().affinity.GetComponent<Fleet>().lastExValue;
+		currentExValue = 50;
 	}
 		
 	void Update () {
@@ -117,7 +119,7 @@ public class Player : Agent, IAttacker {
 		}
 		
 		if(IsInExMode()){
-			if(!SpendEx(1 * Time.deltaTime)){
+			if(!SpendEx(7.5f * Time.deltaTime)){
 				ExitExMode();
 			}
 		}
@@ -160,6 +162,14 @@ public class Player : Agent, IAttacker {
 	
 	public void UnlockInputs(){
 		IsInputLocked = false;
+	}
+	
+	public void LockExGain(){
+		isExGainLocked = true;
+	}
+	
+	public void UnlockExGain(){
+		isExGainLocked = false;
 	}
 	
 	public void SetPlayerNumber(int inputPlayerNumber){
@@ -212,17 +222,20 @@ public class Player : Agent, IAttacker {
 	}
 	
 	private void AdjustEx(float value){
-		if(!IsInExMode()){
-			currentExValue = Mathf.Clamp (currentExValue + value, 0, maxExValue);
+		if(isExGainLocked && value > 0){
+			value = 0;
 		}
+		currentExValue = Mathf.Clamp (currentExValue + value, 0, maxExValue);
 	}
 	
 	private void EnterExMode(){
+		LockExGain();
 		body.transform.Find ("ExBody").gameObject.SetActive (true);
 		exMode = true;
 	}
 	
 	private void ExitExMode(){
+		UnlockExGain();
 		body.transform.Find ("ExBody").gameObject.SetActive (false);
 		exMode = false;
 	}

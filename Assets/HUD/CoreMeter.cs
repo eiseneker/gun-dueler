@@ -7,13 +7,13 @@ public class CoreMeter : MonoBehaviour {
 	private Fleet fleet;
 	private float meterRatio;
 	private Transform filler;
-	private Transform dangerText;
-	private Transform coreText;	
+//	private Transform dangerText;
+//	private Transform coreText;	
 	
 	void Start () {
 		filler = transform.Find ("Filler");
-		dangerText = transform.Find ("Danger Text");
-		coreText = transform.Find ("Core Text");
+//		dangerText = transform.Find ("Danger Text");
+//		coreText = transform.Find ("Core Text");
 	}
 	
 	void Update () {

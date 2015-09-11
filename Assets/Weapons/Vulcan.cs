@@ -2,9 +2,9 @@
 using System.Collections;
 
 public class Vulcan : Weapon {
-	private float defaultSpeed = 8;
+	private float defaultSpeed = 7;
 	private float defaultFireDelay = 0.10f;
-	private int defaultMaxBulletsInPlay = 6;
+	private int defaultMaxBulletsInPlay = 8;
 	
 	private GameObject bulletPrefab;
 	private float speed;
@@ -30,21 +30,19 @@ public class Vulcan : Weapon {
 			
 			if(ex){
 				maxBulletsInPlay *= 2;
-				fireDelay /= 1.5f;
-				speed *= 1.5f;
+				fireDelay /= 1.2f;
+				speed *= 1.2f;
 			}
 			if(player.yMovement < 0){
 				speed *= 1.5f;
 			}
 			
-			BulletProjectile bullet = newProjectile();
-		
-			bullet.speed = speed;
-			bullet.weapon = this;
-			bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
-			bullet.vector = Vector3.up;
-			RegisterBullet ();
-			OrientProjectile(bullet);
+			if(ex){
+				CreateBullet (0.2f);
+				CreateBullet (-0.2f);
+			}else{
+				CreateBullet (0);
+			}
 			timeSinceLastFire = 0f;
 		}
 	}
@@ -53,5 +51,17 @@ public class Vulcan : Weapon {
 		GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity) as GameObject;
 		BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
 		return(bullet);
+	}
+	
+	private void CreateBullet(float xOffset){
+		BulletProjectile bullet = newProjectile();
+		
+		bullet.speed = speed;
+		bullet.weapon = this;
+		bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
+		bullet.vector = Vector3.up;
+		bullet.transform.position = new Vector3(transform.position.x + xOffset, transform.position.y, 0);
+		RegisterBullet ();
+		OrientProjectile(bullet);
 	}
 }
