@@ -52,7 +52,7 @@ public class Shield : MonoBehaviour {
 	
 	public void ShieldUp(bool exAttempt) {
 		if(usesExNatively){
-			shieldIsUp = player.SpendEx(1 * Time.deltaTime);
+			shieldIsUp = player.SpendEx(1 * Time.deltaTime) && !player.playerHitState.isHit;
 		}else{
 			ex = exAttempt && player.SpendEx(1);
 			if(currentBrokenShieldTime <= 0 && !shieldIsUp){

@@ -14,7 +14,7 @@ public class MagnetMissile : Weapon {
 	
 	public void Fire (bool exAttempt) {
 		if(CanFire ()){
-			bool ex = exAttempt && player.SpendEx(25);
+			bool ex = exAttempt;
 			MagnetProjectile magnet;
 			speed = defaultSpeed;
 		

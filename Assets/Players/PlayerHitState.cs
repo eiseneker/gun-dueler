@@ -3,13 +3,13 @@ using System.Collections;
 
 public class PlayerHitState : MonoBehaviour {
 	public GameObject player;
+	public bool isHit = false;
 
 	private float maxInvincibleTime = 0.5f;
 	private float maxCriticalTime = 1.5f;
 	private HitState currentHitState;
 	private PlayerHitState playerHitState;
 	private float currentStateTime = 0f;
-	private bool isHit = false;
 	
 	private enum HitState
 	{

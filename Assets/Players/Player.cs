@@ -9,11 +9,11 @@ public class Player : Agent, IAttacker {
 	public float maxExValue = 100;
 	public float yMovement;
 	public float xMovement;
+	public PlayerHitState playerHitState;
 	
 	public static List<GameObject> players = new List<GameObject>();
 	
 	private float currentHealth;
-	private PlayerHitState playerHitState;
 	private Vulcan vulcan;
 	private Shotgun shotgun;
 	private MagnetMissile magnetMissile;
@@ -25,7 +25,7 @@ public class Player : Agent, IAttacker {
 	private int playerNumber;
 	private bool exMode = false;
 	private float speed;
-	private float currentExValue = 100;
+	private float currentExValue = 49;
 	private float defaultSpeed = 5.1f;
 	private DamageBehavior damageBehavior;
 	private float currentJustRespawned;
@@ -75,13 +75,11 @@ public class Player : Agent, IAttacker {
 				xMovement *= moveFactor;
 				yMovement *= moveFactor;
 				
-				if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1){
+				if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1 && currentExValue >= 50){
 					EnterExMode();
-				}else{
-					ExitExMode();
 				}
 				
-				if((xMovement != 0 || yMovement != 0) && IsInExMode () && SpendEx (1)){
+				if((xMovement != 0 || yMovement != 0) && IsInExMode ()){
 					speed = defaultSpeed * 1.5f;
 				}else{
 					speed = defaultSpeed;
@@ -115,6 +113,12 @@ public class Player : Agent, IAttacker {
 		}else{
 			transform.Translate (Vector3.up * Time.deltaTime * speed);
 			currentJustRespawned += Time.deltaTime;
+		}
+		
+		if(IsInExMode()){
+			if(!SpendEx(1 * Time.deltaTime)){
+				ExitExMode();
+			}
 		}
 	}
 	
@@ -163,11 +167,11 @@ public class Player : Agent, IAttacker {
 	}
 	
 	public void RegisterSuccessfulAttack(float value){
-		currentExValue = Mathf.Clamp (currentExValue + value, 0, maxExValue);
+		AdjustEx(value);
 	}
 	
 	public void RegisterSuccessfulDestroy(float value){
-		currentExValue = Mathf.Clamp (currentExValue + value, 0, maxExValue);
+		AdjustEx(value);
 	}
 	
 	public bool SpendEx(float amount){
@@ -199,6 +203,12 @@ public class Player : Agent, IAttacker {
 		Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity);
 		players.Remove (gameObject);
 		Destroy (gameObject);
+	}
+	
+	private void AdjustEx(float value){
+		if(!IsInExMode()){
+			currentExValue = Mathf.Clamp (currentExValue + value, 0, maxExValue);
+		}
 	}
 	
 	private void EnterExMode(){

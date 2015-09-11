@@ -22,7 +22,7 @@ public class Vulcan : Weapon {
 	public void Fire (bool exAttempt) {
 		if(CanFire ()){
 			AudioSource.PlayClipAtPoint(soundClip, transform.position);
-			bool ex = exAttempt && player.SpendEx(1);
+			bool ex = exAttempt;
 			
 			speed = defaultSpeed;
 			fireDelay = defaultFireDelay;

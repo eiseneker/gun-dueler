@@ -18,7 +18,7 @@ public class Shotgun : Weapon {
 	
 	public void Fire (bool exAttempt) {
 		if(CanFire ()){
-			bool ex = exAttempt && player.SpendEx(25);
+			bool ex = exAttempt;
 			speed = defaultSpeed;
 			if(ex) speed *= 1.5f;
 		
