@@ -21,7 +21,7 @@ public class HealthMeter : MonoBehaviour {
 			player = GetPlayer();
 			meterRatio = 1;
 		}else{
-			meterRatio = player.CurrentHealthRatio();
+			meterRatio = player.damageBehavior.CurrentHealthRatio();
 			healthText.gameObject.SetActive(!player.IsCritical());
 			criticalText.gameObject.SetActive(player.IsCritical());
 		}

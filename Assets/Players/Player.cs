@@ -4,16 +4,15 @@ using System.Collections.Generic;
 
 public class Player : Agent, IAttacker {
 	public GameObject shieldPrefab;
-	public float maxHealth;
 	public bool reversePosition;
 	public float maxExValue = 100;
 	public float yMovement;
 	public float xMovement;
 	public PlayerHitState playerHitState;
+	public DamageBehavior damageBehavior;
 	
 	public static List<GameObject> players = new List<GameObject>();
 	
-	private float currentHealth;
 	private Vulcan vulcan;
 	private Shotgun shotgun;
 	private MagnetMissile magnetMissile;
@@ -27,7 +26,6 @@ public class Player : Agent, IAttacker {
 	private float speed;
 	private float currentExValue = 49;
 	private float defaultSpeed = 5.1f;
-	private DamageBehavior damageBehavior;
 	private float currentJustRespawned;
 	private float maxJustRespawned = 0.25f;
 	
@@ -56,12 +54,14 @@ public class Player : Agent, IAttacker {
 		shieldObject.transform.parent = gameObject.transform;
 		shield = shieldObject.GetComponent<Shield>();
 		shield.player = this;
-		currentHealth = maxHealth;
 		playerHitState.SwitchToInvincible();
 		damageBehavior = GetComponent<DamageBehavior>();
 	}
 		
 	void Update () {
+		if(playerNumber == 1){
+			print (damageBehavior.CurrentHealthRatio());
+		}
 		if(currentJustRespawned >= maxJustRespawned){
 			if(!IsInputLocked){
 				xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
@@ -123,7 +123,7 @@ public class Player : Agent, IAttacker {
 	}
 	
 	public override void ReceiveHit(float damage, GameObject attackerObject) {
-		IAttacker attacker = attackerObject.GetComponent(typeof(IAttacker)) as IAttacker;
+		IAttacker attacker = ResolveAttacker(attackerObject);
 		
 		if(shield.IsShieldUp()){
 			shield.DamageShield(20);
@@ -134,7 +134,7 @@ public class Player : Agent, IAttacker {
 			
 			if(attacker != null) attacker.RegisterSuccessfulAttack(5);
 			
-			if(currentHealth <= 0 || playerHitState.IsCritical ()){
+			if(damageBehavior.CurrentHealthRatio() <= 0 || playerHitState.IsCritical ()){
 				DestroyMe();
 				if(attacker != null) attacker.RegisterSuccessfulDestroy(25);
 			}
@@ -145,11 +145,7 @@ public class Player : Agent, IAttacker {
 	public bool IsCritical(){
 		return(playerHitState.IsCritical());
 	}
-	
-	public float CurrentHealthRatio(){
-		return(currentHealth / maxHealth);
-	}
-	
+
 	public float CurrentExRatio(){
 		return(currentExValue / maxExValue);
 	}
@@ -200,6 +196,10 @@ public class Player : Agent, IAttacker {
 	}
 	
 	public void DestroyMe(){
+		if(IsInExMode()){
+			ExitExMode();
+			currentExValue = 0;
+		}
 		Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity);
 		players.Remove (gameObject);
 		Destroy (gameObject);
