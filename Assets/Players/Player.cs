@@ -24,7 +24,7 @@ public class Player : Agent, IAttacker {
 	private int playerNumber;
 	private bool exMode = false;
 	private float speed;
-	private float currentExValue = 49;
+	private float currentExValue = 0;
 	private float defaultSpeed = 5.1f;
 	private float currentJustRespawned;
 	private float maxJustRespawned = 0.25f;
@@ -219,7 +219,7 @@ public class Player : Agent, IAttacker {
 		exMode = false;
 	}
 	
-	private bool IsInExMode(){
+	public bool IsInExMode(){
 		return(exMode);
 	}
 	

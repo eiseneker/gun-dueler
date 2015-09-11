@@ -22,7 +22,7 @@ public class ExMeter : MonoBehaviour {
 			meterRatio = 1;
 		}else{
 			meterRatio = player.CurrentExRatio();
-			exText.gameObject.SetActive(meterRatio < 1);
+			exText.gameObject.SetActive(player.IsInExMode () || (meterRatio < 1 && meterRatio >= 0.5f));
 			superText.gameObject.SetActive(meterRatio >= 1);
 		}
 		filler.localScale = new Vector3(meterRatio, 1, 1);

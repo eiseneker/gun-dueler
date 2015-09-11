@@ -22,8 +22,8 @@ public class CoreMeter : MonoBehaviour {
 			meterRatio = 1;
 		}else{
 			meterRatio = fleet.CurrentHealthRatio();
-			dangerText.gameObject.SetActive(meterRatio <= 0.1f);
-			coreText.gameObject.SetActive(meterRatio > 0.1f);
+//			dangerText.gameObject.SetActive(meterRatio <= 0.1f);
+//			coreText.gameObject.SetActive(meterRatio > 0.1f);
 		}
 		filler.localScale = new Vector3(meterRatio, 1, 1);
 	}
