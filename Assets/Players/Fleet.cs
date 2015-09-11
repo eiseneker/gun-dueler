@@ -13,6 +13,7 @@ public class Fleet : MonoBehaviour {
 	public GameObject player;
 	public GameObject spawnTurretPrefab;
 	public GameObject[] structures;
+	public float lastExValue;
 
 	private float maxHealth = 50;
 	private float currentHealth;	

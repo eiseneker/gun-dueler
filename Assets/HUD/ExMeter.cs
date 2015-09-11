@@ -14,12 +14,12 @@ public class ExMeter : MonoBehaviour {
 		filler = transform.Find ("Filler");
 		exText = transform.Find ("Ex Text");
 		superText = transform.Find ("Super Text");
+		meterRatio = 0;
 	}
 	
 	void Update () {
 		if(player == null) {
 			player = GetPlayer();
-			meterRatio = 1;
 		}else{
 			meterRatio = player.CurrentExRatio();
 			exText.gameObject.SetActive(player.IsInExMode () || (meterRatio < 1 && meterRatio >= 0.5f));

@@ -56,6 +56,7 @@ public class Player : Agent, IAttacker {
 		shield.player = this;
 		playerHitState.SwitchToInvincible();
 		damageBehavior = GetComponent<DamageBehavior>();
+		currentExValue = GetComponent<Entity>().affinity.GetComponent<Fleet>().lastExValue;
 	}
 		
 	void Update () {
@@ -129,14 +130,17 @@ public class Player : Agent, IAttacker {
 			shield.DamageShield(20);
 			currentExValue += 4;
 		}else{
+			if(!playerHitState.isHit){
+				if(attacker != null) attacker.RegisterSuccessfulAttack(5);
+			}
+			
 			playerHitState.RegisterHit();
 			damageBehavior.ReceiveDamage(damage);
 			
-			if(attacker != null) attacker.RegisterSuccessfulAttack(5);
 			
 			if(damageBehavior.CurrentHealthRatio() <= 0 || playerHitState.IsCritical ()){
 				DestroyMe();
-				if(attacker != null) attacker.RegisterSuccessfulDestroy(25);
+				if(attacker != null) attacker.RegisterSuccessfulDestroy(15);
 			}
 		}
 		
@@ -200,6 +204,8 @@ public class Player : Agent, IAttacker {
 			ExitExMode();
 			currentExValue = 0;
 		}
+		currentExValue /= 2;
+		GetComponent<Entity>().affinity.GetComponent<Fleet>().lastExValue = currentExValue;
 		Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity);
 		players.Remove (gameObject);
 		Destroy (gameObject);
@@ -212,10 +218,12 @@ public class Player : Agent, IAttacker {
 	}
 	
 	private void EnterExMode(){
+		body.transform.Find ("ExBody").gameObject.SetActive (true);
 		exMode = true;
 	}
 	
 	private void ExitExMode(){
+		body.transform.Find ("ExBody").gameObject.SetActive (false);
 		exMode = false;
 	}
 	
