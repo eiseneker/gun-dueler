@@ -58,7 +58,6 @@ public class Player : Agent, IAttacker {
 		playerHitState.SwitchToInvincible();
 		damageBehavior = GetComponent<DamageBehavior>();
 		currentExValue = GetComponent<Entity>().affinity.GetComponent<Fleet>().lastExValue;
-		currentExValue = 50;
 	}
 		
 	void Update () {
@@ -88,12 +87,24 @@ public class Player : Agent, IAttacker {
 					speed = defaultSpeed;
 				}
 				
-				if((transform.position.x > -5 && xMovement * moveFactor < 0) || (transform.position.x < 5 && xMovement * moveFactor > 0)){
-					transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
-				}
+				if(playerNumber == 1){
 				
-				if((transform.position.y > -5.5f && yMovement * moveFactor > 0) || (transform.position.y < 5.5f && yMovement * moveFactor < 0)){
-					transform.Translate(Vector3.down * yMovement * Time.deltaTime * speed);
+					if((transform.position.x > -5 && xMovement * moveFactor < 0) || (transform.position.x < 5 && xMovement * moveFactor > 0)){
+						transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
+					}
+					
+					if((transform.position.y > -5.5f && yMovement * moveFactor > 0) || (transform.position.y < 5.5f && yMovement * moveFactor < 0)){
+						transform.Translate(Vector3.down * yMovement * Time.deltaTime * speed);
+					}
+				
+				}else{
+					if((transform.position.x < 5 && xMovement * moveFactor < 0) || (transform.position.x > -5 && xMovement * moveFactor > 0)){
+						transform.Translate(Vector3.left * xMovement * Time.deltaTime * speed);
+					}
+					
+					if((transform.position.y < 5.5f && yMovement * moveFactor > 0) || (transform.position.y > -5.5f && yMovement * moveFactor < 0)){
+						transform.Translate(Vector3.up * yMovement * Time.deltaTime * speed);
+					}
 				}
 				
 				if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
