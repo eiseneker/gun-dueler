@@ -6,7 +6,6 @@ public class ShredderContainer : MonoBehaviour {
 	private static float highestX;
 	
 	void Update(){
-		print ("moving to " + highestX);
 		transform.position = new Vector3(highestX, 0, 0);
 	}
 
