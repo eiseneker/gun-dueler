@@ -44,7 +44,7 @@ public class Fleet : MonoBehaviour {
 		
 		AddMinionsObject ();
 		AddPlayer();
-		AddStructures();
+//		AddStructures();
 	}
 	
 	void Update() {
@@ -58,23 +58,23 @@ public class Fleet : MonoBehaviour {
 		
 		rotationFactor = Mathf.Clamp (rotationFactor - Input.GetAxis ("Player"+playerNumber+"_MoveFleetLeft")/10 + Input.GetAxis ("Player"+playerNumber+"_MoveFleetRight")/10, -5, 5);
 		
-		shipBorder.transform.Translate(Vector3.right * Time.deltaTime * rotationFactor);
+//		shipBorder.transform.Translate(Vector3.right * Time.deltaTime * rotationFactor);
 		
-		if(rotationFactor > 0){
-			if(lastStructure.transform.position.x > 6 && !reversePosition || lastStructure.transform.position.x < -6 && reversePosition){
-				structuresInPlay.Remove (lastStructure);
-				structuresInPlay.Insert (0, lastStructure);
-				Vector3 firstPosition = firstStructure.transform.localPosition;
-				lastStructure.transform.localPosition = new Vector3(firstPosition.x - structureSpacing, firstPosition.y, 0);
-			}
-		}else{
-			if(firstStructure.transform.position.x < -6 && !reversePosition || firstStructure.transform.position.x > 6 && reversePosition){
-				structuresInPlay.Remove (firstStructure);
-				structuresInPlay.Add (firstStructure);
-				Vector3 lastPosition = lastStructure.transform.localPosition;
-				firstStructure.transform.localPosition = new Vector3(lastPosition.x + structureSpacing, lastPosition.y, 0);
-			}
-		}
+//		if(rotationFactor > 0){
+//			if(lastStructure.transform.position.x > 6 && !reversePosition || lastStructure.transform.position.x < -6 && reversePosition){
+//				structuresInPlay.Remove (lastStructure);
+//				structuresInPlay.Insert (0, lastStructure);
+//				Vector3 firstPosition = firstStructure.transform.localPosition;
+//				lastStructure.transform.localPosition = new Vector3(firstPosition.x - structureSpacing, firstPosition.y, 0);
+//			}
+//		}else{
+//			if(firstStructure.transform.position.x < -6 && !reversePosition || firstStructure.transform.position.x > 6 && reversePosition){
+//				structuresInPlay.Remove (firstStructure);
+//				structuresInPlay.Add (firstStructure);
+//				Vector3 lastPosition = lastStructure.transform.localPosition;
+//				firstStructure.transform.localPosition = new Vector3(lastPosition.x + structureSpacing, lastPosition.y, 0);
+//			}
+//		}
 	}
 	
 	void OnDrawGizmos () {
