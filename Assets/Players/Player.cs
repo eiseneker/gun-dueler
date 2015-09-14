@@ -75,6 +75,7 @@ public class Player : Agent, IAttacker {
 		Truck lastTruck;
 		GameObject truck0 = GetTruck (0);
 		GameObject truck1 = GetTruck (1);
+		ShredderContainer.ReportPosition(transform.position.x);
 		
 		if(truck0.transform.position.x > truck1.transform.position.x){
 			firstTruck = truck0.GetComponent<Truck>();
