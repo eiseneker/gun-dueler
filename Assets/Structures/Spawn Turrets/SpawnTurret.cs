@@ -28,7 +28,7 @@ public class SpawnTurret : Agent {
 				if(fleet.player == null && fleet.PlayerCanRespawn()){
 					GameObject player = fleet.AddPlayer();
 					player.transform.position = transform.position;
-					player.rigidbody2D.AddForce(new Vector2(0, 1));
+					player.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 1));
 				}else{
 					SpawnMinion ();
 				}

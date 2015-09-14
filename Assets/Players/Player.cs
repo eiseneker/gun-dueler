@@ -33,15 +33,15 @@ public class Player : Agent, IAttacker {
 	void Start(){
 		speed = defaultSpeed;
 		players.Add (gameObject);
-		playerHitState = gameObject.AddComponent ("PlayerHitState") as PlayerHitState;
+		playerHitState = gameObject.AddComponent<PlayerHitState>() as PlayerHitState;
 		playerHitState.player = gameObject;
-		vulcan = gameObject.AddComponent ("Vulcan") as Vulcan;
+		vulcan = gameObject.AddComponent<Vulcan>() as Vulcan;
 		vulcan.player = this;
-		shotgun = gameObject.AddComponent ("Shotgun") as Shotgun;
+		shotgun = gameObject.AddComponent<Shotgun>() as Shotgun;
 		shotgun.player = this;
-		gigaBeam = gameObject.AddComponent ("GigaBeam") as GigaBeam;
+		gigaBeam = gameObject.AddComponent<GigaBeam>() as GigaBeam;
 		gigaBeam.player = this;
-		magnetMissile = gameObject.AddComponent ("MagnetMissile") as MagnetMissile;
+		magnetMissile = gameObject.AddComponent<MagnetMissile>() as MagnetMissile;
 		magnetMissile.player = this;
 		reversePosition = GetComponent<Entity>().reversePosition;
 		body = transform.Find ("Body").gameObject;
@@ -61,18 +61,11 @@ public class Player : Agent, IAttacker {
 	}
 		
 	void Update () {
-		if(playerNumber == 1){
-			print (damageBehavior.CurrentHealthRatio());
-		}
 		if(currentJustRespawned >= maxJustRespawned){
 			if(!IsInputLocked){
 				xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
 				yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
 				float moveFactor = 1;
-				
-				if(reversePosition) {
-					moveFactor = -1;
-				}
 				
 				xMovement *= moveFactor;
 				yMovement *= moveFactor;
@@ -87,25 +80,8 @@ public class Player : Agent, IAttacker {
 					speed = defaultSpeed;
 				}
 				
-				if(playerNumber == 1){
-				
-					if((transform.position.x > -5 && xMovement * moveFactor < 0) || (transform.position.x < 5 && xMovement * moveFactor > 0)){
-						transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
-					}
-					
-					if((transform.position.y > -5.5f && yMovement * moveFactor > 0) || (transform.position.y < 5.5f && yMovement * moveFactor < 0)){
-						transform.Translate(Vector3.down * yMovement * Time.deltaTime * speed);
-					}
-				
-				}else{
-					if((transform.position.x < 5 && xMovement * moveFactor < 0) || (transform.position.x > -5 && xMovement * moveFactor > 0)){
-						transform.Translate(Vector3.left * xMovement * Time.deltaTime * speed);
-					}
-					
-					if((transform.position.y < 5.5f && yMovement * moveFactor > 0) || (transform.position.y > -5.5f && yMovement * moveFactor < 0)){
-						transform.Translate(Vector3.up * yMovement * Time.deltaTime * speed);
-					}
-				}
+				transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
+				transform.Translate(Vector3.up * yMovement * Time.deltaTime * speed);
 				
 				if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
 					shotgun.Fire (IsInExMode());

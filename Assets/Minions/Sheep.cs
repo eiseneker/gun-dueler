@@ -50,6 +50,6 @@ public class Sheep : Minion {
 		damageBehavior.HealToFull();
 		firesPerSecond += 1;
 		transform.localScale += new Vector3(0.1f, 0.1f, 0);
-		rigidbody2D.mass += 100;
+		GetComponent<Rigidbody2D>().mass += 100;
 	}
 }
