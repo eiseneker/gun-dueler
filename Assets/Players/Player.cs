@@ -71,6 +71,16 @@ public class Player : Agent, IAttacker {
 	}
 		
 	void Update () {
+		Truck leadTruck = (Truck.trucks[0] as GameObject).GetComponent<Truck>();
+		float leadingY = 0;
+		
+		foreach(GameObject truck in Truck.trucks){
+			if(truck.transform.position.x > leadingY){
+				leadingY = truck.transform.position.y;
+				leadTruck = truck.GetComponent<Truck>();
+			}
+		}
+	
 		if(currentJustRespawned >= maxJustRespawned){
 			if(!IsInputLocked){
 				float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
@@ -89,22 +99,27 @@ public class Player : Agent, IAttacker {
 				}else{
 					speed = defaultSpeed;
 				}
-				
-				if(xMovement == 0){
-					Idle ();
+						
+				if(transform.position.x >= leadTruck.headElement.transform.position.x + 3){
+					myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, leadTruck.GetComponent<Rigidbody2D>().velocity.magnitude);
+				}else{
+					if(xMovement == 0){
+						Idle ();
+					}
+					
+					if(xMovement > 0){
+						Accelerate();
+					}
+					
+					if(xMovement < 0){
+						Brake ();
+					}
 				}
-				
-				if(xMovement > 0){
-					Accelerate(xMovement);
-				}
-				
-				if(xMovement < 0){
-					Brake (xMovement);
-				}
-				
 				if(yMovement != 0){
 					Steer(yMovement);				
 				}
+				
+				
 				
 				
 				if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
@@ -134,8 +149,6 @@ public class Player : Agent, IAttacker {
 				ExitExMode();
 			}
 		}
-		
-		print(myRigidbody.velocity.magnitude);
 	}
 	
 	
@@ -156,17 +169,17 @@ public class Player : Agent, IAttacker {
 		}
 	}
 	
-	private void Brake(float movement){
+	private void Brake(){
 		if(myRigidbody.velocity.magnitude < minVelocity){
 			myRigidbody.AddRelativeForce (Vector3.up * accelerationFactor * Time.deltaTime * speed);
 			myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, minVelocity);
 		}else{
-			myRigidbody.AddRelativeForce (Vector3.up * brakeFactor * movement * Time.deltaTime * speed);
+			myRigidbody.AddRelativeForce (Vector3.up * brakeFactor * -1 * Time.deltaTime * speed);
 		}
 	}
 	
-	private void Accelerate(float movement){
-		myRigidbody.AddRelativeForce (Vector3.up * accelerationFactor * movement * Time.deltaTime * speed);
+	private void Accelerate(){
+		myRigidbody.AddRelativeForce (Vector3.up * accelerationFactor * Time.deltaTime * speed);
 		myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, maxVelocity);
 	}
 	

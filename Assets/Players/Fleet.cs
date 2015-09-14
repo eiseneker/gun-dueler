@@ -22,29 +22,21 @@ public class Fleet : MonoBehaviour {
 	private GameObject core;
 	private float maxPlayerRespawnTime = 5;
 	private float currentPlayerRespawnTime;
-	private float structureSpacing = 2;
-	private ArrayList structurePositions = new ArrayList();
-	private ArrayList structureList = new ArrayList();
-	private ArrayList structuresInPlay = new ArrayList();
-	private GameObject shipBorder;
-	private float rotationFactor = -0.5f;
+	private Truck truck;
 
 	void Start () {
-		structureList.AddRange (structures);
-	
-		for(int i = 0 - structures.Length/2; i < structures.Length/2; i++){
-			structurePositions.Add (i * structureSpacing);
-		}
+		truck = transform.Find ("Truck").GetComponent<Truck>();
+		truck.structures = structures;
+		truck.reversePosition = reversePosition;
 	
 		reversePosition = GetComponent<Entity>().reversePosition;
 		currentHealth = maxHealth;
-		shipBorder = transform.Find ("Ship Border").gameObject;
 		
 		GetComponent<Entity>().affinity = gameObject;
+		truck.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 		
 		AddMinionsObject ();
 		AddPlayer();
-//		AddStructures();
 	}
 	
 	void Update() {
@@ -53,28 +45,6 @@ public class Fleet : MonoBehaviour {
 				currentPlayerRespawnTime += Time.deltaTime;
 			}
 		}
-//		GameObject lastStructure = structuresInPlay[structures.Length - 1] as GameObject;
-//		GameObject firstStructure = structuresInPlay[0] as GameObject;
-		
-//		rotationFactor = Mathf.Clamp (rotationFactor - Input.GetAxis ("Player"+playerNumber+"_MoveFleetLeft")/10 + Input.GetAxis ("Player"+playerNumber+"_MoveFleetRight")/10, -5, 5);
-		
-//		shipBorder.transform.Translate(Vector3.right * Time.deltaTime * rotationFactor);
-		
-//		if(rotationFactor > 0){
-//			if(lastStructure.transform.position.x > 6 && !reversePosition || lastStructure.transform.position.x < -6 && reversePosition){
-//				structuresInPlay.Remove (lastStructure);
-//				structuresInPlay.Insert (0, lastStructure);
-//				Vector3 firstPosition = firstStructure.transform.localPosition;
-//				lastStructure.transform.localPosition = new Vector3(firstPosition.x - structureSpacing, firstPosition.y, 0);
-//			}
-//		}else{
-//			if(firstStructure.transform.position.x < -6 && !reversePosition || firstStructure.transform.position.x > 6 && reversePosition){
-//				structuresInPlay.Remove (firstStructure);
-//				structuresInPlay.Add (firstStructure);
-//				Vector3 lastPosition = lastStructure.transform.localPosition;
-//				firstStructure.transform.localPosition = new Vector3(lastPosition.x + structureSpacing, lastPosition.y, 0);
-//			}
-//		}
 	}
 	
 	void OnDrawGizmos () {
@@ -99,24 +69,6 @@ public class Fleet : MonoBehaviour {
 		currentPlayerRespawnTime = 0;
 		ResetPlayerRespawn();
 		return(player);
-	}
-	
-	void AddStructure(Vector3 structurePosition, GameObject structurePrefab){
-		GameObject structure = Instantiate (structurePrefab, Vector3.zero, Quaternion.identity) as GameObject;
-		structure.transform.parent = shipBorder.transform;
-		structure.transform.localPosition = structurePosition;
-		structure.GetComponent<Entity>().affinity = gameObject;
-		structure.GetComponent<Entity>().reversePosition = reversePosition;
-		structuresInPlay.Add (structure);
-	}
-	
-	void AddStructures(){
-		int index = 0;
-		foreach(GameObject structure in structureList){
-			Vector3 position = new Vector3((float)structurePositions[index], 0, 0);
-			AddStructure (position, structure);
-			index++;
-		}
 	}
 	
 	public bool PlayerCanRespawn(){
