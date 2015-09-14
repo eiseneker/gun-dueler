@@ -71,14 +71,17 @@ public class Player : Agent, IAttacker {
 	}
 		
 	void Update () {
-		Truck leadTruck = (Truck.trucks[0] as GameObject).GetComponent<Truck>();
-		float leadingY = 0;
+		Truck firstTruck;
+		Truck lastTruck;
+		GameObject truck0 = GetTruck (0);
+		GameObject truck1 = GetTruck (1);
 		
-		foreach(GameObject truck in Truck.trucks){
-			if(truck.transform.position.x > leadingY){
-				leadingY = truck.transform.position.y;
-				leadTruck = truck.GetComponent<Truck>();
-			}
+		if(truck0.transform.position.x > truck1.transform.position.x){
+			firstTruck = truck0.GetComponent<Truck>();
+			lastTruck = truck1.GetComponent<Truck>();
+		}else{
+			lastTruck = truck0.GetComponent<Truck>();
+			firstTruck = truck1.GetComponent<Truck>();
 		}
 	
 		if(currentJustRespawned >= maxJustRespawned){
@@ -100,8 +103,10 @@ public class Player : Agent, IAttacker {
 					speed = defaultSpeed;
 				}
 						
-				if(transform.position.x >= leadTruck.headElement.transform.position.x + 3){
-					myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, leadTruck.GetComponent<Rigidbody2D>().velocity.magnitude);
+				if(transform.position.x >= firstTruck.headElement.transform.position.x + 3){
+					myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, firstTruck.GetComponent<Rigidbody2D>().velocity.magnitude);
+				}else if(transform.position.x <= lastTruck.lastElement.transform.position.x - 3){
+					Accelerate ();
 				}else{
 					if(xMovement == 0){
 						Idle ();
@@ -300,6 +305,10 @@ public class Player : Agent, IAttacker {
 	
 	public bool IsInExMode(){
 		return(exMode);
+	}
+	
+	private GameObject GetTruck(int index){
+		return(Truck.trucks[index] as GameObject);
 	}
 	
 }

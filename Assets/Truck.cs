@@ -20,6 +20,7 @@ public class Truck : MonoBehaviour {
 	public static ArrayList trucks = new ArrayList();
 	public ArrayList structuresInPlay = new ArrayList();
 	public GameObject headElement;
+	public GameObject lastElement;
 
 	// Use this for initialization
 	void Start () {
@@ -33,6 +34,7 @@ public class Truck : MonoBehaviour {
 		
 		AddStructures();
 		headElement = structuresInPlay[structuresInPlay.Count - 1] as GameObject;
+		lastElement = structuresInPlay[0] as GameObject;
 		trucks.Add(gameObject);
 	}
 	
