@@ -6,8 +6,6 @@ public class Player : Agent, IAttacker {
 	public GameObject shieldPrefab;
 	public bool reversePosition;
 	public float maxExValue = 100;
-	public float yMovement;
-	public float xMovement;
 	public PlayerHitState playerHitState;
 	public DamageBehavior damageBehavior;
 	
@@ -29,8 +27,16 @@ public class Player : Agent, IAttacker {
 	private float defaultSpeed = 5.1f;
 	private float currentJustRespawned;
 	private float maxJustRespawned = 0.25f;
+	private Rigidbody2D myRigidbody;
+	private float accelerationFactor = 50;
+	private float brakeFactor = 50;
+	private float maxVelocity = 10;
+	private float minVelocity = 3;
+	private float idleVelocity = 5;
+	private float idleFactor = 25;
 	
 	void Start(){
+		myRigidbody = GetComponent<Rigidbody2D>();
 		speed = defaultSpeed;
 		players.Add (gameObject);
 		playerHitState = gameObject.AddComponent<PlayerHitState>() as PlayerHitState;
@@ -58,13 +64,17 @@ public class Player : Agent, IAttacker {
 		playerHitState.SwitchToInvincible();
 		damageBehavior = GetComponent<DamageBehavior>();
 		currentExValue = GetComponent<Entity>().affinity.GetComponent<Fleet>().lastExValue;
+		gameObject.transform.eulerAngles = new Vector3(
+			gameObject.transform.eulerAngles.x,
+			gameObject.transform.eulerAngles.y,
+			gameObject.transform.eulerAngles.z - 90);
 	}
 		
 	void Update () {
 		if(currentJustRespawned >= maxJustRespawned){
 			if(!IsInputLocked){
-				xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
-				yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
+				float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
+				float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
 				float moveFactor = 1;
 				
 				xMovement *= moveFactor;
@@ -80,8 +90,22 @@ public class Player : Agent, IAttacker {
 					speed = defaultSpeed;
 				}
 				
-				transform.Translate(Vector3.right * xMovement * Time.deltaTime * speed);
-				transform.Translate(Vector3.up * yMovement * Time.deltaTime * speed);
+				if(xMovement == 0){
+					Idle ();
+				}
+				
+				if(xMovement > 0){
+					Accelerate(xMovement);
+				}
+				
+				if(xMovement < 0){
+					Brake (xMovement);
+				}
+				
+				if(yMovement != 0){
+					Steer(yMovement);				
+				}
+				
 				
 				if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
 					shotgun.Fire (IsInExMode());
@@ -101,7 +125,7 @@ public class Player : Agent, IAttacker {
 				shield.ShieldDown ();
 			}
 		}else{
-			transform.Translate (Vector3.up * Time.deltaTime * speed);
+//			transform.Translate (Vector3.up * Time.deltaTime * speed);
 			currentJustRespawned += Time.deltaTime;
 		}
 		
@@ -110,6 +134,40 @@ public class Player : Agent, IAttacker {
 				ExitExMode();
 			}
 		}
+		
+		print(myRigidbody.velocity.magnitude);
+	}
+	
+	
+	
+	private void Steer(float movement){
+		float velocityRange = maxVelocity - minVelocity;
+		float adjustedVelocity = myRigidbody.velocity.magnitude - minVelocity;
+		float velocityRatio = adjustedVelocity/velocityRange;
+		transform.Translate(Vector3.left * movement * velocityRatio * Time.deltaTime * speed);
+	}
+	
+	private void Idle(){
+		if(myRigidbody.velocity.magnitude > idleVelocity){
+			myRigidbody.AddRelativeForce (Vector3.up * -accelerationFactor * Time.deltaTime * speed);
+		}else{
+			myRigidbody.AddRelativeForce (Vector3.up * idleFactor * Time.deltaTime * speed);
+			myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, idleVelocity);
+		}
+	}
+	
+	private void Brake(float movement){
+		if(myRigidbody.velocity.magnitude < minVelocity){
+			myRigidbody.AddRelativeForce (Vector3.up * accelerationFactor * Time.deltaTime * speed);
+			myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, minVelocity);
+		}else{
+			myRigidbody.AddRelativeForce (Vector3.up * brakeFactor * movement * Time.deltaTime * speed);
+		}
+	}
+	
+	private void Accelerate(float movement){
+		myRigidbody.AddRelativeForce (Vector3.up * accelerationFactor * movement * Time.deltaTime * speed);
+		myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, maxVelocity);
 	}
 	
 	public override void ReceiveHit(float damage, GameObject attackerObject) {

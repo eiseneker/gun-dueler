@@ -33,9 +33,11 @@ public class Vulcan : Weapon {
 				fireDelay /= 1.2f;
 				speed *= 1.2f;
 			}
-			if(player.yMovement < 0){
-				speed *= 1.5f;
-			}
+			
+			//TODO: Find alternative
+//			if(player.yMovement < 0){
+//				speed *= 1.5f;
+//			}
 			
 			if(ex){
 				CreateBullet (0.2f);

@@ -53,10 +53,10 @@ public class Fleet : MonoBehaviour {
 				currentPlayerRespawnTime += Time.deltaTime;
 			}
 		}
-		GameObject lastStructure = structuresInPlay[structures.Length - 1] as GameObject;
-		GameObject firstStructure = structuresInPlay[0] as GameObject;
+//		GameObject lastStructure = structuresInPlay[structures.Length - 1] as GameObject;
+//		GameObject firstStructure = structuresInPlay[0] as GameObject;
 		
-		rotationFactor = Mathf.Clamp (rotationFactor - Input.GetAxis ("Player"+playerNumber+"_MoveFleetLeft")/10 + Input.GetAxis ("Player"+playerNumber+"_MoveFleetRight")/10, -5, 5);
+//		rotationFactor = Mathf.Clamp (rotationFactor - Input.GetAxis ("Player"+playerNumber+"_MoveFleetLeft")/10 + Input.GetAxis ("Player"+playerNumber+"_MoveFleetRight")/10, -5, 5);
 		
 //		shipBorder.transform.Translate(Vector3.right * Time.deltaTime * rotationFactor);
 		
