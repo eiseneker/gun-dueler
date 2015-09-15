@@ -6,10 +6,12 @@ public class PlayerCamera : MonoBehaviour {
 	public GameObject player;
 	
 	public int playerNumber;
+	private Vector3  currentVelocity = new Vector3(0, 0, 0);
 
-	void Update () {
+	void LateUpdate () {
 		if(player){
-			transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
+			Vector3 destination = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
+			transform.position = Vector3.SmoothDamp(transform.position, destination, ref currentVelocity, 0.5f);
 		}else{
 			player = GetPlayer();
 		}
@@ -18,4 +20,5 @@ public class PlayerCamera : MonoBehaviour {
 	private GameObject GetPlayer(){
 		return(GameObject.Find ("Game Root/Players/Player " + playerNumber + " Fleet/Player(Clone)"));
 	}
+	
 }
