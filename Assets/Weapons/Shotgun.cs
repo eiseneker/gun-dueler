@@ -42,6 +42,8 @@ public class Shotgun : Weapon {
 		bullet.weapon = this;
 		bullet.yVector = yVector;
 		bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
+		float xMovement = player.GetComponent<Rigidbody2D>().velocity.magnitude;
+		bullet.xVector = Mathf.Round (xMovement);
 		OrientProjectile(bullet);
 		bullet.RotateMe (angle);
 	}
