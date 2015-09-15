@@ -3,7 +3,8 @@ using System.Collections;
 
 public class BulletProjectile : Projectile, IShreddable {
 	public float speed;
-	public Vector3 vector;
+	public float xVector;
+	public float yVector;
 	
 	private Transform body;
 	private SpriteRenderer bodySprite;
@@ -18,7 +19,8 @@ public class BulletProjectile : Projectile, IShreddable {
 	}
 	
 	void Update () {
-		transform.Translate (vector * Time.deltaTime * speed);
+		print (xVector);
+		transform.Translate (new Vector3(xVector * Time.deltaTime, yVector * Time.deltaTime * speed, 0));
 	}
 	
 	void OnTriggerEnter2D (Collider2D collision) {

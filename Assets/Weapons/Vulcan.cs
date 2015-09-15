@@ -62,9 +62,9 @@ public class Vulcan : Weapon {
 		bullet.weapon = this;
 		bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 		float xMovement = player.GetComponent<Rigidbody2D>().velocity.magnitude;
-		print(xMovement);
-		bullet.vector = new Vector3(1, 1, 0);
-		bullet.transform.position = new Vector3(transform.position.x + xOffset, transform.position.y, 0);
+		bullet.yVector = 1;
+		bullet.xVector = Mathf.Round (xMovement);
+		bullet.transform.position = new Vector3((Mathf.Round(transform.position.x * 100f) / 100f), transform.position.y, 0);
 		RegisterBullet ();
 		OrientProjectile(bullet);
 	}

@@ -161,8 +161,9 @@ public class Player : Agent, IAttacker {
 	
 	private void Steer(float movement){
 		float velocityRange = maxVelocity - minVelocity;
-		float adjustedVelocity = myRigidbody.velocity.magnitude - minVelocity;
+		float adjustedVelocity = myRigidbody.velocity.magnitude;
 		float velocityRatio = adjustedVelocity/velocityRange;
+		
 		transform.Translate(Vector3.left * movement * velocityRatio * Time.deltaTime * speed);
 	}
 	

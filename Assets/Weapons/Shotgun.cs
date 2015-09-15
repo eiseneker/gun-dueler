@@ -23,11 +23,11 @@ public class Shotgun : Weapon {
 			if(ex) speed *= 1.5f;
 		
 			foreach(float angle in angles){
-				CreateBullet (angle, Vector3.down);
-				CreateBullet (-angle, Vector3.down);
+				CreateBullet (angle, -1);
+				CreateBullet (-angle, -1);
 				if(ex){
-					CreateBullet (angle, Vector3.up);
-					CreateBullet (-angle, Vector3.up);
+					CreateBullet (angle, 1);
+					CreateBullet (-angle, 1);
 				}
 			}
 			
@@ -36,11 +36,11 @@ public class Shotgun : Weapon {
 	}
 	
 	
-	private void CreateBullet(float angle, Vector3 vector){
+	private void CreateBullet(float angle, float yVector){
 		BulletProjectile bullet = newProjectile();
 		bullet.speed = speed;
 		bullet.weapon = this;
-		bullet.vector = vector;
+		bullet.yVector = yVector;
 		bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 		OrientProjectile(bullet);
 		bullet.RotateMe (angle);

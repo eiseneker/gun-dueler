@@ -71,6 +71,6 @@ public class Minion : Agent, IAttacker, IShreddable {
 		BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
 		bullet.speed = bulletSpeed;
 		bullet.owner = gameObject;
-		bullet.vector = Vector3.up;
+		bullet.yVector = 1;
 	}
 }
