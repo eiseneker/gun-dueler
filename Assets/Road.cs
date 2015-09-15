@@ -16,7 +16,7 @@ public class Road : MonoBehaviour {
 	
 	
 	public void LoadNewRoad(){
-		GameObject road = Instantiate (gameObject, new Vector3(transform.position.x + 50, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
+		GameObject road = Instantiate (gameObject, new Vector3(transform.position.x + 100, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
 		road.transform.parent = transform.parent;
 	}
 	
