@@ -115,9 +115,11 @@ public class Player : Agent, IAttacker {
 					if(xMovement < 0){
 						vehicleControls.Brake ();
 					}
-				}
-				if(yMovement != 0){
-					vehicleControls.Steer(yMovement);				
+					if(yMovement != 0){
+						vehicleControls.Steer(yMovement);
+					}else{
+						vehicleControls.Straight();
+					}
 				}
 				
 				

@@ -4,6 +4,8 @@ using System.Collections;
 public class VehicleControls : MonoBehaviour {
 
 	private Rigidbody2D myRigidbody;
+	private bool drivingStraight;
+	
 	
 	public float accelerationFactor = 50;
 	public float brakeFactor = 50;
@@ -22,7 +24,15 @@ public class VehicleControls : MonoBehaviour {
 		float adjustedVelocity = myRigidbody.velocity.magnitude;
 		float velocityRatio = adjustedVelocity/velocityRange;
 		
-		transform.Translate(Vector3.left * movement * velocityRatio * Time.deltaTime * speed);
+		myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, movement * speed * velocityRatio);
+		drivingStraight = false;
+	}
+	
+	public void Straight(){
+		if(!drivingStraight){
+			myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, 0);
+			drivingStraight = true;
+		}
 	}
 	
 	public void Idle(){

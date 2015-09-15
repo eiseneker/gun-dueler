@@ -15,8 +15,7 @@ public class Sheep : Minion {
 	private float acceleration;
 	private GameObject enemyPlayer;
 	private DriveBehavior driveBehavior;
-	
-	public int upgradeCount;
+	private int upgradeCount;
 	
 	private enum DriveBehavior
 	{
@@ -41,7 +40,7 @@ public class Sheep : Minion {
 		
 		enemyPlayer = GetComponent<Entity>().EnemyPlayer();
 		
-		if(enemyPlayer && Mathf.Abs(enemyPlayer.transform.position.x - transform.position.x) < 1){
+		if(enemyPlayer && Mathf.Abs(enemyPlayer.transform.position.x - transform.position.x) < 3){
 			driveBehavior = DriveBehavior.Idle;
 		}else if(enemyPlayer == null){
 			driveBehavior = DriveBehavior.Idle;
@@ -58,6 +57,8 @@ public class Sheep : Minion {
 		
 		if(currentStartupTime < maxStartupTime){
 			vehicleControls.Steer (0.25f * reverseFactor);
+		}else{
+			vehicleControls.Straight ();
 		}
 		
 		if(driveBehavior == DriveBehavior.Idle){
@@ -81,12 +82,9 @@ public class Sheep : Minion {
 			if(collision.gameObject.GetComponent<Entity>().affinity == GetComponent<Entity>().affinity){
 				Sheep sheep = collision.gameObject.GetComponent<Sheep>();
 				if(sheep){
-					int count1 = this.upgradeCount;
-					int count2 = sheep.upgradeCount;
 					if(this.upgradeCount + sheep.upgradeCount < 2){
 						sheep.Upgrade(sheep.upgradeCount + 1);
 						if(!preserved){
-							print ("destroyed! " + count1 + " - " + count2);
 							Destroy (gameObject);
 						}
 					}
