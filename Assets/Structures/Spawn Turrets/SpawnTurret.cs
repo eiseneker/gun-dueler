@@ -10,9 +10,14 @@ public class SpawnTurret : Structure {
 	private GameObject minionsObject;
 	private GameObject player;
 	private Fleet fleet;
-	
+	private GameObject enemyPlayer;
+	private float distanceToPlayer;
+	private float maxSpawnCooldown;
+
 	public GameObject minionPrefab;
-	public float maxSpawnCooldown;
+	public float defaultMaxSpawnCooldown;
+	public float maxDistanceToPlayer;
+	public float minimumSpawnCooldown;
 	
 	void Start(){
 		damageBehavior = GetComponent<DamageBehavior>();
@@ -22,20 +27,28 @@ public class SpawnTurret : Structure {
 	}
 	
 	void Update () {
-		currentSpawnCooldown += Time.deltaTime;
-		if(GameController.gameStarted && !disabled){
-			if(currentSpawnCooldown >= maxSpawnCooldown){
-				if(fleet.player == null && fleet.PlayerCanRespawn()){
-					GameObject player = fleet.AddPlayer();
-					player.transform.position = transform.position;
-					player.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 1));
-				}else{
-					SpawnMinion ();
+		if(enemyPlayer == null){
+			enemyPlayer = GetComponent<Entity>().EnemyPlayer();
+		}
+		distanceToPlayer = DistanceToEnemyPlayer();
+		if(enemyPlayer && !OutOfSpawnRange()){
+			maxSpawnCooldown = Mathf.Clamp (DistanceToEnemyPlayer()/maxDistanceToPlayer * defaultMaxSpawnCooldown, minimumSpawnCooldown, defaultMaxSpawnCooldown);
+		
+			currentSpawnCooldown += Time.deltaTime;
+			if(GameController.gameStarted && !disabled){
+				if(currentSpawnCooldown >= maxSpawnCooldown){
+					if(fleet.player == null && fleet.PlayerCanRespawn()){
+						GameObject player = fleet.AddPlayer();
+						player.transform.position = transform.position;
+						player.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 1));
+					}else{
+						SpawnMinion ();
+					}
+					currentSpawnCooldown = 0;
 				}
+			}else{
 				currentSpawnCooldown = 0;
 			}
-		}else{
-			currentSpawnCooldown = 0;
 		}
 		bodySprite.color = NormalColor();
 	}
@@ -83,5 +96,13 @@ public class SpawnTurret : Structure {
 			color = new Color(0.3f, 0.3f, 0.3f);
 		}
 		return(color);
+	}
+	
+	private bool OutOfSpawnRange(){
+		return(DistanceToEnemyPlayer() > maxDistanceToPlayer);
+	}
+	
+	private float DistanceToEnemyPlayer(){
+		return(Mathf.Abs (enemyPlayer.transform.position.x - transform.position.x));
 	}
 }

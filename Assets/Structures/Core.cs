@@ -22,7 +22,6 @@ public class Core : Structure, IProjectilePassable {
 		if(enemyPlayerNumber == 0){
 			FetchEnemyPlayer();
 		}
-		print (GetComponent<Rigidbody2D>().velocity.x);
 	}
 	
 	public override void ReceiveHit(float damage, GameObject attackerObject) {
