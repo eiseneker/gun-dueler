@@ -58,8 +58,6 @@ public class Sheep : Minion {
 			vehicleControls.Steer (0.25f * reverseFactor);
 		}
 		
-		print (driveBehavior);
-		
 		if(driveBehavior == DriveBehavior.Idle){
 			vehicleControls.Idle ();
 		}else if (driveBehavior == DriveBehavior.Accelerate){
