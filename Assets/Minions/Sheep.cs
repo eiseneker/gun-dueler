@@ -6,7 +6,7 @@ public class Sheep : Minion {
 	private float currentStartupTime;
 	private float maxStartupTime;
 	private float firesPerSecond = 2f;
-	private bool skipDestroyOnMerge = false;
+	private bool preserved = false;
 	private Transform turretTransform;
 	private SheepTurret turret;
 	private VehicleControls vehicleControls;
@@ -15,6 +15,8 @@ public class Sheep : Minion {
 	private float acceleration;
 	private GameObject enemyPlayer;
 	private DriveBehavior driveBehavior;
+	
+	public int upgradeCount;
 	
 	private enum DriveBehavior
 	{
@@ -79,12 +81,17 @@ public class Sheep : Minion {
 			if(collision.gameObject.GetComponent<Entity>().affinity == GetComponent<Entity>().affinity){
 				Sheep sheep = collision.gameObject.GetComponent<Sheep>();
 				if(sheep){
-					sheep.Upgrade();
-					if(!skipDestroyOnMerge){
-						Destroy (gameObject);
+					int count1 = this.upgradeCount;
+					int count2 = sheep.upgradeCount;
+					if(this.upgradeCount + sheep.upgradeCount < 2){
+						sheep.Upgrade(sheep.upgradeCount + 1);
+						if(!preserved){
+							print ("destroyed! " + count1 + " - " + count2);
+							Destroy (gameObject);
+						}
 					}
+					preserved = false;
 				}
-				skipDestroyOnMerge = false;
 			}else{
 				IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
 				if(harmedObject != null){
@@ -102,11 +109,14 @@ public class Sheep : Minion {
 		}
 	}
 	
-	protected void Upgrade(){
-		skipDestroyOnMerge = true;
-		damageBehavior.IncreaseMaxHealth(2);
-		damageBehavior.HealToFull();
-		firesPerSecond += 1;
-		transform.localScale += new Vector3(0.1f, 0.1f, 0);
+	protected void Upgrade(int count){
+		for(int i = 0; i < count; i++){
+			preserved = true;
+			damageBehavior.IncreaseMaxHealth(2);
+			damageBehavior.HealToFull();
+			firesPerSecond += 1;
+			transform.localScale += new Vector3(0.1f, 0.1f, 0);
+			upgradeCount++;
+		}
 	}
 }
