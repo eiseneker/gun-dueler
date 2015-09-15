@@ -14,10 +14,10 @@ public class Fleet : MonoBehaviour {
 	public GameObject spawnTurretPrefab;
 	public GameObject[] structures;
 	public float lastExValue;
+	public bool reversePosition;
 
 	private float maxHealth = 50;
 	private float currentHealth;	
-	private bool reversePosition;
 	private GameObject minions;
 	private GameObject core;
 	private float maxPlayerRespawnTime = 5;
@@ -27,13 +27,12 @@ public class Fleet : MonoBehaviour {
 	void Start () {
 		truck = transform.Find ("Truck").GetComponent<Truck>();
 		truck.structures = structures;
-		truck.reversePosition = reversePosition;
 	
-		reversePosition = GetComponent<Entity>().reversePosition;
 		currentHealth = maxHealth;
 		
 		GetComponent<Entity>().affinity = gameObject;
 		truck.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
+		truck.reversePosition = reversePosition;
 		
 		AddMinionsObject ();
 		AddPlayer();
@@ -64,7 +63,6 @@ public class Fleet : MonoBehaviour {
 		player = Instantiate (playerPrefab, transform.Find ("Player Position").position, Quaternion.identity) as GameObject;
 		player.transform.parent = transform;
 		player.GetComponent<Entity>().affinity = gameObject;
-		player.GetComponent<Entity>().reversePosition = GetComponent<Entity>().reversePosition;
 		player.GetComponent<Player>().SetPlayerNumber(playerNumber);
 		currentPlayerRespawnTime = 0;
 		ResetPlayerRespawn();

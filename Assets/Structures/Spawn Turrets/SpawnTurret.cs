@@ -23,7 +23,7 @@ public class SpawnTurret : Agent {
 	
 	void Update () {
 		currentSpawnCooldown += Time.deltaTime;
-		if(GameController.gameStarted && !disabled && transform.position.x > -4.8 && transform.position.x < 4.8){
+		if(GameController.gameStarted && !disabled){
 			if(currentSpawnCooldown >= maxSpawnCooldown){
 				if(fleet.player == null && fleet.PlayerCanRespawn()){
 					GameObject player = fleet.AddPlayer();
@@ -45,8 +45,10 @@ public class SpawnTurret : Agent {
 		GameObject minion = Instantiate (minionPrefab, transform.position, rotation) as GameObject;
 		minion.transform.parent = minionsObject.transform;
 		minion.transform.Find ("Ship").GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
+		minion.transform.rotation = Quaternion.Euler(0f, 0f, -90);
 		if(GetComponent<Entity>().reversePosition){
-			minion.transform.rotation = Quaternion.Euler(0f, 0f, 180);
+			minion.transform.Find ("Ship").GetComponent<Minion>().reversePosition = true;
+			minion.transform.rotation = Quaternion.Euler(0f, 0f, -90);
 		}
 	}
 	

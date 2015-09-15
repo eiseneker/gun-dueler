@@ -13,8 +13,13 @@ public class Sheep : Minion {
 		currentMoveTime += Time.deltaTime;
 		
 		if(currentMoveTime < maxMoveTime){
-			transform.Translate(Vector3.up * Time.deltaTime);
+			if(reversePosition){
+				transform.Translate(Vector3.right * Time.deltaTime);
+			}else{
+				transform.Translate(Vector3.left * Time.deltaTime);
+			}
 		}
+		transform.Translate(Vector3.up * Time.deltaTime * 8);
 		
 		float probability = firesPerSecond * Time.deltaTime;
 		

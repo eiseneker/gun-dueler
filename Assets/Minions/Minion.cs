@@ -8,6 +8,7 @@ public class Minion : Agent, IAttacker, IShreddable {
 	public float bulletSpeed;
 	public float fireDelay;
 	public GameObject formation;
+	public bool reversePosition;
 	
 	private float timeSinceLastFire;
 	
@@ -23,7 +24,6 @@ public class Minion : Agent, IAttacker, IShreddable {
 	public virtual void Update () {
 		timeSinceLastFire += Time.deltaTime;
 		timeSinceStart += Time.deltaTime;
-		
 	}
 	
 	public override void ReceiveHit(float damage, GameObject attackerObject) {

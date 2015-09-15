@@ -19,7 +19,6 @@ public class BulletProjectile : Projectile, IShreddable {
 	}
 	
 	void Update () {
-		print (xVector);
 		transform.Translate (new Vector3(xVector * Time.deltaTime, yVector * Time.deltaTime * speed, 0));
 	}
 	
