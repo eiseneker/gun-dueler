@@ -35,7 +35,6 @@ public class Sheep : Minion {
 			vehicleControls.Steer (0.25f * reverseFactor);
 		}
 		vehicleControls.Idle ();
-		print(GetComponent<Rigidbody2D>().velocity);
 		
 		float probability = firesPerSecond * Time.deltaTime;
 		

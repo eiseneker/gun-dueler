@@ -5,6 +5,8 @@ public class CoreSentry : MonoBehaviour, IProjectilePassable {
 
 	private float timeSinceLastFire;
 	private float fireDelay = .1f;
+	
+	public Core core;
 
 	void OnTriggerStay2D (Collider2D collision) {
 		Entity entity = collision.gameObject.GetComponent<Entity>();
@@ -29,7 +31,7 @@ public class CoreSentry : MonoBehaviour, IProjectilePassable {
 			
 			Vector3 direction = target.transform.position - transform.position;
 			direction.Normalize();
-			bullet.xVector = direction.x;
+			bullet.xVector = direction.x + core.Velocity();
 			bullet.yVector = direction.y;
 		}
 	}

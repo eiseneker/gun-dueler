@@ -7,6 +7,7 @@ public class Truck : MonoBehaviour {
 	private ArrayList structureList = new ArrayList();
 	private float structureSpacing = 2;
 	private VehicleControls vehicleControls;
+	private Rigidbody2D myRigidbody;
 	
 	public bool reversePosition;
 	public GameObject[] structures;
@@ -28,6 +29,7 @@ public class Truck : MonoBehaviour {
 		lastElement = structuresInPlay[0] as GameObject;
 		trucks.Add(gameObject);
 		vehicleControls = GetComponent<VehicleControls>();
+		myRigidbody = GetComponent<Rigidbody2D>();
 	}
 	
 	// Update is called once per frame
@@ -41,6 +43,7 @@ public class Truck : MonoBehaviour {
 		structure.transform.localPosition = structurePosition;
 		structure.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 		structure.GetComponent<Entity>().reversePosition = reversePosition;
+		structure.GetComponent<Structure>().truck = this;
 		structuresInPlay.Add (structure);
 	}
 	
@@ -51,5 +54,9 @@ public class Truck : MonoBehaviour {
 			AddStructure (position, structure);
 			index++;
 		}
+	}
+	
+	public float Velocity(){
+		return(myRigidbody.velocity.magnitude);
 	}
 }

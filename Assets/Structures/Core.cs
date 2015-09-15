@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Core : Agent, IProjectilePassable {
+public class Core : Structure, IProjectilePassable {
 
 	public int enemyPlayerNumber = 0;
 
@@ -15,12 +15,14 @@ public class Core : Agent, IProjectilePassable {
 		transform.Find ("Sentry").GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 		transform.Find ("Body").GetComponent<SpriteRenderer>().color = fleet.teamColor;
 		coreSentry = transform.Find ("Sentry").GetComponent<CoreSentry>();
+		coreSentry.core = this;
 	}
 	
 	void Update(){
 		if(enemyPlayerNumber == 0){
 			FetchEnemyPlayer();
 		}
+		print (GetComponent<Rigidbody2D>().velocity.x);
 	}
 	
 	public override void ReceiveHit(float damage, GameObject attackerObject) {
@@ -51,6 +53,10 @@ public class Core : Agent, IProjectilePassable {
 		if(enemyPlayer){
 			enemyPlayerNumber = enemyPlayer.GetComponent<Entity>().affinity.GetComponent<Fleet>().playerNumber;
 		}
+	}
+	
+	public float Velocity(){
+		return(truck.Velocity ());
 	}
 }
 

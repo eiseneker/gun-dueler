@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class SpawnTurret : Agent {
+public class SpawnTurret : Structure {
 	private bool disabled = false;
 	private DamageBehavior damageBehavior;
 	private SpriteRenderer bodySprite;
