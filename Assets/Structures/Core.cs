@@ -54,7 +54,7 @@ public class Core : Structure, IProjectilePassable {
 		}
 	}
 	
-	public float Velocity(){
+	public Vector3 Velocity(){
 		return(truck.Velocity ());
 	}
 }

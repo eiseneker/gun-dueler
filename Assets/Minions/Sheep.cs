@@ -12,10 +12,20 @@ public class Sheep : Minion {
 	private VehicleControls vehicleControls;
 	private Rigidbody2D myRigidBody;
 	private float reverseFactor = 1;
+	private float acceleration;
+	private GameObject enemyPlayer;
+	private DriveBehavior driveBehavior;
+	
+	private enum DriveBehavior
+	{
+		Idle,
+		Accelerate,
+		Brake
+	}
 	
 	public override void Start(){
 		base.Start ();
-		maxStartupTime = Random.Range (1, 5);
+		maxStartupTime = Random.Range (2, 4);
 		vehicleControls = GetComponent<VehicleControls>();
 		turretTransform = transform.Find ("Turret");
 		turret = turretTransform.GetComponent<SheepTurret>();
@@ -25,6 +35,19 @@ public class Sheep : Minion {
 			reverseFactor *= -1;
 		}
 		OrientationHelper.RotateTransform(turretTransform, 90 * reverseFactor);
+		acceleration = Random.value;
+		
+		enemyPlayer = GetComponent<Entity>().EnemyPlayer();
+		
+		if(enemyPlayer && Mathf.Abs(enemyPlayer.transform.position.x - transform.position.x) < 1){
+			driveBehavior = DriveBehavior.Idle;
+		}else if(enemyPlayer == null){
+			driveBehavior = DriveBehavior.Idle;
+		}else if (enemyPlayer.transform.position.x > transform.position.x){
+			driveBehavior = DriveBehavior.Accelerate;
+		}else{
+			driveBehavior = DriveBehavior.Brake;
+		}
 	}
 
 	public override void Update () {
@@ -34,7 +57,17 @@ public class Sheep : Minion {
 		if(currentStartupTime < maxStartupTime){
 			vehicleControls.Steer (0.25f * reverseFactor);
 		}
-		vehicleControls.Idle ();
+		
+		print (driveBehavior);
+		
+		if(driveBehavior == DriveBehavior.Idle){
+			vehicleControls.Idle ();
+		}else if (driveBehavior == DriveBehavior.Accelerate){
+		
+			vehicleControls.Accelerate (acceleration);
+		}else{
+			vehicleControls.Brake ();
+		}
 		
 		float probability = firesPerSecond * Time.deltaTime;
 		
@@ -77,6 +110,5 @@ public class Sheep : Minion {
 		damageBehavior.HealToFull();
 		firesPerSecond += 1;
 		transform.localScale += new Vector3(0.1f, 0.1f, 0);
-		GetComponent<Rigidbody2D>().mass += 100;
 	}
 }

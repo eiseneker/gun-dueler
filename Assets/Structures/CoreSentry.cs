@@ -31,7 +31,7 @@ public class CoreSentry : MonoBehaviour, IProjectilePassable {
 			
 			Vector3 direction = target.transform.position - transform.position;
 			direction.Normalize();
-			bullet.xVector = direction.x + core.Velocity();
+			bullet.xVector = direction.x + core.Velocity().x;
 			bullet.yVector = direction.y;
 		}
 	}

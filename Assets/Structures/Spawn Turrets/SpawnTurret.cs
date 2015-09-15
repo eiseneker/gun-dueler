@@ -11,7 +11,6 @@ public class SpawnTurret : Structure {
 	private GameObject player;
 	private Fleet fleet;
 	private GameObject enemyPlayer;
-	private float distanceToPlayer;
 	private float maxSpawnCooldown;
 
 	public GameObject minionPrefab;
@@ -30,7 +29,6 @@ public class SpawnTurret : Structure {
 		if(enemyPlayer == null){
 			enemyPlayer = GetComponent<Entity>().EnemyPlayer();
 		}
-		distanceToPlayer = DistanceToEnemyPlayer();
 		if(enemyPlayer && !OutOfSpawnRange()){
 			maxSpawnCooldown = Mathf.Clamp (DistanceToEnemyPlayer()/maxDistanceToPlayer * defaultMaxSpawnCooldown, minimumSpawnCooldown, defaultMaxSpawnCooldown);
 		
@@ -62,6 +60,7 @@ public class SpawnTurret : Structure {
 		minion.transform.rotation = Quaternion.Euler(0f, 0f, -90);
 		if(GetComponent<Entity>().reversePosition){
 			ship.GetComponent<Minion>().reversePosition = true;
+			ship.GetComponent<Rigidbody2D>().velocity = truck.Velocity();
 			minion.transform.rotation = Quaternion.Euler(0f, 0f, -90);
 		}
 		Physics2D.IgnoreCollision(ship.GetComponent<Collider2D>(), GetComponent<Collider2D>());

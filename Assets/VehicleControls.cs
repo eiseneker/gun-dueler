@@ -43,8 +43,13 @@ public class VehicleControls : MonoBehaviour {
 		}
 	}
 	
-	public void Accelerate(){
-		myRigidbody.AddRelativeForce (Vector3.up * accelerationFactor * Time.deltaTime * speed);
+	public void Accelerate(float factor){
+		float accelerationOffset = (accelerationFactor - idleFactor) * factor;
+		myRigidbody.AddRelativeForce (Vector3.up * (idleFactor + accelerationOffset) * Time.deltaTime * speed);
 		myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, maxVelocity);
+	}
+	
+	public void Accelerate(){
+		Accelerate(1);
 	}
 }

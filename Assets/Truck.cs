@@ -20,7 +20,7 @@ public class Truck : MonoBehaviour {
 	void Start () {
 		structureList.AddRange (structures);
 		
-		for(int i = 0 - structures.Length/2; i < structures.Length/2; i++){
+		for(int i = 0; i < structures.Length; i++){
 			structurePositions.Add (i * structureSpacing);
 		}
 		
@@ -56,7 +56,7 @@ public class Truck : MonoBehaviour {
 		}
 	}
 	
-	public float Velocity(){
-		return(myRigidbody.velocity.magnitude);
+	public Vector3 Velocity(){
+		return(myRigidbody.velocity);
 	}
 }
