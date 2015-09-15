@@ -3,23 +3,42 @@ using System.Collections;
 
 public class Sheep : Minion {
 
-	private float currentMoveTime;
-	private float maxMoveTime = 3;
+	private float currentStartupTime;
+	private float maxStartupTime;
 	private float firesPerSecond = 2f;
 	private bool skipDestroyOnMerge = false;
+	private Transform turretTransform;
+	private SheepTurret turret;
+	
+	private VehicleControls vehicleControls;
+	
+	public override void Start(){
+		base.Start ();
+		maxStartupTime = Random.Range (1, 5);
+		vehicleControls = GetComponent<VehicleControls>();
+		turretTransform = transform.Find ("Turret");
+		turret = turretTransform.GetComponent<SheepTurret>();
+		turret.owner = gameObject;
+		if(reversePosition){
+			OrientationHelper.RotateTransform(turretTransform, -90);
+		}else{
+			OrientationHelper.RotateTransform(turretTransform, 90);
+		}
+	}
 
 	public override void Update () {
 		base.Update ();
-		currentMoveTime += Time.deltaTime;
+		currentStartupTime += Time.deltaTime;
 		
-		if(currentMoveTime < maxMoveTime){
+		if(currentStartupTime < maxStartupTime){
 			if(reversePosition){
-				transform.Translate(Vector3.right * Time.deltaTime);
+				vehicleControls.Steer (-0.25f);
 			}else{
-				transform.Translate(Vector3.left * Time.deltaTime);
+				vehicleControls.Steer (0.25f);
 			}
 		}
-		transform.Translate(Vector3.up * Time.deltaTime * 8);
+		vehicleControls.Idle ();
+		print(GetComponent<Rigidbody2D>().velocity);
 		
 		float probability = firesPerSecond * Time.deltaTime;
 		
@@ -46,6 +65,13 @@ public class Sheep : Minion {
 				}
 				DestroyMe();
 			}
+		}
+	}
+	
+	protected void Fire () {
+		if(timeSinceLastFire >= fireDelay){
+			turret.CreateBullet ();
+			timeSinceLastFire = 0f;
 		}
 	}
 	

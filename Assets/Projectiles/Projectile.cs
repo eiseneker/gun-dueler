@@ -57,10 +57,7 @@ public class Projectile : MonoBehaviour, IProjectilePassable {
 	}
 	
 	public void RotateMe(float degrees){
-		transform.eulerAngles = new Vector3(
-			transform.eulerAngles.x,
-			transform.eulerAngles.y,
-			transform.eulerAngles.z + degrees);
+		OrientationHelper.RotateTransform(transform, degrees);
 	}
 	
 	protected virtual float DamageValue(){

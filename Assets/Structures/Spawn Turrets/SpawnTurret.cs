@@ -44,12 +44,14 @@ public class SpawnTurret : Agent {
 		Quaternion rotation = new Quaternion();
 		GameObject minion = Instantiate (minionPrefab, transform.position, rotation) as GameObject;
 		minion.transform.parent = minionsObject.transform;
-		minion.transform.Find ("Ship").GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
+		Transform ship = minion.transform.Find ("Ship");
+		ship.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 		minion.transform.rotation = Quaternion.Euler(0f, 0f, -90);
 		if(GetComponent<Entity>().reversePosition){
-			minion.transform.Find ("Ship").GetComponent<Minion>().reversePosition = true;
+			ship.GetComponent<Minion>().reversePosition = true;
 			minion.transform.rotation = Quaternion.Euler(0f, 0f, -90);
 		}
+		Physics2D.IgnoreCollision(ship.GetComponent<Collider2D>(), GetComponent<Collider2D>());
 	}
 	
 	public override void ReceiveHit(float damage, GameObject attackerObject) {

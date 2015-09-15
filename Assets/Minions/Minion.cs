@@ -4,14 +4,11 @@ using System.Collections;
 
 public class Minion : Agent, IAttacker, IShreddable {
 	public float speed;
-	public GameObject bulletPrefab;
-	public float bulletSpeed;
 	public float fireDelay;
 	public GameObject formation;
 	public bool reversePosition;
 	
-	private float timeSinceLastFire;
-	
+	protected float timeSinceLastFire;
 	protected DamageBehavior damageBehavior;
 	protected float timeSinceStart = 0;
 	
@@ -43,13 +40,6 @@ public class Minion : Agent, IAttacker, IShreddable {
 	public void RegisterSuccessfulDestroy(float value){
 	}
 	
-	protected void Fire () {
-		if(timeSinceLastFire >= fireDelay){
-			CreateBullet ();
-			timeSinceLastFire = 0f;
-		}
-	}
-	
 	private void GenerateExhaust(){
 		GameObject body = transform.Find ("Body").gameObject;
 		foreach(Transform child in body.transform){
@@ -64,13 +54,5 @@ public class Minion : Agent, IAttacker, IShreddable {
 		Destroy(transform.parent.gameObject);
 		GameObject explosion = Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity) as GameObject;
 		explosion.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
-	}
-	
-	private void CreateBullet(){
-		GameObject bulletObject = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
-		BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
-		bullet.speed = bulletSpeed;
-		bullet.owner = gameObject;
-		bullet.yVector = 1;
 	}
 }

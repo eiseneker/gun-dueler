@@ -22,22 +22,15 @@ public class Player : Agent, IAttacker {
 	private bool isExGainLocked = false;
 	private int playerNumber;
 	private bool exMode = false;
-	private float speed;
 	private float currentExValue = 0;
 	private float defaultSpeed = 5.1f;
 	private float currentJustRespawned;
 	private float maxJustRespawned = 0.25f;
 	private Rigidbody2D myRigidbody;
-	private float accelerationFactor = 50;
-	private float brakeFactor = 50;
-	private float maxVelocity = 10;
-	private float minVelocity = 3;
-	private float idleVelocity = 5;
-	private float idleFactor = 25;
+	private VehicleControls vehicleControls;
 	
 	void Start(){
 		myRigidbody = GetComponent<Rigidbody2D>();
-		speed = defaultSpeed;
 		players.Add (gameObject);
 		playerHitState = gameObject.AddComponent<PlayerHitState>() as PlayerHitState;
 		playerHitState.player = gameObject;
@@ -68,6 +61,8 @@ public class Player : Agent, IAttacker {
 			gameObject.transform.eulerAngles.x,
 			gameObject.transform.eulerAngles.y,
 			gameObject.transform.eulerAngles.z - 90);
+		vehicleControls = GetComponent<VehicleControls>();
+		vehicleControls.speed = defaultSpeed;
 	}
 		
 	void Update () {
@@ -99,30 +94,30 @@ public class Player : Agent, IAttacker {
 				}
 				
 				if((xMovement != 0 || yMovement != 0) && IsInExMode ()){
-					speed = defaultSpeed * 1.5f;
+					vehicleControls.speed = defaultSpeed * 1.5f;
 				}else{
-					speed = defaultSpeed;
+					vehicleControls.speed = defaultSpeed;
 				}
 						
 				if(transform.position.x >= firstTruck.headElement.transform.position.x + 3){
 					myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, firstTruck.GetComponent<Rigidbody2D>().velocity.magnitude);
 				}else if(transform.position.x <= lastTruck.lastElement.transform.position.x - 3){
-					Accelerate ();
+					vehicleControls.Accelerate ();
 				}else{
 					if(xMovement == 0){
-						Idle ();
+						vehicleControls.Idle ();
 					}
 					
 					if(xMovement > 0){
-						Accelerate();
+						vehicleControls.Accelerate();
 					}
 					
 					if(xMovement < 0){
-						Brake ();
+						vehicleControls.Brake ();
 					}
 				}
 				if(yMovement != 0){
-					Steer(yMovement);				
+					vehicleControls.Steer(yMovement);				
 				}
 				
 				
@@ -157,38 +152,6 @@ public class Player : Agent, IAttacker {
 		}
 	}
 	
-	
-	
-	private void Steer(float movement){
-		float velocityRange = maxVelocity - minVelocity;
-		float adjustedVelocity = myRigidbody.velocity.magnitude;
-		float velocityRatio = adjustedVelocity/velocityRange;
-		
-		transform.Translate(Vector3.left * movement * velocityRatio * Time.deltaTime * speed);
-	}
-	
-	private void Idle(){
-		if(myRigidbody.velocity.magnitude > idleVelocity){
-			myRigidbody.AddRelativeForce (Vector3.up * -accelerationFactor * Time.deltaTime * speed);
-		}else{
-			myRigidbody.AddRelativeForce (Vector3.up * idleFactor * Time.deltaTime * speed);
-			myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, idleVelocity);
-		}
-	}
-	
-	private void Brake(){
-		if(myRigidbody.velocity.magnitude < minVelocity){
-			myRigidbody.AddRelativeForce (Vector3.up * accelerationFactor * Time.deltaTime * speed);
-			myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, minVelocity);
-		}else{
-			myRigidbody.AddRelativeForce (Vector3.up * brakeFactor * -1 * Time.deltaTime * speed);
-		}
-	}
-	
-	private void Accelerate(){
-		myRigidbody.AddRelativeForce (Vector3.up * accelerationFactor * Time.deltaTime * speed);
-		myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, maxVelocity);
-	}
 	
 	public override void ReceiveHit(float damage, GameObject attackerObject) {
 		IAttacker attacker = ResolveAttacker(attackerObject);

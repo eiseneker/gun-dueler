@@ -3,13 +3,10 @@ using System.Collections;
 
 public class Truck : MonoBehaviour {
 
-	private Rigidbody2D myRigidbody;
-	private float accelerationFactor = 50;
-	private float maxVelocity = 7;
-	private float speed = 1;
 	private ArrayList structurePositions = new ArrayList();
 	private ArrayList structureList = new ArrayList();
 	private float structureSpacing = 2;
+	private VehicleControls vehicleControls;
 	
 	public bool reversePosition;
 	public GameObject[] structures;
@@ -20,8 +17,6 @@ public class Truck : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		myRigidbody = GetComponent<Rigidbody2D>();
-		
 		structureList.AddRange (structures);
 		
 		for(int i = 0 - structures.Length/2; i < structures.Length/2; i++){
@@ -32,18 +27,13 @@ public class Truck : MonoBehaviour {
 		headElement = structuresInPlay[structuresInPlay.Count - 1] as GameObject;
 		lastElement = structuresInPlay[0] as GameObject;
 		trucks.Add(gameObject);
+		vehicleControls = GetComponent<VehicleControls>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Accelerate (1);
+		vehicleControls.Accelerate ();
 	}
-	
-	private void Accelerate(float movement){
-		myRigidbody.AddRelativeForce (Vector3.up * accelerationFactor * movement * Time.deltaTime * speed);
-		myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, maxVelocity);
-	}
-	
 	
 	void AddStructure(Vector3 structurePosition, GameObject structurePrefab){
 		GameObject structure = Instantiate (structurePrefab, Vector3.zero, Quaternion.identity) as GameObject;

@@ -11,7 +11,7 @@ public class PlayerCamera : MonoBehaviour {
 	void LateUpdate () {
 		if(player){
 			Vector3 destination = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
-			transform.position = Vector3.SmoothDamp(transform.position, destination, ref currentVelocity, 0.5f);
+			transform.position = Vector3.SmoothDamp(transform.position, destination, ref currentVelocity, 0.1f);
 		}else{
 			player = GetPlayer();
 		}
