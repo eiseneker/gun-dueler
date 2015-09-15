@@ -6,11 +6,12 @@ public class SheepTurret : MonoBehaviour {
 	public float bulletSpeed;
 	public GameObject owner;
 	
-	public void CreateBullet(){
+	public void CreateBullet(float xVelocity){
 		GameObject bulletObject = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
 		BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
 		bullet.speed = bulletSpeed;
 		bullet.owner = owner;
 		bullet.yVector = 1;
+		bullet.xVector = xVelocity;
 	}
 }

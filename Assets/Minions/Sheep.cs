@@ -9,8 +9,9 @@ public class Sheep : Minion {
 	private bool skipDestroyOnMerge = false;
 	private Transform turretTransform;
 	private SheepTurret turret;
-	
 	private VehicleControls vehicleControls;
+	private Rigidbody2D myRigidBody;
+	private float reverseFactor = 1;
 	
 	public override void Start(){
 		base.Start ();
@@ -19,11 +20,11 @@ public class Sheep : Minion {
 		turretTransform = transform.Find ("Turret");
 		turret = turretTransform.GetComponent<SheepTurret>();
 		turret.owner = gameObject;
+		myRigidBody = GetComponent<Rigidbody2D>();
 		if(reversePosition){
-			OrientationHelper.RotateTransform(turretTransform, -90);
-		}else{
-			OrientationHelper.RotateTransform(turretTransform, 90);
+			reverseFactor *= -1;
 		}
+		OrientationHelper.RotateTransform(turretTransform, 90 * reverseFactor);
 	}
 
 	public override void Update () {
@@ -31,11 +32,7 @@ public class Sheep : Minion {
 		currentStartupTime += Time.deltaTime;
 		
 		if(currentStartupTime < maxStartupTime){
-			if(reversePosition){
-				vehicleControls.Steer (-0.25f);
-			}else{
-				vehicleControls.Steer (0.25f);
-			}
+			vehicleControls.Steer (0.25f * reverseFactor);
 		}
 		vehicleControls.Idle ();
 		print(GetComponent<Rigidbody2D>().velocity);
@@ -70,7 +67,7 @@ public class Sheep : Minion {
 	
 	protected void Fire () {
 		if(timeSinceLastFire >= fireDelay){
-			turret.CreateBullet ();
+			turret.CreateBullet (myRigidBody.velocity.x * reverseFactor);
 			timeSinceLastFire = 0f;
 		}
 	}
