@@ -18,7 +18,8 @@ public class BulletProjectile : Projectile, IShreddable {
 		transform.parent = owner.transform.root.Find ("Bullets");
 	}
 	
-	void Update () {
+	public override void Update () {
+		base.Update ();
 		transform.Translate (new Vector3(xVector * Time.deltaTime, yVector * Time.deltaTime * speed, 0));
 	}
 	

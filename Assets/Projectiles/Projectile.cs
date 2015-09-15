@@ -6,6 +6,9 @@ public class Projectile : MonoBehaviour, IProjectilePassable {
 	public Weapon weapon;
 	
 	protected GameObject affinity;
+	protected float maxLifespan = 5;
+	
+	private float currentLifespan;
 
 	public virtual void Start () {
 		if(owner == null) {
@@ -16,6 +19,13 @@ public class Projectile : MonoBehaviour, IProjectilePassable {
 		affinity = owner.GetComponent<Entity>().affinity;
 		if(weapon == null){
 			transform.Find ("Body").gameObject.layer = LayerMask.NameToLayer("Player " + (3 - affinity.GetComponent<Fleet>().playerNumber) + " Visible");
+		}
+	}
+	
+	public virtual void Update(){
+		currentLifespan += Time.deltaTime;
+		if(currentLifespan >= maxLifespan){
+			Destroy (gameObject);
 		}
 	}
 	

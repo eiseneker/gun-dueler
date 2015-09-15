@@ -5,11 +5,7 @@ public class Truck : MonoBehaviour {
 
 	private Rigidbody2D myRigidbody;
 	private float accelerationFactor = 50;
-	private float brakeFactor = 50;
 	private float maxVelocity = 7;
-	private float minVelocity = 3;
-	private float idleVelocity = 5;
-	private float idleFactor = 25;
 	private float speed = 1;
 	private ArrayList structurePositions = new ArrayList();
 	private ArrayList structureList = new ArrayList();

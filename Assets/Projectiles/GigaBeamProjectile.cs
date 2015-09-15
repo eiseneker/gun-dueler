@@ -7,7 +7,7 @@ public class GigaBeamProjectile : Projectile {
 	
 	private Transform body;
 	private SpriteRenderer bodySprite;
-	private float maxLifespan = 3f;
+	private new float maxLifespan = 3f;
 	private float lifespan = 0f;
 	
 	public override void Start () {	
@@ -18,7 +18,7 @@ public class GigaBeamProjectile : Projectile {
 		owner.GetComponent<Player>().LockExGain();
 	}
 	
-	void Update () {
+	public override void Update () {
 		if(owner == null){
 			Destroy (gameObject);
 		}

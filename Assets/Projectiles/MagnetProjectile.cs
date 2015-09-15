@@ -21,7 +21,8 @@ public class MagnetProjectile : Projectile, IShreddable {
 		transform.parent = owner.transform.root.Find ("Bullets");
 	}
 	
-	void Update () {
+	public override void Update () {
+		base.Update ();
 		if(!targetFound){
 			if(IsTargetNearby(target)){
 				float rotationFactor;
