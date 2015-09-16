@@ -2,23 +2,23 @@
 using System.Collections;
 
 public class Bull : Minion {
-	GameObject enemyPlayer;
+	private GameObject enemyPlayer;
+	private VehicleControls vehicleControls;
 	
 	public override void Start(){
 		base.Start();
 		speed = 2;
 		enemyPlayer = GetComponent<Entity>().EnemyPlayer();
+		vehicleControls = GetComponent<VehicleControls>();
 	}
 
 	public override void Update(){
 		base.Update();
-		if(timeSinceStart >= 2f){
-			speed = 5;
-			if(enemyPlayer){
-				GetComponent<Entity>().FaceObject (enemyPlayer);
-			}
+		speed = 5;
+		if(enemyPlayer){
+			GetComponent<Entity>().FaceObject (enemyPlayer);
 		}
-		transform.Translate(Vector3.up * Time.deltaTime * speed);
+		vehicleControls.Accelerate();
 	}
 	
 	private void OnCollisionEnter2D(Collision2D collision){
