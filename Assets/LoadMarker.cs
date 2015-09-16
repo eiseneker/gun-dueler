@@ -8,11 +8,11 @@ public class LoadMarker : MonoBehaviour {
 	private int hitCount = 0;
 
 	void OnTriggerEnter2D(Collider2D collider){
-		if(collider.GetComponent<Player>()){
+		if(collider.GetComponent<Structure>()){
 			hitCount++;
 			if(hitCount == 1){
 				road.LoadNewRoad();
-			}else{
+			}else if(hitCount == Structure.structureCount){
 				road.UnloadFirstRoad();			
 			}		
 		}

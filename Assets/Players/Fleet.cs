@@ -15,6 +15,7 @@ public class Fleet : MonoBehaviour {
 	public GameObject[] structures;
 	public float lastExValue;
 	public bool reversePosition;
+	public Truck truck;
 
 	private float maxHealth = 50;
 	private float currentHealth;	
@@ -22,7 +23,6 @@ public class Fleet : MonoBehaviour {
 	private GameObject core;
 	private float maxPlayerRespawnTime = 5;
 	private float currentPlayerRespawnTime;
-	private Truck truck;
 
 	void Start () {
 		truck = transform.Find ("Truck").GetComponent<Truck>();
@@ -42,6 +42,8 @@ public class Fleet : MonoBehaviour {
 		if(player == null){
 			if(currentPlayerRespawnTime < maxPlayerRespawnTime){
 				currentPlayerRespawnTime += Time.deltaTime;
+			}else{
+				AddPlayer ();
 			}
 		}
 	}
@@ -60,7 +62,7 @@ public class Fleet : MonoBehaviour {
 	}
 	
 	public GameObject AddPlayer(){
-		player = Instantiate (playerPrefab, transform.Find ("Player Position").position, Quaternion.identity) as GameObject;
+		player = Instantiate (playerPrefab, transform.position, Quaternion.identity) as GameObject;
 		player.transform.parent = transform;
 		player.GetComponent<Entity>().affinity = gameObject;
 		player.GetComponent<Player>().SetPlayerNumber(playerNumber);

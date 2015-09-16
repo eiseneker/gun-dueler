@@ -45,6 +45,7 @@ public class Truck : MonoBehaviour {
 		structure.GetComponent<Entity>().reversePosition = reversePosition;
 		structure.GetComponent<Structure>().truck = this;
 		structuresInPlay.Add (structure);
+		Structure.structureCount++;
 	}
 	
 	void AddStructures(){

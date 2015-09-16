@@ -27,6 +27,8 @@ public class Player : Agent, IAttacker {
 	private float maxJustRespawned = 0.25f;
 	private Rigidbody2D myRigidbody;
 	private VehicleControls vehicleControls;
+	private Truck truck;
+	private float reverseIndex = 1;
 	
 	void Start(){
 		myRigidbody = GetComponent<Rigidbody2D>();
@@ -41,7 +43,7 @@ public class Player : Agent, IAttacker {
 		gigaBeam.player = this;
 		magnetMissile = gameObject.AddComponent<MagnetMissile>() as MagnetMissile;
 		magnetMissile.player = this;
-		reversePosition = GetComponent<Entity>().reversePosition;
+		reversePosition = GetComponent<Entity>().affinity.GetComponent<Fleet>().reversePosition;
 		body = transform.Find ("Body").gameObject;
 		foreach(Transform child in body.transform){
 			Exhaust exhaust = child.GetComponent<Exhaust>();
@@ -61,7 +63,9 @@ public class Player : Agent, IAttacker {
 			gameObject.transform.eulerAngles.y,
 			gameObject.transform.eulerAngles.z - 90);
 		vehicleControls = GetComponent<VehicleControls>();
-//		vehicleControls.GetToIdle();
+		truck = GetComponent<Entity>().affinity.GetComponent<Fleet>().truck;
+		if(reversePosition) reverseIndex *= -1;
+		transform.position = new Vector3(truck.transform.position.x + 6, truck.transform.position.y + (3 * reverseIndex));
 	}
 		
 	void Update () {
