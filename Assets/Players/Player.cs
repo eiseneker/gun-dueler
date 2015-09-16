@@ -8,6 +8,7 @@ public class Player : Agent, IAttacker {
 	public float maxExValue = 100;
 	public PlayerHitState playerHitState;
 	public DamageBehavior damageBehavior;
+	public int enemyPlayerNumber = 0;
 	
 	public static List<GameObject> players = new List<GameObject>();
 	
@@ -29,6 +30,8 @@ public class Player : Agent, IAttacker {
 	private VehicleControls vehicleControls;
 	private Truck truck;
 	private float reverseIndex = 1;
+	private float currentDangerTimer;
+	private float maxDangerTimer = 3;
 	
 	void Start(){
 		myRigidbody = GetComponent<Rigidbody2D>();
@@ -69,6 +72,13 @@ public class Player : Agent, IAttacker {
 	}
 		
 	void Update () {
+		if(enemyPlayerNumber == 0){
+			FetchEnemyPlayer();
+		}
+		if(currentDangerTimer >= maxDangerTimer){
+			StateController.lastWinner = enemyPlayerNumber;
+			GameController.LoadWinScreen();
+		}
 		Truck firstTruck;
 		Truck lastTruck;
 		GameObject truck0 = GetTruck (0);
@@ -104,10 +114,11 @@ public class Player : Agent, IAttacker {
 			
 			if(transform.position.x >= firstTruck.headElement.transform.position.x + 3){
 				myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, firstTruck.GetComponent<Rigidbody2D>().velocity.magnitude);
+				ResetDangerTimer();
 			}else if(transform.position.x <= lastTruck.lastElement.transform.position.x - 3){
-				if(xMovement == 0){
-					vehicleControls.Idle ();
-				}
+				IncrementDangerTimer();
+			}else{
+				ResetDangerTimer();
 			}
 			
 			if(xMovement < 0){
@@ -270,6 +281,21 @@ public class Player : Agent, IAttacker {
 	
 	private GameObject GetTruck(int index){
 		return(Truck.trucks[index] as GameObject);
+	}
+	
+	private void ResetDangerTimer(){
+		currentDangerTimer = 0;
+	}
+	
+	private void IncrementDangerTimer(){
+		currentDangerTimer += Time.deltaTime;
+	}
+	
+	private void FetchEnemyPlayer(){
+		GameObject enemyPlayer = GetComponent<Entity>().EnemyPlayer();
+		if(enemyPlayer){
+			enemyPlayerNumber = enemyPlayer.GetComponent<Entity>().affinity.GetComponent<Fleet>().playerNumber;
+		}
 	}
 	
 }
