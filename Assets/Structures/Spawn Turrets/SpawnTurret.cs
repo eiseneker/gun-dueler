@@ -60,9 +60,9 @@ public class SpawnTurret : Structure {
 		minion.transform.rotation = Quaternion.Euler(0f, 0f, -90);
 		if(GetComponent<Entity>().reversePosition){
 			ship.GetComponent<Minion>().reversePosition = true;
-			ship.GetComponent<Rigidbody2D>().velocity = truck.Velocity();
 			minion.transform.rotation = Quaternion.Euler(0f, 0f, -90);
 		}
+		ship.GetComponent<Rigidbody2D>().velocity = truck.Velocity();
 		Physics2D.IgnoreCollision(ship.GetComponent<Collider2D>(), GetComponent<Collider2D>());
 	}
 	
