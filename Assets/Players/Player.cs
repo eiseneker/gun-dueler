@@ -109,10 +109,6 @@ public class Player : Agent, IAttacker {
 					vehicleControls.Idle ();
 				}
 			}
-				
-			if(xMovement > 0){
-				vehicleControls.Accelerate();
-			}
 			
 			if(xMovement < 0){
 				vehicleControls.Brake ();
@@ -121,6 +117,10 @@ public class Player : Agent, IAttacker {
 				vehicleControls.Steer(yMovement);
 			}else{
 				vehicleControls.Straight();
+				
+				if(xMovement > 0){
+					vehicleControls.Accelerate();
+				}
 			}
 			
 			if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){

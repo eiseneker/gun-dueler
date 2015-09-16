@@ -25,7 +25,7 @@ public class VehicleControls : MonoBehaviour {
 		float adjustedVelocity = myRigidbody.velocity.magnitude;
 		float velocityRatio = adjustedVelocity/velocityRange;
 		
-		myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, movement * steerSpeed * velocityRatio * speedMultiplier);
+		myRigidbody.velocity = new Vector2(myRigidbody.velocity.x * .99f, movement * steerSpeed * velocityRatio * speedMultiplier);
 		drivingStraight = false;
 	}
 	
