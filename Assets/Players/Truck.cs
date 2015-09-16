@@ -25,11 +25,14 @@ public class Truck : MonoBehaviour {
 		}
 		
 		AddStructures();
+		print (structuresInPlay.Count);
 		headElement = structuresInPlay[structuresInPlay.Count - 1] as GameObject;
 		lastElement = structuresInPlay[0] as GameObject;
 		trucks.Add(gameObject);
 		vehicleControls = GetComponent<VehicleControls>();
 		myRigidbody = GetComponent<Rigidbody2D>();
+		transform.Find ("Body").localScale = new Vector3(1, (structuresInPlay.Count * 2), 0);
+		transform.Find ("Body").localPosition = new Vector3(0, structuresInPlay.Count - 1, 0);
 	}
 	
 	// Update is called once per frame
@@ -60,4 +63,6 @@ public class Truck : MonoBehaviour {
 	public Vector3 Velocity(){
 		return(myRigidbody.velocity);
 	}
+	
+	
 }

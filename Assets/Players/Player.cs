@@ -25,13 +25,14 @@ public class Player : Agent, IAttacker {
 	private bool exMode = false;
 	private float currentExValue = 0;
 	private float currentJustRespawned;
-	private float maxJustRespawned = 0.25f;
 	private Rigidbody2D myRigidbody;
 	private VehicleControls vehicleControls;
 	private Truck truck;
 	private float reverseIndex = 1;
 	private float currentDangerTimer;
 	private float maxDangerTimer = 3;
+	private Truck firstTruck;
+	private Truck lastTruck;
 	
 	void Start(){
 		myRigidbody = GetComponent<Rigidbody2D>();
@@ -72,82 +73,23 @@ public class Player : Agent, IAttacker {
 	}
 		
 	void Update () {
+		ShredderContainer.ReportPosition(transform.position.x);
+	
 		if(enemyPlayerNumber == 0){
 			FetchEnemyPlayer();
 		}
-		if(currentDangerTimer >= maxDangerTimer){
-			StateController.lastWinner = enemyPlayerNumber;
-			GameController.LoadWinScreen();
-		}
-		Truck firstTruck;
-		Truck lastTruck;
-		GameObject truck0 = GetTruck (0);
-		GameObject truck1 = GetTruck (1);
-		ShredderContainer.ReportPosition(transform.position.x);
 		
-		if(truck0.transform.position.x > truck1.transform.position.x){
-			firstTruck = truck0.GetComponent<Truck>();
-			lastTruck = truck1.GetComponent<Truck>();
-		}else{
-			lastTruck = truck0.GetComponent<Truck>();
-			firstTruck = truck1.GetComponent<Truck>();
-		}
+//		ResolveDangerTime();
+		UpdateTruckOrder ();
+		ResolveBoundaryConditions();
 	
 		if(!IsInputLocked){
-			if(playerNumber == 1) print ("ok...");
 			float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
 			float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
-			float moveFactor = 1;
 			
-			xMovement *= moveFactor;
-			yMovement *= moveFactor;
-			
-			if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1 && currentExValue >= 50){
-				EnterExMode();
-			}
-			
-			if((xMovement != 0 || yMovement != 0) && IsInExMode ()){
-				vehicleControls.speedMultiplier = 1.5f;
-			}else{
-				vehicleControls.speedMultiplier = 1;
-			}
-			
-			if(transform.position.x >= firstTruck.headElement.transform.position.x + 3){
-				myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, firstTruck.GetComponent<Rigidbody2D>().velocity.magnitude);
-				ResetDangerTimer();
-			}else if(transform.position.x <= lastTruck.lastElement.transform.position.x - 3){
-				IncrementDangerTimer();
-			}else{
-				ResetDangerTimer();
-			}
-			
-			if(xMovement < 0){
-				vehicleControls.Brake ();
-			}
-			if(yMovement != 0){
-				vehicleControls.Steer(yMovement);
-			}else{
-				vehicleControls.Straight();
-				
-				if(xMovement > 0){
-					vehicleControls.Accelerate();
-				}
-			}
-			
-			if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
-				shotgun.Fire (IsInExMode());
-			}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
-				magnetMissile.Fire (IsInExMode());
-			}else if(Input.GetAxis ("Player"+playerNumber+"_SuperWeapon") == 1){
-				gigaBeam.Fire ();
-			}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
-				shield.ShieldUp(IsInExMode());
-			}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
-				vulcan.Fire(IsInExMode());
-				shield.ShieldDown();
-			}else{
-				shield.ShieldDown();
-			}
+			ManageExInput();
+			ManageVehicleControls(xMovement, yMovement);
+			ManageActionInputs();
 		}else{
 			shield.ShieldDown ();
 		}
@@ -156,6 +98,29 @@ public class Player : Agent, IAttacker {
 			if(!SpendEx(7.5f * Time.deltaTime)){
 				ExitExMode();
 			}
+		}
+	}
+	
+	void ManageExInput(){
+		if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1 && currentExValue >= 50){
+			EnterExMode();
+		}
+	}
+	
+	void ManageActionInputs(){
+		if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
+			shotgun.Fire (IsInExMode());
+		}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
+			magnetMissile.Fire (IsInExMode());
+		}else if(Input.GetAxis ("Player"+playerNumber+"_SuperWeapon") == 1){
+			gigaBeam.Fire ();
+		}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
+			shield.ShieldUp(IsInExMode());
+		}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
+			vulcan.Fire(IsInExMode());
+			shield.ShieldDown();
+		}else{
+			shield.ShieldDown();
 		}
 	}
 	
@@ -298,4 +263,62 @@ public class Player : Agent, IAttacker {
 		}
 	}
 	
+	private void UpdateTruckOrder(){
+		GameObject truck0 = GetTruck (0);
+		GameObject truck1 = GetTruck (1);
+		
+		if(truck0.transform.position.x > truck1.transform.position.x){
+			firstTruck = truck0.GetComponent<Truck>();
+			lastTruck = truck1.GetComponent<Truck>();
+		}else{
+			lastTruck = truck0.GetComponent<Truck>();
+			firstTruck = truck1.GetComponent<Truck>();
+		}
+	}
+	
+	private bool AheadOfFirstTruck(){
+		return(transform.position.x >= firstTruck.headElement.transform.position.x + 3);
+	}
+	
+	private void ResolveDangerTime(){
+		if(currentDangerTimer >= maxDangerTimer){
+			StateController.lastWinner = enemyPlayerNumber;
+			GameController.LoadWinScreen();
+		}
+	}
+	
+	private void ResolveBoundaryConditions(){
+		if(AheadOfFirstTruck()){
+			myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, firstTruck.GetComponent<Rigidbody2D>().velocity.magnitude);
+			ResetDangerTimer();
+		}else if(transform.position.x <= lastTruck.lastElement.transform.position.x - 3){
+			vehicleControls.Accelerate();
+			IncrementDangerTimer();
+		}else{
+			ResetDangerTimer();
+		}
+	}
+	
+	private void ManageVehicleControls(float xMovement, float yMovement){
+		if((xMovement != 0 || yMovement != 0) && IsInExMode ()){
+			vehicleControls.speedMultiplier = 1.5f;
+		}else{
+			vehicleControls.speedMultiplier = 1;
+		}
+		
+		if(xMovement < 0){
+			vehicleControls.Brake ();
+		}
+		if(yMovement != 0){
+			vehicleControls.Steer(yMovement);
+		}else{
+			vehicleControls.Straight();
+			
+			if(xMovement > 0){
+				vehicleControls.Accelerate();
+			}else{
+				vehicleControls.Idle ();
+			}
+		}
+	}
 }

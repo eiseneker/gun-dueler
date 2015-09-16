@@ -34,6 +34,8 @@ public class Fleet : MonoBehaviour {
 		truck.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
 		truck.reversePosition = reversePosition;
 		
+		OrientationHelper.RotateTransform(truck.transform, 270);
+		
 		AddMinionsObject ();
 		AddPlayer();
 	}
