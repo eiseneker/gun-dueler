@@ -40,7 +40,7 @@ public class Sheep : Minion {
 		
 		enemyPlayer = GetComponent<Entity>().EnemyPlayer();
 		
-		if(enemyPlayer && Mathf.Abs(enemyPlayer.transform.position.x - transform.position.x) < 3){
+		if(enemyPlayer && Mathf.Abs(enemyPlayer.transform.position.x - transform.position.x) < 2){
 			driveBehavior = DriveBehavior.Idle;
 		}else if(enemyPlayer == null){
 			driveBehavior = DriveBehavior.Idle;

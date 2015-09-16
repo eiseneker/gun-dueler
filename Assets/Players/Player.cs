@@ -23,7 +23,6 @@ public class Player : Agent, IAttacker {
 	private int playerNumber;
 	private bool exMode = false;
 	private float currentExValue = 0;
-	private float defaultSpeed = 5.1f;
 	private float currentJustRespawned;
 	private float maxJustRespawned = 0.25f;
 	private Rigidbody2D myRigidbody;
@@ -62,7 +61,7 @@ public class Player : Agent, IAttacker {
 			gameObject.transform.eulerAngles.y,
 			gameObject.transform.eulerAngles.z - 90);
 		vehicleControls = GetComponent<VehicleControls>();
-		vehicleControls.speed = defaultSpeed;
+//		vehicleControls.GetToIdle();
 	}
 		
 	void Update () {
@@ -80,71 +79,62 @@ public class Player : Agent, IAttacker {
 			firstTruck = truck1.GetComponent<Truck>();
 		}
 	
-		if(currentJustRespawned >= maxJustRespawned){
-			if(!IsInputLocked){
-				float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
-				float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
-				float moveFactor = 1;
-				
-				xMovement *= moveFactor;
-				yMovement *= moveFactor;
-				
-				if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1 && currentExValue >= 50){
-					EnterExMode();
-				}
-				
-				if((xMovement != 0 || yMovement != 0) && IsInExMode ()){
-					vehicleControls.speed = defaultSpeed * 1.5f;
-				}else{
-					vehicleControls.speed = defaultSpeed;
-				}
-						
-				if(transform.position.x >= firstTruck.headElement.transform.position.x + 3){
-					myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, firstTruck.GetComponent<Rigidbody2D>().velocity.magnitude);
-				}else if(transform.position.x <= lastTruck.lastElement.transform.position.x - 3){
-					vehicleControls.Accelerate ();
-				}else{
-					if(xMovement == 0){
-						vehicleControls.Idle ();
-					}
-					
-					if(xMovement > 0){
-						vehicleControls.Accelerate();
-					}
-					
-					if(xMovement < 0){
-						vehicleControls.Brake ();
-					}
-					if(yMovement != 0){
-						vehicleControls.Steer(yMovement);
-					}else{
-						vehicleControls.Straight();
-					}
-				}
-				
-				
-				
-				
-				if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
-					shotgun.Fire (IsInExMode());
-				}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
-					magnetMissile.Fire (IsInExMode());
-				}else if(Input.GetAxis ("Player"+playerNumber+"_SuperWeapon") == 1){
-					gigaBeam.Fire ();
-				}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
-					shield.ShieldUp(IsInExMode());
-				}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
-					vulcan.Fire(IsInExMode());
-					shield.ShieldDown();
-				}else{
-					shield.ShieldDown();
-				}
+		if(!IsInputLocked){
+			if(playerNumber == 1) print ("ok...");
+			float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
+			float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
+			float moveFactor = 1;
+			
+			xMovement *= moveFactor;
+			yMovement *= moveFactor;
+			
+			if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1 && currentExValue >= 50){
+				EnterExMode();
+			}
+			
+			if((xMovement != 0 || yMovement != 0) && IsInExMode ()){
+				vehicleControls.speedMultiplier = 1.5f;
 			}else{
-				shield.ShieldDown ();
+				vehicleControls.speedMultiplier = 1;
+			}
+			
+			if(transform.position.x >= firstTruck.headElement.transform.position.x + 3){
+				myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, firstTruck.GetComponent<Rigidbody2D>().velocity.magnitude);
+			}else if(transform.position.x <= lastTruck.lastElement.transform.position.x - 3){
+				if(xMovement == 0){
+					vehicleControls.Idle ();
+				}
+			}
+				
+			if(xMovement > 0){
+				vehicleControls.Accelerate();
+			}
+			
+			if(xMovement < 0){
+				vehicleControls.Brake ();
+			}
+			if(yMovement != 0){
+				vehicleControls.Steer(yMovement);
+			}else{
+				vehicleControls.Straight();
+			}
+			
+			if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
+				shotgun.Fire (IsInExMode());
+			}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
+				magnetMissile.Fire (IsInExMode());
+			}else if(Input.GetAxis ("Player"+playerNumber+"_SuperWeapon") == 1){
+				gigaBeam.Fire ();
+			}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
+				shield.ShieldUp(IsInExMode());
+			}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
+				vulcan.Fire(IsInExMode());
+				shield.ShieldDown();
+			}else{
+				shield.ShieldDown();
 			}
 		}else{
-//			transform.Translate (Vector3.up * Time.deltaTime * speed);
-			currentJustRespawned += Time.deltaTime;
+			shield.ShieldDown ();
 		}
 		
 		if(IsInExMode()){
