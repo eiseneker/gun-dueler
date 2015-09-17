@@ -9,6 +9,10 @@ public class GameController : MonoBehaviour {
 	
 	void Start(){
 		gameStarted = false;
+		Transform roads = GameObject.Find ("Game Root/Roads").transform;
+		GameObject road = Instantiate(Resources.Load ("Road"), transform.position, Quaternion.identity) as GameObject;
+		road.transform.parent = roads;
+		road.transform.position = new Vector3(0, -1.09f, 17.8f);
 	}
 	
 	void Update(){
