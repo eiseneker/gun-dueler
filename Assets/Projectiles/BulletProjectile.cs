@@ -28,7 +28,7 @@ public class BulletProjectile : Projectile, IShreddable {
 	}
 	
 	protected override float DamageValue(){
-		return(0.1f);
+		return(0.5f);
 	}
 	
 }

@@ -140,10 +140,14 @@ public class Player : Agent, IAttacker {
 			}
 			
 			playerHitState.RegisterHit();
-			damageBehavior.ReceiveDamage(damage);
+			if(playerHitState.IsCritical()){
+				damageBehavior.ReceiveDamage(damage*2);
+			}else{
+				damageBehavior.ReceiveDamage(damage);
+			}
 			
 			
-			if(damageBehavior.CurrentHealthRatio() <= 0 || playerHitState.IsCritical ()){
+			if(damageBehavior.CurrentHealthRatio() <= 0){
 				DestroyMe();
 				if(attacker != null) attacker.RegisterSuccessfulDestroy(15);
 			}
