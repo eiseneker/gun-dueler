@@ -10,7 +10,10 @@ public class Weapon : MonoBehaviour {
 	protected int maxBulletsInPlay;
 	protected float projectileSpeed;
 	
+	protected int currentAmmoCount;
+	
 	public virtual void Start() {
+		currentAmmoCount = MaxAmmoCount();
 		timeSinceLastFire = fireDelay;
 	}
 	
@@ -41,6 +44,14 @@ public class Weapon : MonoBehaviour {
 	
 	protected void OrientProjectile(Projectile projectile){
 		if(player.reversePosition) projectile.RotateMe(180);
+	}
+	
+	public virtual float CurrentAmmoRatio(){
+		return((float)currentAmmoCount/(float)MaxAmmoCount());
+	}
+	
+	protected virtual int MaxAmmoCount(){
+		return(0);
 	}
 	
 }

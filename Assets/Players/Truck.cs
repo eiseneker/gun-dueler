@@ -25,7 +25,6 @@ public class Truck : MonoBehaviour {
 		}
 		
 		AddStructures();
-		print (structuresInPlay.Count);
 		headElement = structuresInPlay[structuresInPlay.Count - 1] as GameObject;
 		lastElement = structuresInPlay[0] as GameObject;
 		trucks.Add(gameObject);

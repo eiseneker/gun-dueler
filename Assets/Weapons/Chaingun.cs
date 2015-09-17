@@ -9,9 +9,10 @@ public class Chaingun : Weapon {
 	private GameObject bulletPrefab;
 	private float speed;
 	private AudioClip soundClip;
+	private float currentReloadInterval;
+	private float maxReloadInterval = 0.2f;
+	private GameObject ammoMeter;
 	
-	private float maxBulletCount = 100;
-	private float currentBulletCount;
 	
 	public Chaingun(){
 		maxBulletsInPlay = defaultMaxBulletsInPlay;
@@ -19,19 +20,29 @@ public class Chaingun : Weapon {
 		speed = defaultSpeed;
 		bulletPrefab = Resources.Load ("bullet") as GameObject;
 		soundClip = Resources.Load<AudioClip>("Vulcan");
-		currentBulletCount = maxBulletCount;
 	}
 	
 	protected override void Update(){
 		base.Update ();
-		if(currentBulletCount < maxBulletCount){
-			currentBulletCount += Mathf.Pow(timeSinceLastFire/5, 2);
+		if(currentReloadInterval >= maxReloadInterval){
+			if(currentAmmoCount < MaxAmmoCount()){
+				currentAmmoCount = Mathf.Clamp (currentAmmoCount + Mathf.CeilToInt(Mathf.Pow(timeSinceLastFire, 2)), 0, MaxAmmoCount());
+			}
+			currentReloadInterval = 0;
 		}
-		print (currentBulletCount);
+		if(ammoMeter && CurrentAmmoRatio() == 1){
+			Destroy (ammoMeter);
+		}
+		currentReloadInterval += Time.deltaTime;
 	}
  
 	public void Fire (bool exAttempt) {
 		if(CanFire ()){
+			if(ammoMeter == null){
+				ammoMeter = Instantiate ( Resources.Load ("HUD/Ammo Meter"), transform.position, Quaternion.identity) as GameObject;
+				ammoMeter.GetComponent<AmmoMeter>().player = player;
+				ammoMeter.GetComponent<AmmoMeter>().weapon = this;
+			}
 			bool ex = exAttempt;
 			
 			speed = defaultSpeed;
@@ -67,7 +78,7 @@ public class Chaingun : Weapon {
 	}
 	
 	private void CreateBullet(float xOffset){
-		if(currentBulletCount > 0){
+		if(currentAmmoCount > 0){
 			AudioSource.PlayClipAtPoint(soundClip, transform.position);
 			BulletProjectile bullet = newProjectile();
 			bullet.speed = speed;
@@ -79,11 +90,12 @@ public class Chaingun : Weapon {
 			bullet.transform.position = new Vector3((Mathf.Round(transform.position.x * 100f) / 100f) + xOffset, transform.position.y, 0);
 			RegisterBullet ();
 			OrientProjectile(bullet);
-			currentBulletCount--;
+			currentAmmoCount--;
 		}
 	}
 	
-	public float currentBulletRatio(){
-		return(currentBulletCount/maxBulletCount);
+	protected override int MaxAmmoCount(){
+		return(100);
 	}
+	
 }
