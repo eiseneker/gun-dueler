@@ -31,7 +31,7 @@ public class Weapon : MonoBehaviour {
 		return(timeSinceLastFire >= fireDelay);
 	}
 	
-	protected void Update () {
+	protected virtual void Update () {
 		timeSinceLastFire += Time.deltaTime;
 	}
 	

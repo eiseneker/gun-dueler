@@ -13,6 +13,7 @@ public class Player : Agent, IAttacker {
 	public static List<GameObject> players = new List<GameObject>();
 	
 	private Vulcan vulcan;
+	private Chaingun chaingun;
 	private Shotgun shotgun;
 	private MagnetMissile magnetMissile;
 	private GigaBeam gigaBeam;
@@ -41,6 +42,8 @@ public class Player : Agent, IAttacker {
 		playerHitState.player = gameObject;
 		vulcan = gameObject.AddComponent<Vulcan>() as Vulcan;
 		vulcan.player = this;
+		chaingun = gameObject.AddComponent<Chaingun>() as Chaingun;
+		chaingun.player = this;
 		shotgun = gameObject.AddComponent<Shotgun>() as Shotgun;
 		shotgun.player = this;
 		gigaBeam = gameObject.AddComponent<GigaBeam>() as GigaBeam;
@@ -117,7 +120,7 @@ public class Player : Agent, IAttacker {
 		}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
 			shield.ShieldUp(IsInExMode());
 		}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
-			vulcan.Fire(IsInExMode());
+			chaingun.Fire(IsInExMode());
 			shield.ShieldDown();
 		}else{
 			shield.ShieldDown();
