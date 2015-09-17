@@ -34,6 +34,7 @@ public class Player : Agent, IAttacker {
 	private float maxDangerTimer = 3;
 	private Truck firstTruck;
 	private Truck lastTruck;
+	private float z = 1;
 	
 	void Start(){
 		myRigidbody = GetComponent<Rigidbody2D>();
@@ -102,6 +103,10 @@ public class Player : Agent, IAttacker {
 				ExitExMode();
 			}
 		}
+		if(playerNumber == 1){
+			print(transform.position);
+		}	
+//		transform.position = new Vector3(transform.position.x, transform.position.y, 1 * transform.position.y);
 	}
 	
 	void ManageExInput(){

@@ -12,6 +12,10 @@ public class Road : MonoBehaviour {
 		loadMarker = transform.Find ("LoadMarker").GetComponent<LoadMarker>();
 		loadMarker.road = this;
 		roads.Add (this);
+		transform.eulerAngles = new Vector3(
+			32,
+			transform.eulerAngles.y,
+			transform.eulerAngles.z);
 	}
 	
 	
