@@ -13,6 +13,7 @@ public class Player : Agent, IAttacker {
 	public static List<GameObject> players = new List<GameObject>();
 	
 	private Vulcan vulcan;
+	private BombLauncher bombLauncher;
 	private Chaingun chaingun;
 	private Shotgun shotgun;
 	private MagnetMissile magnetMissile;
@@ -35,6 +36,7 @@ public class Player : Agent, IAttacker {
 	private Truck firstTruck;
 	private Truck lastTruck;
 	private float z = 1;
+	private bool bombLaunched = false;
 	
 	void Start(){
 		myRigidbody = GetComponent<Rigidbody2D>();
@@ -47,6 +49,10 @@ public class Player : Agent, IAttacker {
 		chaingunObject.transform.parent = transform;
 		chaingun = chaingunObject.GetComponent<Chaingun>() as Chaingun;
 		chaingun.player = this;
+		GameObject bombLauncherObject = Instantiate (Resources.Load ("Bomb Launcher"), transform.position, Quaternion.identity) as GameObject;
+		bombLauncherObject.transform.parent = transform;
+		bombLauncher = bombLauncherObject.GetComponent<BombLauncher>() as BombLauncher;
+		bombLauncher.player = this;
 		shotgun = gameObject.AddComponent<Shotgun>() as Shotgun;
 		shotgun.player = this;
 		gigaBeam = gameObject.AddComponent<GigaBeam>() as GigaBeam;
@@ -93,7 +99,7 @@ public class Player : Agent, IAttacker {
 			float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
 			float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y") * -1;
 			
-			ManageExInput();
+//			ManageExInput();
 			ManageVehicleControls(xMovement, yMovement);
 			ManageActionInputs();
 		}else{
@@ -115,7 +121,13 @@ public class Player : Agent, IAttacker {
 	}
 	
 	void ManageActionInputs(){
-		if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
+		if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1){
+			if(!bombLaunched){
+				bombLauncher.Fire ();
+				bombLaunched = true;
+				print ("bomb fired!");
+			}
+		}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
 			chaingun.Fire(IsInExMode(), 180);
 		}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
 			chaingun.Fire(IsInExMode(), 0);
@@ -135,6 +147,7 @@ public class Player : Agent, IAttacker {
 	
 	
 	public override void ReceiveHit(float damage, GameObject attackerObject) {
+		print ("hit received! " + damage);
 		IAttacker attacker = ResolveAttacker(attackerObject);
 		
 		if(shield.IsShieldUp()){

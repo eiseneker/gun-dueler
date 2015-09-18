@@ -53,7 +53,7 @@ public class Chaingun : Weapon {
 				ammoMeter = Instantiate ( Resources.Load ("HUD/Ammo Meter"), transform.position, Quaternion.identity) as GameObject;
 				ammoMeter.GetComponent<AmmoMeter>().player = player;
 				ammoMeter.GetComponent<AmmoMeter>().weapon = this;
-			}
+			}	
 			bool ex = exAttempt;
 			
 			speed = defaultSpeed;
@@ -97,7 +97,6 @@ public class Chaingun : Weapon {
 			bullet.weapon = this;
 			bullet.GetComponent<Entity>().affinity = player.GetComponent<Entity>().affinity;
 			float xMovement;
-			print (transform.eulerAngles.z);
 			bullet.yVector = 1;
 			xMovement = 0;
 			

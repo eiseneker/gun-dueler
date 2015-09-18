@@ -12,7 +12,6 @@ public class HealthMeter : MonoBehaviour {
 
 	void Start () {
 		filler = transform.Find ("Filler");
-		healthText = transform.Find ("Health Text");
 		criticalText = transform.Find ("Critical Text");
 	}
 	
@@ -22,7 +21,6 @@ public class HealthMeter : MonoBehaviour {
 			meterRatio = 1;
 		}else{
 			meterRatio = player.damageBehavior.CurrentHealthRatio();
-			healthText.gameObject.SetActive(!player.IsCritical());
 			criticalText.gameObject.SetActive(player.IsCritical());
 		}
 		filler.localScale = new Vector3(meterRatio, 1, 1);
