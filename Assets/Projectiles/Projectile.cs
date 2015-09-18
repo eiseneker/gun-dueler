@@ -56,6 +56,22 @@ public class Projectile : MonoBehaviour, IProjectilePassable {
 		}
 	}
 	
+	protected void DetermineHit(Collision2D collision, bool destroysSelfOnHit){
+		Entity hitEntity = collision.gameObject.GetComponent<Entity>();
+		if(hitEntity && hitEntity.affinity != affinity){
+			IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
+			if(harmedObject != null){
+				harmedObject.ReceiveHit(DamageValue (), owner);
+				if(destroysSelfOnHit) DestroyMe ();
+			}
+		}else if(hitEntity && hitEntity.gameObject != owner){
+			IProjectilePassable iProjectilePassable = collision.gameObject.GetComponent(typeof(IProjectilePassable)) as IProjectilePassable;
+			if(iProjectilePassable == null){
+				if(DestroysSelfOnFriendlyHit()) DestroyMe ();
+			}
+		}
+	}
+	
 	public void RotateMe(float degrees){
 		OrientationHelper.RotateTransform(transform, degrees);
 	}

@@ -97,15 +97,21 @@ public class Chaingun : Weapon {
 			bullet.weapon = this;
 			bullet.GetComponent<Entity>().affinity = player.GetComponent<Entity>().affinity;
 			float xMovement;
-			bullet.yVector = 1;
+			float bulletMagnitude = 2;
+			
+			bullet.yVector = bulletMagnitude;
+			
 			xMovement = 0;
 			
+			
 			if(OrientationHelper.FacingUp (transform)){
-				xMovement = player.GetComponent<Rigidbody2D>().velocity.magnitude;
+				xMovement = player.GetComponent<Rigidbody2D>().velocity.magnitude * 2.5f;
 			}else if(OrientationHelper.FacingDown (transform)){
-				xMovement = player.GetComponent<Rigidbody2D>().velocity.magnitude * -1;
+				xMovement = player.GetComponent<Rigidbody2D>().velocity.magnitude * -2.5f;
 			}else if(OrientationHelper.FacingRight (transform)){
-				bullet.yVector = Mathf.Clamp (player.GetComponent<Rigidbody2D>().velocity.magnitude/5, 1.5f,2);
+				bullet.yVector = player.GetComponent<Rigidbody2D>().velocity.magnitude/3;
+			}else if(OrientationHelper.FacingLeft (transform)){
+				bullet.yVector = player.GetComponent<Rigidbody2D>().velocity.magnitude/30;
 			}
 			
 			bullet.xVector = Mathf.Round (xMovement) + Random.Range(-1f, 1f);

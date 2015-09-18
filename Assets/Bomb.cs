@@ -3,22 +3,20 @@ using System.Collections;
 
 public class Bomb : Agent, IShreddable {
 
-	private float maxHealth = 5;
+	private float maxHealth = 20;
 	private float currentHealth;
 	
 	public Player owner;
 	public Vector2 initialVelocity;
-	private Collider2D hitbox;
 	
 	private float maxInvincibleTime = 1f;
 	private float currentInvincibleTime;
 	
 	// Use this for initialization
 	void Start () {
-		hitbox = GetComponent<Collider2D>();
 		currentHealth = maxHealth;
 		Physics2D.IgnoreCollision(GetComponent<Collider2D>(), owner.GetComponent<Collider2D>());
-		GetComponent<Rigidbody2D>().AddForce (new Vector2(0, 50));
+		GetComponent<Rigidbody2D>().AddForce (new Vector2(0, 0));
 	}
 	
 	// Update is called once per frame

@@ -31,6 +31,7 @@ public class Weapon : MonoBehaviour {
 	}
 	
 	protected bool HasFinishedCooldown(){
+		print (fireDelay);
 		return(timeSinceLastFire >= fireDelay);
 	}
 	

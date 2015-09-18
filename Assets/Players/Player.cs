@@ -36,7 +36,6 @@ public class Player : Agent, IAttacker {
 	private Truck firstTruck;
 	private Truck lastTruck;
 	private float z = 1;
-	private bool bombLaunched = false;
 	
 	void Start(){
 		myRigidbody = GetComponent<Rigidbody2D>();
@@ -122,11 +121,7 @@ public class Player : Agent, IAttacker {
 	
 	void ManageActionInputs(){
 		if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1){
-			if(!bombLaunched){
-				bombLauncher.Fire ();
-				bombLaunched = true;
-				print ("bomb fired!");
-			}
+			bombLauncher.Fire ();
 		}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
 			chaingun.Fire(IsInExMode(), 180);
 		}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
