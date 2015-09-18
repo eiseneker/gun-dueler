@@ -43,7 +43,9 @@ public class Player : Agent, IAttacker {
 		playerHitState.player = gameObject;
 		vulcan = gameObject.AddComponent<Vulcan>() as Vulcan;
 		vulcan.player = this;
-		chaingun = gameObject.AddComponent<Chaingun>() as Chaingun;
+		GameObject chaingunObject = Instantiate (Resources.Load ("Chaingun"), transform.position, Quaternion.identity) as GameObject;
+		chaingunObject.transform.parent = transform;
+		chaingun = chaingunObject.GetComponent<Chaingun>() as Chaingun;
 		chaingun.player = this;
 		shotgun = gameObject.AddComponent<Shotgun>() as Shotgun;
 		shotgun.player = this;
@@ -89,7 +91,7 @@ public class Player : Agent, IAttacker {
 	
 		if(!IsInputLocked){
 			float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
-			float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y");
+			float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y") * -1;
 			
 			ManageExInput();
 			ManageVehicleControls(xMovement, yMovement);
@@ -114,17 +116,19 @@ public class Player : Agent, IAttacker {
 	
 	void ManageActionInputs(){
 		if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
-			shotgun.Fire (IsInExMode());
+			chaingun.Fire(IsInExMode(), 180);
 		}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
-			magnetMissile.Fire (IsInExMode());
+			chaingun.Fire(IsInExMode(), 0);
 		}else if(Input.GetAxis ("Player"+playerNumber+"_SuperWeapon") == 1){
-			gigaBeam.Fire ();
+			chaingun.Fire(IsInExMode(), 270);
 		}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
 			shield.ShieldUp(IsInExMode());
+			chaingun.Release();
 		}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
-			chaingun.Fire(IsInExMode());
+			chaingun.Fire(IsInExMode(), 90);
 			shield.ShieldDown();
 		}else{
+			chaingun.Release();
 			shield.ShieldDown();
 		}
 	}

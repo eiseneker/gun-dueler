@@ -16,13 +16,24 @@ public class OrientationHelper {
 	}
 	
 	public static bool FacingUp(Transform transform){
-		return(transform.eulerAngles.z == 0 || transform.eulerAngles.z > 315 && transform.eulerAngles.z < 45);
+		return(transform.eulerAngles.z > 315 || transform.eulerAngles.z < 45);
 	}
 	
 	public static void RotateTransform(Transform transform, float degrees){
-		transform.eulerAngles = new Vector3(
-			transform.eulerAngles.x,
-			transform.eulerAngles.y,
-			transform.eulerAngles.z + degrees);
+		transform.rotation = Quaternion.Euler(0f, 0f, degrees);
 	}
+	
+	public static void RotateTransform(Transform transform, float degrees, float increment){
+		Quaternion q = Quaternion.AngleAxis(degrees, Vector3.forward);
+		transform.rotation = Quaternion.Slerp(transform.rotation, q, increment * Time.deltaTime);
+	}
+	
+	public static void FaceObject(Transform targetTransform, Transform myTransform){
+		Vector3 distance = targetTransform.position - myTransform.position;
+		distance.Normalize();
+		
+		float zRotation = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg;
+		myTransform.rotation = Quaternion.Euler(0f, 0f, zRotation - 90);
+	}
+	
 }
