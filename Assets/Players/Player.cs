@@ -110,6 +110,11 @@ public class Player : Agent, IAttacker {
 				ExitExMode();
 			}
 		}
+		if(vehicleControls.IsCharging()){
+			body.GetComponent<SpriteRenderer>().color = Color.red;
+		}else{
+			body.GetComponent<SpriteRenderer>().color = Color.white;
+		}
 //		transform.position = new Vector3(transform.position.x, transform.position.y, 1 * transform.position.y);
 	}
 	
@@ -129,14 +134,15 @@ public class Player : Agent, IAttacker {
 		}else if(Input.GetAxis ("Player"+playerNumber+"_SuperWeapon") == 1){
 			chaingun.Fire(IsInExMode(), 270);
 		}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
-			shield.ShieldUp(IsInExMode());
+			Charge ();
+//			shield.ShieldUp(IsInExMode());
 			chaingun.Release();
 		}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
 			chaingun.Fire(IsInExMode(), 90);
-			shield.ShieldDown();
+//			shield.ShieldDown();
 		}else{
 			chaingun.Release();
-			shield.ShieldDown();
+//			shield.ShieldDown();
 		}
 	}
 	
@@ -168,6 +174,10 @@ public class Player : Agent, IAttacker {
 		}
 		
 	}
+	
+	private void Charge(){
+		vehicleControls.Charge();
+	}	
 	
 	public bool IsCritical(){
 		return(playerHitState.IsCritical());
