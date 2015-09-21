@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HealthMeter : MonoBehaviour {
+public class EngineMeter : MonoBehaviour {
 	public int playerNumber;
 	
-	private Player player;
+	private Engine engine;
 	private float meterRatio;
 	private Transform filler;
 	private Transform healthText;
@@ -16,20 +16,19 @@ public class HealthMeter : MonoBehaviour {
 	}
 	
 	void Update () {
-		if(player == null) {
-			player = GetPlayer();
+		if(engine == null) {
+			engine = GetEngine();
 			meterRatio = 1;
 		}else{
-			meterRatio = player.damageBehavior.CurrentHealthRatio();
-			criticalText.gameObject.SetActive(player.IsCritical());
+			meterRatio = engine.damageBehavior.CurrentHealthRatio();
 		}
 		filler.localScale = new Vector3(meterRatio, 1, 1);
 	}
 	
-	private Player GetPlayer() {
-		GameObject playerObject = GameObject.Find ("Player "+playerNumber+" Fleet/Player(Clone)");
-		if(playerObject){
-			return(playerObject.GetComponent<Player>());
+	private Engine GetEngine() {
+		GameObject engineObject = GameObject.Find ("Player "+playerNumber+" Fleet/Truck/Engine(Clone)");
+		if(engineObject){
+			return(engineObject.GetComponent<Engine>());
 		}else{
 			return(null);
 		}

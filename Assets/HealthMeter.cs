@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AmmoMeter : MonoBehaviour {
+public class HealthMeter : MonoBehaviour {
 	public Player player;
 	public Weapon weapon;
 	
@@ -15,7 +15,7 @@ public class AmmoMeter : MonoBehaviour {
 	}
 	
 	void Update () {
-		meterRatio = weapon.CurrentAmmoRatio();
+		meterRatio = player.damageBehavior.CurrentHealthRatio();
 		filler.localScale = new Vector3(meterRatio, 1, 1);
 		transform.position = player.transform.position;
 		Camera camera = GameObject.Find ("Cameras/HUD Camera").GetComponent<Camera>();
@@ -33,7 +33,7 @@ public class AmmoMeter : MonoBehaviour {
 		Vector2 ViewportPosition = camera.WorldToViewportPoint(player.gameObject.transform.position);
 		Vector2 WorldObject_ScreenPosition=new Vector2(
 			((ViewportPosition.x*CanvasRect.sizeDelta.x)-(CanvasRect.sizeDelta.x*0.5f)) - 40,
-			((ViewportPosition.y*CanvasRect.sizeDelta.y)-(CanvasRect.sizeDelta.y*0.5f)) - 24);
+			((ViewportPosition.y*CanvasRect.sizeDelta.y)-(CanvasRect.sizeDelta.y*0.5f)) - 18);
 		
 		
 		UI_Element.anchoredPosition=WorldObject_ScreenPosition;

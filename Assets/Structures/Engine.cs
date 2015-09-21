@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Engine : Structure {
-	private DamageBehavior damageBehavior;
+	public DamageBehavior damageBehavior;
+	
 	private SpriteRenderer bodySprite;
 	private GameObject player;
 	private GameObject enemyPlayer;
@@ -30,7 +31,7 @@ public class Engine : Structure {
 		if(damageBehavior.CurrentHealthRatio() <= 0){
 			DestroyMe ();
 		}
-}
+	}
 	
 	private void DestroyMe(){
 		Destroy (gameObject);

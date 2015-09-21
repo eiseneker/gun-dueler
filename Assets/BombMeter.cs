@@ -1,22 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
-public class AmmoMeter : MonoBehaviour {
+public class BombMeter : MonoBehaviour {
 	public Player player;
-	public Weapon weapon;
-	
-	private float meterRatio;
-	private Transform filler;
+	public BombLauncher weapon;
 	
 	void Start () {
-		filler = transform.Find ("Filler");
-		meterRatio = 0;
 		transform.parent = GameObject.Find ("HUD").transform;
 	}
 	
 	void Update () {
-		meterRatio = weapon.CurrentAmmoRatio();
-		filler.localScale = new Vector3(meterRatio, 1, 1);
+		print (weapon);
+		transform.Find ("Text").GetComponent<Text>().text = weapon.currentBombCount.ToString ();
 		transform.position = player.transform.position;
 		Camera camera = GameObject.Find ("Cameras/HUD Camera").GetComponent<Camera>();
 		
@@ -32,8 +28,8 @@ public class AmmoMeter : MonoBehaviour {
 		
 		Vector2 ViewportPosition = camera.WorldToViewportPoint(player.gameObject.transform.position);
 		Vector2 WorldObject_ScreenPosition=new Vector2(
-			((ViewportPosition.x*CanvasRect.sizeDelta.x)-(CanvasRect.sizeDelta.x*0.5f)) - 40,
-			((ViewportPosition.y*CanvasRect.sizeDelta.y)-(CanvasRect.sizeDelta.y*0.5f)) - 24);
+			((ViewportPosition.x*CanvasRect.sizeDelta.x)-(CanvasRect.sizeDelta.x*0.5f)) + 40,
+			((ViewportPosition.y*CanvasRect.sizeDelta.y)-(CanvasRect.sizeDelta.y*0.5f)) - 100);
 		
 		
 		UI_Element.anchoredPosition=WorldObject_ScreenPosition;

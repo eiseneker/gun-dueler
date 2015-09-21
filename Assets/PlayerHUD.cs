@@ -7,7 +7,7 @@ public class PlayerHUD : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		transform.Find ("Health Meter").GetComponent<HealthMeter>().playerNumber = playerNumber;
+		transform.Find ("Engine Meter").GetComponent<EngineMeter>().playerNumber = playerNumber;
 	}
 	
 	// Update is called once per frame

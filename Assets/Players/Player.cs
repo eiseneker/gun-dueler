@@ -36,6 +36,7 @@ public class Player : Agent, IAttacker {
 	private Truck firstTruck;
 	private Truck lastTruck;
 	private float z = 1;
+	private GameObject healthMeter;
 	
 	void Start(){
 		myRigidbody = GetComponent<Rigidbody2D>();
@@ -81,6 +82,10 @@ public class Player : Agent, IAttacker {
 		truck = GetComponent<Entity>().affinity.GetComponent<Fleet>().truck;
 		if(reversePosition) reverseIndex *= -1;
 		transform.position = new Vector3(truck.transform.position.x + 6, truck.transform.position.y + (3 * reverseIndex));
+		if(healthMeter == null){
+			healthMeter = Instantiate ( Resources.Load ("HUD/Health Meter"), transform.position, Quaternion.identity) as GameObject;
+			healthMeter.GetComponent<HealthMeter>().player = this;
+		}	
 	}
 		
 	void Update () {
