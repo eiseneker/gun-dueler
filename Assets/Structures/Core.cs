@@ -24,7 +24,7 @@ public class Core : Structure, IProjectilePassable {
 		}
 	}
 	
-	public override void ReceiveHit(float damage, GameObject attackerObject) {
+	public override void ReceiveHit(float damage, GameObject attackerObject, GameObject attack) {
 		IAttacker attacker = ResolveAttacker(attackerObject);
 		if(attacker != null) {
 			coreSentry.Fire (attackerObject);

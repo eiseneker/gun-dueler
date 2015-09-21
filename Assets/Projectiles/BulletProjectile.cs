@@ -11,7 +11,7 @@ public class BulletProjectile : Projectile, IShreddable {
 	
 	public override void Start(){
 		base.Start();
-		affinity = owner.GetComponent<Entity>().affinity;
+		GetComponent<Entity>().affinity = owner.GetComponent<Entity>().affinity;
 		body = transform.Find("Body");
 		bodySprite = body.GetComponent<SpriteRenderer>();
 		bodySprite.color = GetTeamColor();

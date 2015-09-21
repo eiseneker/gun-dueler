@@ -43,7 +43,7 @@ public class Bomb : Agent, IShreddable {
 		
 	}
 	
-	public override void ReceiveHit(float damage, GameObject attackerObject){
+	public override void ReceiveHit(float damage, GameObject attackerObject, GameObject attack){
 		currentHealth -= damage;
 		if(currentHealth <= 0){
 			Explode();

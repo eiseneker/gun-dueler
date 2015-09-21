@@ -85,6 +85,7 @@ public class Sheep : Minion {
 					if(this.upgradeCount + sheep.upgradeCount < 2){
 						sheep.Upgrade(sheep.upgradeCount + 1);
 						if(!preserved){
+							print ("case 1");
 							Destroy (gameObject);
 						}
 					}
@@ -93,9 +94,8 @@ public class Sheep : Minion {
 			}else{
 				IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
 				if(harmedObject != null){
-					harmedObject.ReceiveHit(1, gameObject);
+					harmedObject.ReceiveHit(1, gameObject, gameObject);
 				}
-				DestroyMe();
 			}
 		}
 	}

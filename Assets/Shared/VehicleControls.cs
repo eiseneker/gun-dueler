@@ -41,7 +41,6 @@ public class VehicleControls : MonoBehaviour {
 		if(currentChargeDuration <= maxChargeDuration){
 			LockControls();
 			CaptureChargeVelocity();
-			print ("forcing velocity to " +capturedChargeVelocity );
 			myRigidbody.velocity = capturedChargeVelocity;
 		}else{
 			ClearChargeVelocity();

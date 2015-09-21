@@ -18,7 +18,7 @@ public class Explosion : MonoBehaviour {
 		if(hazardous){
 			IHarmable harmedObject = collider.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
 			if(harmedObject != null){
-				harmedObject.ReceiveHit(50, gameObject);
+				harmedObject.ReceiveHit(50, gameObject, gameObject);
 			}
 		}
 	}

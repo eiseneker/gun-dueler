@@ -66,7 +66,7 @@ public class SpawnTurret : Structure {
 		Physics2D.IgnoreCollision(ship.GetComponent<Collider2D>(), GetComponent<Collider2D>());
 	}
 	
-	public override void ReceiveHit(float damage, GameObject attackerObject) {
+	public override void ReceiveHit(float damage, GameObject attackerObject, GameObject attack) {
 		if(!disabled){
 			IAttacker attacker = ResolveAttacker(attackerObject);
 			if(attacker != null) attacker.RegisterSuccessfulAttack(0);

@@ -13,5 +13,6 @@ public class SheepTurret : MonoBehaviour {
 		bullet.owner = owner;
 		bullet.yVector = 1;
 		bullet.xVector = xVelocity;
+		print (bullet.owner);
 	}
 }

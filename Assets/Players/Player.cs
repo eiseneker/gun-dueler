@@ -98,7 +98,6 @@ public class Player : Agent, IAttacker {
 			float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
 			float yMovement = Input.GetAxis ("Player"+playerNumber+"_Y") * -1;
 			
-//			ManageExInput();
 			ManageVehicleControls(xMovement, yMovement);
 			ManageActionInputs();
 		}else{
@@ -115,13 +114,6 @@ public class Player : Agent, IAttacker {
 		}else{
 			body.GetComponent<SpriteRenderer>().color = Color.white;
 		}
-//		transform.position = new Vector3(transform.position.x, transform.position.y, 1 * transform.position.y);
-	}
-	
-	void ManageExInput(){
-		if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1 && currentExValue >= 50){
-			EnterExMode();
-		}
 	}
 	
 	void ManageActionInputs(){
@@ -135,26 +127,32 @@ public class Player : Agent, IAttacker {
 			chaingun.Fire(IsInExMode(), 270);
 		}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
 			Charge ();
-//			shield.ShieldUp(IsInExMode());
 			chaingun.Release();
 		}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
 			chaingun.Fire(IsInExMode(), 90);
-//			shield.ShieldDown();
 		}else{
 			chaingun.Release();
-//			shield.ShieldDown();
 		}
 	}
 	
 	
-	public override void ReceiveHit(float damage, GameObject attackerObject) {
-		print ("hit received! " + damage);
+	public override void ReceiveHit(float damage, GameObject attackerObject, GameObject attack) {
 		IAttacker attacker = ResolveAttacker(attackerObject);
+		bool deferHit = false;
+		
 		
 		if(shield.IsShieldUp()){
 			shield.DamageShield(20);
 			currentExValue += 4;
-		}else{
+			deferHit = true;
+		}
+		
+		if(vehicleControls.IsCharging() && (attack.GetComponent<Projectile>() || attack.GetComponent<Minion>())){
+			currentExValue += 1;
+			deferHit = true;
+		}
+		
+		if(!deferHit){
 			if(!playerHitState.isHit){
 				if(attacker != null) attacker.RegisterSuccessfulAttack(5);
 			}
@@ -173,6 +171,17 @@ public class Player : Agent, IAttacker {
 			}
 		}
 		
+	}
+	
+	private void OnCollisionEnter2D(Collision2D collision){
+		IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
+		float damage = 1;
+		if(harmedObject != null){
+			if(vehicleControls.IsCharging()){
+				damage = 20;
+			}
+			harmedObject.ReceiveHit(damage, gameObject, gameObject);
+		}
 	}
 	
 	private void Charge(){

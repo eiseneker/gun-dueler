@@ -23,7 +23,7 @@ public class Minion : Agent, IAttacker, IShreddable {
 		timeSinceStart += Time.deltaTime;
 	}
 	
-	public override void ReceiveHit(float damage, GameObject attackerObject) {
+	public override void ReceiveHit(float damage, GameObject attackerObject, GameObject attack) {
 		IAttacker attacker = ResolveAttacker(attackerObject);
 		if(attackerObject && attackerObject.GetComponent<Minion>()) damage /= 2;
 		if(attacker != null) attacker.RegisterSuccessfulAttack(0);

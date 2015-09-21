@@ -45,7 +45,7 @@ public class Projectile : MonoBehaviour, IProjectilePassable {
 		if(hitEntity && hitEntity.affinity != affinity){
 			IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
 			if(harmedObject != null){
-				harmedObject.ReceiveHit(DamageValue (), owner);
+				harmedObject.ReceiveHit(DamageValue (), owner, gameObject);
 				if(destroysSelfOnHit) DestroyMe ();
 			}
 		}else if(hitEntity && hitEntity.gameObject != owner){
@@ -61,7 +61,7 @@ public class Projectile : MonoBehaviour, IProjectilePassable {
 		if(hitEntity && hitEntity.affinity != affinity){
 			IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
 			if(harmedObject != null){
-				harmedObject.ReceiveHit(DamageValue (), owner);
+				harmedObject.ReceiveHit(DamageValue (), owner, gameObject);
 				if(destroysSelfOnHit) DestroyMe ();
 			}
 		}else if(hitEntity && hitEntity.gameObject != owner){

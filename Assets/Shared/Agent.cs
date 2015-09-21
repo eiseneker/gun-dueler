@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Agent : MonoBehaviour, IHarmable {
 	
-	public virtual void ReceiveHit(float damage, GameObject attackerObject){
+	public virtual void ReceiveHit(float damage, GameObject attackerObject, GameObject attack){
 		
 	}
 	

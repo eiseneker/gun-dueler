@@ -25,7 +25,7 @@ public class Bull : Minion {
 		if(collision.gameObject.GetComponent<Entity>().affinity != GetComponent<Entity>().affinity){
 			IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
 			if(harmedObject != null){
-				harmedObject.ReceiveHit(1, gameObject);
+				harmedObject.ReceiveHit(1, gameObject, gameObject);
 			}
 			DestroyMe();
 		}
