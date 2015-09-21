@@ -140,17 +140,8 @@ public class Player : Agent, IAttacker {
 		IAttacker attacker = ResolveAttacker(attackerObject);
 		bool deferHit = false;
 		
-		
-		if(shield.IsShieldUp()){
-			shield.DamageShield(20);
-			currentExValue += 4;
-			deferHit = true;
-		}
-		
-		if(vehicleControls.IsCharging() && (attack.GetComponent<Projectile>() || attack.GetComponent<Minion>())){
-			currentExValue += 1;
-			deferHit = true;
-		}
+		deferHit = HandledByShield();
+		if(!deferHit) deferHit = HandledByCharging(attack);
 		
 		if(!deferHit){
 			if(!playerHitState.isHit){
@@ -164,13 +155,29 @@ public class Player : Agent, IAttacker {
 				damageBehavior.ReceiveDamage(damage);
 			}
 			
-			
 			if(damageBehavior.CurrentHealthRatio() <= 0){
 				DestroyMe();
 				if(attacker != null) attacker.RegisterSuccessfulDestroy(15);
 			}
 		}
 		
+	}
+	
+	private bool HandledByCharging(GameObject attack){
+		bool handledByCharging = vehicleControls.IsCharging() && (attack.GetComponent<Projectile>() || attack.GetComponent<Minion>());
+		if(handledByCharging){
+			currentExValue += 1;
+		}
+		return(handledByCharging);
+	}
+	
+	private bool HandledByShield(){
+		bool shieldUp = shield.IsShieldUp();
+		if(shieldUp){
+			shield.DamageShield(20);
+			currentExValue += 4;
+		}
+		return(shieldUp);
 	}
 	
 	private void OnCollisionEnter2D(Collision2D collision){

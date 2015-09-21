@@ -21,7 +21,6 @@ public class BulletProjectile : Projectile, IShreddable {
 	
 	public override void Update () {
 		base.Update ();
-//		transform.Translate (new Vector3(xVector * Time.deltaTime, yVector * Time.deltaTime * speed, 0));
 	}
 	
 	void OnTriggerEnter2D (Collider2D collider) {

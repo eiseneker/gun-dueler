@@ -38,6 +38,23 @@ public class Sheep : Minion {
 		OrientationHelper.RotateTransform(turretTransform, 90 * reverseFactor);
 		acceleration = Random.value;
 		
+		DetermineSpawnBehavior();
+	}
+
+	public override void Update () {
+		base.Update ();
+		currentStartupTime += Time.deltaTime;
+		
+		ManageDrivingBehavior();
+		
+		float probability = firesPerSecond * Time.deltaTime;
+		
+		if(Random.value < probability){
+			Fire ();
+		}
+	}
+	
+	private void DetermineSpawnBehavior(){
 		enemyPlayer = GetComponent<Entity>().EnemyPlayer();
 		
 		if(enemyPlayer && Mathf.Abs(enemyPlayer.transform.position.x - transform.position.x) < 2){
@@ -50,11 +67,8 @@ public class Sheep : Minion {
 			driveBehavior = DriveBehavior.Brake;
 		}
 	}
-
-	public override void Update () {
-		base.Update ();
-		currentStartupTime += Time.deltaTime;
-		
+	
+	private void ManageDrivingBehavior(){
 		if(currentStartupTime < maxStartupTime){
 			vehicleControls.Steer (0.25f * reverseFactor);
 		}else{
@@ -64,33 +78,17 @@ public class Sheep : Minion {
 		if(driveBehavior == DriveBehavior.Idle){
 			vehicleControls.Idle ();
 		}else if (driveBehavior == DriveBehavior.Accelerate){
-		
 			vehicleControls.Accelerate (acceleration);
 		}else{
 			vehicleControls.Brake ();
-		}
-		
-		float probability = firesPerSecond * Time.deltaTime;
-		
-		if(Random.value < probability){
-			Fire ();
 		}
 	}
 	
 	void OnCollisionEnter2D (Collision2D collision){
 		if(collision.gameObject.GetComponent<Entity>()){
-			if(collision.gameObject.GetComponent<Entity>().affinity == GetComponent<Entity>().affinity){
+			if(AffinitiesMatch(collision.gameObject)){
 				Sheep sheep = collision.gameObject.GetComponent<Sheep>();
-				if(sheep){
-					if(this.upgradeCount + sheep.upgradeCount < 2){
-						sheep.Upgrade(sheep.upgradeCount + 1);
-						if(!preserved){
-							print ("case 1");
-							Destroy (gameObject);
-						}
-					}
-					preserved = false;
-				}
+				if(sheep) Merge (sheep);
 			}else{
 				IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
 				if(harmedObject != null){
@@ -98,6 +96,20 @@ public class Sheep : Minion {
 				}
 			}
 		}
+	}
+	
+	private bool AffinitiesMatch(GameObject collidedObject){
+		return(collidedObject.GetComponent<Entity>().affinity == GetComponent<Entity>().affinity);
+	}
+	
+	protected void Merge(Sheep sheep){
+		if(this.upgradeCount + sheep.upgradeCount < 2){
+			sheep.Upgrade(sheep.upgradeCount + 1);
+			if(!preserved){
+				Destroy (gameObject);
+			}
+		}
+		preserved = false;
 	}
 	
 	protected void Fire () {
