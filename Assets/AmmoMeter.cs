@@ -18,6 +18,7 @@ public class AmmoMeter : MonoBehaviour {
 		meterRatio = weapon.CurrentAmmoRatio();
 		filler.localScale = new Vector3(meterRatio, 1, 1);
 		transform.position = player.transform.position;
+		Camera camera = GameObject.Find ("Cameras/HUD Camera").GetComponent<Camera>();
 		
 		
 		//this is the ui element
@@ -29,12 +30,12 @@ public class AmmoMeter : MonoBehaviour {
 		//then you calculate the position of the UI element
 		//0,0 for the canvas is at the center of the screen, whereas WorldToViewPortPoint treats the lower left corner as 0,0. Because of this, you need to subtract the height / width of the canvas * 0.5 to get the correct position.
 		
-		Vector2 ViewportPosition=GameObject.Find ("Cameras/HUD Camera").GetComponent<Camera>().WorldToViewportPoint(player.gameObject.transform.position);
+		Vector2 ViewportPosition = camera.WorldToViewportPoint(player.gameObject.transform.position);
 		Vector2 WorldObject_ScreenPosition=new Vector2(
 			((ViewportPosition.x*CanvasRect.sizeDelta.x)-(CanvasRect.sizeDelta.x*0.5f)) - 40,
 			((ViewportPosition.y*CanvasRect.sizeDelta.y)-(CanvasRect.sizeDelta.y*0.5f)) - 18);
 		
-		//now you can set the position of the ui element
+		
 		UI_Element.anchoredPosition=WorldObject_ScreenPosition;
 	}
 }
