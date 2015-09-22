@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,12 +12,14 @@ public class SpawnTurret : Structure {
 	private GameObject player;
 	private Fleet fleet;
 	private GameObject enemyPlayer;
-	private float maxSpawnCooldown;
+	public float maxSpawnCooldown;
+	public float cooldownAdjust;
 
 	public GameObject minionPrefab;
 	public float defaultMaxSpawnCooldown;
 	public float maxDistanceToPlayer;
 	public float minimumSpawnCooldown;
+	public float maxCooldownAdjust;
 	
 	void Start(){
 		damageBehavior = GetComponent<DamageBehavior>();
@@ -30,8 +33,12 @@ public class SpawnTurret : Structure {
 			enemyPlayer = GetComponent<Entity>().EnemyPlayer();
 		}
 		if(enemyPlayer && !OutOfSpawnRange()){
-			maxSpawnCooldown = Mathf.Clamp (DistanceToEnemyPlayer()/maxDistanceToPlayer * defaultMaxSpawnCooldown, minimumSpawnCooldown, defaultMaxSpawnCooldown);
-		
+			maxCooldownAdjust = Mathf.Pow ((maxDistanceToPlayer*2), 2);
+			cooldownAdjust = Mathf.Pow ((DistanceBehindEnemyPlayer() + maxDistanceToPlayer), 2);
+			float cooldownRange = defaultMaxSpawnCooldown - minimumSpawnCooldown;
+			float adjustRatio = cooldownAdjust / maxCooldownAdjust;
+			float distanceBehindEnemyPlayer = DistanceBehindEnemyPlayer();
+			maxSpawnCooldown = defaultMaxSpawnCooldown - (adjustRatio * cooldownRange);
 			currentSpawnCooldown += Time.deltaTime;
 			if(GameController.gameStarted && !disabled){
 				if(currentSpawnCooldown >= maxSpawnCooldown){
@@ -99,10 +106,10 @@ public class SpawnTurret : Structure {
 	}
 	
 	private bool OutOfSpawnRange(){
-		return(DistanceToEnemyPlayer() > maxDistanceToPlayer);
+		return(Mathf.Abs (DistanceBehindEnemyPlayer()) > maxDistanceToPlayer);
 	}
 	
-	private float DistanceToEnemyPlayer(){
-		return(Mathf.Abs (enemyPlayer.transform.position.x - transform.position.x));
+	private float DistanceBehindEnemyPlayer(){
+		return(enemyPlayer.transform.position.x - transform.position.x);
 	}
 }

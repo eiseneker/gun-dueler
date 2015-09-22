@@ -36,7 +36,7 @@ public class Sheep : Minion {
 		base.Start ();
 		driveBehavior = DriveBehavior.None;
 		
-		maxStartupTime = Random.Range (2, 5);
+		maxStartupTime = Random.Range (3, 7);
 		vehicleControls = GetComponent<VehicleControls>();
 		turretTransform = transform.Find ("Turret");
 		turret = turretTransform.GetComponent<SheepTurret>();
@@ -129,8 +129,8 @@ public class Sheep : Minion {
 	void OnCollisionEnter2D (Collision2D collision){
 		if(collision.gameObject.GetComponent<Entity>()){
 			if(AffinitiesMatch(collision.gameObject)){
-				Sheep sheep = collision.gameObject.GetComponent<Sheep>();
-				if(sheep) Merge (sheep);
+//				Sheep sheep = collision.gameObject.GetComponent<Sheep>();
+//				if(sheep) Merge (sheep);
 			}else{
 				IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
 				if(harmedObject != null){
