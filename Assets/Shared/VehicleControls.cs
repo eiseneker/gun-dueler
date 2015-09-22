@@ -16,6 +16,7 @@ public class VehicleControls : MonoBehaviour {
 	public float idleFactor = 25;
 	public float steerSpeed;
 	public float speedMultiplier = 1;
+	public float maxVelocityModifier = 1;
 	
 	private float currentChargeDelay;
 	private float maxChargeDelay = 5;
@@ -85,11 +86,11 @@ public class VehicleControls : MonoBehaviour {
 
 	public void Steer(float movement){
 		if(!lockedControls){
-			float velocityRange = maxXVelocity - minVelocity;
+			float velocityRange = (maxXVelocity * maxVelocityModifier) - minVelocity;
 			float adjustedVelocity = myRigidbody.velocity.magnitude;
 			float velocityRatio = adjustedVelocity/velocityRange;
 			yMovement = movement;
-			float yVelocity = Mathf.Clamp (steerSpeed * velocityRatio * speedMultiplier, 0, maxYVelocity);
+			float yVelocity = Mathf.Clamp (steerSpeed * velocityRatio * speedMultiplier, 0, maxYVelocity * maxVelocityModifier);
 			myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, yVelocity * yMovement);
 			
 			steering = true;
@@ -134,7 +135,7 @@ public class VehicleControls : MonoBehaviour {
 			accelerating = true;
 			float accelerationOffset = (accelerationFactor - idleFactor) * factor;
 			myRigidbody.AddRelativeForce (Vector3.up * (idleFactor + accelerationOffset) * Time.deltaTime * speedMultiplier);
-			myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, maxXVelocity);
+			myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, maxXVelocity * maxVelocityModifier);
 		}
 	}
 	
@@ -156,4 +157,5 @@ public class VehicleControls : MonoBehaviour {
 	public bool IsCharging(){
 		return(currentChargeDuration <= maxChargeDuration);
 	}
+	
 }

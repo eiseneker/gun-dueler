@@ -6,7 +6,6 @@ public class Truck : MonoBehaviour {
 	private ArrayList structurePositions = new ArrayList();
 	private ArrayList structureList = new ArrayList();
 	private float structureSpacing = 2;
-	private VehicleControls vehicleControls;
 	private Rigidbody2D myRigidbody;
 	
 	public bool reversePosition;
@@ -15,6 +14,7 @@ public class Truck : MonoBehaviour {
 	public ArrayList structuresInPlay = new ArrayList();
 	public GameObject headElement;
 	public GameObject lastElement;
+	public VehicleControls vehicleControls;
 
 	// Use this for initialization
 	void Start () {
