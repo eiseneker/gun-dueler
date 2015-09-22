@@ -29,16 +29,6 @@ public class Chaingun : Weapon {
 	protected override void Update(){
 		base.Update ();
 		OrientationHelper.RotateTransform(transform, currentAngle, 1);
-		if(currentReloadInterval >= maxReloadInterval){
-			if(currentAmmoCount < MaxAmmoCount()){
-				currentAmmoCount = Mathf.Clamp (currentAmmoCount + Mathf.CeilToInt(Mathf.Pow(timeSinceLastFire, 2)), 0, MaxAmmoCount());
-			}
-			currentReloadInterval = 0;
-		}
-		if(ammoMeter && CurrentAmmoRatio() == 1){
-			Destroy (ammoMeter);
-		}
-		currentReloadInterval += Time.deltaTime;
 	}
 	
 	public void Release(){
@@ -49,11 +39,6 @@ public class Chaingun : Weapon {
 		currentAngle = angle;
 		currentWindupTime = Mathf.Clamp(currentWindupTime + Time.deltaTime, 0, maxWindupTime * 1.5f);
 		if(CanFire () && currentWindupTime >= maxWindupTime){
-			if(ammoMeter == null){
-				ammoMeter = Instantiate ( Resources.Load ("HUD/Ammo Meter"), transform.position, Quaternion.identity) as GameObject;
-				ammoMeter.GetComponent<AmmoMeter>().player = player;
-				ammoMeter.GetComponent<AmmoMeter>().weapon = this;
-			}	
 			bool ex = exAttempt;
 			
 			speed = defaultSpeed;
@@ -90,19 +75,16 @@ public class Chaingun : Weapon {
 	}
 	
 	private void CreateBullet(Vector3 origin){
-		if(currentAmmoCount > 0){
-			AudioSource.PlayClipAtPoint(soundClip, transform.position);
-			BulletProjectile bullet = newProjectile();
-			bullet.speed = speed;
-			bullet.weapon = this;
-			bullet.GetComponent<Entity>().affinity = player.GetComponent<Entity>().affinity;
-			float bulletMagnitude = 1;
-			bullet.yVector = bulletMagnitude;
-			bullet.transform.position = origin;
-			bullet.GetComponent<Rigidbody2D>().velocity = player.GetComponent<Rigidbody2D>().velocity;
-			RegisterBullet ();
-			currentAmmoCount--;
-		}
+		AudioSource.PlayClipAtPoint(soundClip, transform.position);
+		BulletProjectile bullet = newProjectile();
+		bullet.speed = speed;
+		bullet.weapon = this;
+		bullet.GetComponent<Entity>().affinity = player.GetComponent<Entity>().affinity;
+		float bulletMagnitude = 1;
+		bullet.yVector = bulletMagnitude;
+		bullet.transform.position = origin;
+		bullet.GetComponent<Rigidbody2D>().velocity = player.GetComponent<Rigidbody2D>().velocity;
+		RegisterBullet ();
 	}
 	
 	protected override int MaxAmmoCount(){
