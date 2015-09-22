@@ -28,6 +28,13 @@ public class BombLauncher : Weapon {
 			bomb.owner = player;
 			timeSinceLastFire = 0;
 			currentBombCount--;
+			if(player.vehicleControls.steering){
+				bomb.transform.Translate(Vector3.up * player.vehicleControls.yMovement);
+			}else if(player.vehicleControls.accelerating){
+				bomb.transform.Translate(Vector3.right * 1.5f);
+			}else{
+				bomb.transform.Translate(Vector3.left);
+			}
 		}
 	}
 }

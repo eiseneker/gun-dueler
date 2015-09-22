@@ -28,7 +28,7 @@ public class Player : Agent, IAttacker {
 	private float currentExValue = 0;
 	private float currentJustRespawned;
 	private Rigidbody2D myRigidbody;
-	private VehicleControls vehicleControls;
+	public VehicleControls vehicleControls;
 	private Truck truck;
 	private float reverseIndex = 1;
 	private float currentDangerTimer;

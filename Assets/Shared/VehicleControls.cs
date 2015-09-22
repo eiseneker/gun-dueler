@@ -4,8 +4,8 @@ using System.Collections;
 public class VehicleControls : MonoBehaviour {
 
 	private Rigidbody2D myRigidbody;
-	private bool steering;
-	private bool accelerating;
+	public bool steering;
+	public bool accelerating;
 	
 	public float accelerationFactor = 50;
 	public float brakeFactor = 50;
@@ -24,7 +24,7 @@ public class VehicleControls : MonoBehaviour {
 	private float maxYVelocity;
 	private float maxChargeDuration = 0.5f;
 	private float currentChargeDuration;
-	private float yMovement;
+	public float yMovement;
 	private Vector2 chargingXVector;
 	private bool lockedControls = false;
 	private Vector2 capturedChargeVelocity;

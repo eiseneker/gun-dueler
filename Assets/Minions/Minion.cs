@@ -30,7 +30,7 @@ public class Minion : Agent, IAttacker, IShreddable {
 		damageBehavior.ReceiveDamage(damage);
 		if(damageBehavior.CurrentHealthRatio() <= 0){
 			if(attacker != null) attacker.RegisterSuccessfulDestroy(5);
-			DestroyMe ();
+			DestroyMe (attack);
 		}
 	}
 	
@@ -51,8 +51,17 @@ public class Minion : Agent, IAttacker, IShreddable {
 	}
 	
 	public void DestroyMe(){
+		DestroyMe (new GameObject());
+	}
+	
+	public void DestroyMe(GameObject attack){
 		Destroy(transform.parent.gameObject);
 		GameObject explosion = Instantiate ( Resources.Load ("Explosion"), transform.position, Quaternion.identity) as GameObject;
-		explosion.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
+		if(attack.GetComponent<Explosion>()){
+			explosion.GetComponent<Explosion>().hazardous = true;
+			explosion.transform.localScale *= 2;
+		}else{
+			explosion.transform.localScale /= 2;
+		}
 	}
 }

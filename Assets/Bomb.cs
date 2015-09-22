@@ -52,6 +52,7 @@ public class Bomb : Agent, IShreddable {
 	
 	private void Explode(){
 		GameObject explosionObject = Instantiate (Resources.Load ("Explosion"), transform.position, Quaternion.identity) as GameObject;
+		explosionObject.transform.localScale *= 2;
 		Explosion explosion = explosionObject.GetComponent<Explosion>();
 		explosion.hazardous = true;
 		Destroy (gameObject);
