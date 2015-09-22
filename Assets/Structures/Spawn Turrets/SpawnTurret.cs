@@ -64,6 +64,7 @@ public class SpawnTurret : Structure {
 		}
 		ship.GetComponent<Rigidbody2D>().velocity = truck.Velocity();
 		Physics2D.IgnoreCollision(ship.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+		Physics2D.IgnoreCollision(ship.GetComponent<Collider2D>(), truck.GetComponent<Collider2D>());
 	}
 	
 	public override void ReceiveHit(float damage, GameObject attackerObject, GameObject attack) {

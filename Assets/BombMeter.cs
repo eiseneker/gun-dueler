@@ -11,7 +11,6 @@ public class BombMeter : MonoBehaviour {
 	}
 	
 	void Update () {
-		print (weapon);
 		transform.Find ("Text").GetComponent<Text>().text = weapon.currentBombCount.ToString ();
 		transform.position = player.transform.position;
 		Camera camera = GameObject.Find ("Cameras/HUD Camera").GetComponent<Camera>();

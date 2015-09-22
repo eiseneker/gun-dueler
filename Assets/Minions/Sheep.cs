@@ -14,11 +14,19 @@ public class Sheep : Minion {
 	private float reverseFactor = 1;
 	private float acceleration;
 	private GameObject enemyPlayer;
-	private DriveBehavior driveBehavior;
+	private Personality personality;
 	private int upgradeCount;
+	private DriveBehavior driveBehavior;
+	
+	private enum Personality
+	{
+		Passive,
+		Aggressive
+	}
 	
 	private enum DriveBehavior
 	{
+		None,
 		Idle,
 		Accelerate,
 		Brake
@@ -26,7 +34,9 @@ public class Sheep : Minion {
 	
 	public override void Start(){
 		base.Start ();
-		maxStartupTime = Random.Range (2, 4);
+		driveBehavior = DriveBehavior.None;
+		
+		maxStartupTime = Random.Range (2, 5);
 		vehicleControls = GetComponent<VehicleControls>();
 		turretTransform = transform.Find ("Turret");
 		turret = turretTransform.GetComponent<SheepTurret>();
@@ -38,14 +48,24 @@ public class Sheep : Minion {
 		OrientationHelper.RotateTransform(turretTransform, 90 * reverseFactor);
 		acceleration = Random.value;
 		
-		DetermineSpawnBehavior();
+		enemyPlayer = GetComponent<Entity>().EnemyPlayer();
+		
+		DeterminePersonality();
+		
+		if(reversePosition){
+			OrientationHelper.RotateTransform(turretTransform, 180);
+		}
 	}
 
 	public override void Update () {
+		if(enemyPlayer == null) { enemyPlayer = GetComponent<Entity>().EnemyPlayer(); }
+		
 		base.Update ();
+		ManageDrivingBehavior();
 		currentStartupTime += Time.deltaTime;
 		
-		ManageDrivingBehavior();
+		if(personality == Personality.Passive){ BePassive(); }
+		if(personality == Personality.Aggressive){ BeAggressive(); }
 		
 		float probability = firesPerSecond * Time.deltaTime;
 		
@@ -54,10 +74,21 @@ public class Sheep : Minion {
 		}
 	}
 	
-	private void DetermineSpawnBehavior(){
-		enemyPlayer = GetComponent<Entity>().EnemyPlayer();
-		
-		if(enemyPlayer && Mathf.Abs(enemyPlayer.transform.position.x - transform.position.x) < 2){
+	private void BePassive(){
+		if(driveBehavior == DriveBehavior.None){
+			float distanceBehindEnemy = enemyPlayer.transform.position.x - transform.position.x;
+			if(enemyPlayer && distanceBehindEnemy < 2){
+				driveBehavior = DriveBehavior.Idle;
+			}else if(enemyPlayer == null){
+				driveBehavior = DriveBehavior.Idle;
+			}else if (distanceBehindEnemy > 2){
+				driveBehavior = DriveBehavior.Accelerate;
+			}
+		}
+	}
+	
+	private void BeAggressive(){
+		if(enemyPlayer && Mathf.Abs(enemyPlayer.transform.position.x - transform.position.x) < 0.3f){
 			driveBehavior = DriveBehavior.Idle;
 		}else if(enemyPlayer == null){
 			driveBehavior = DriveBehavior.Idle;
@@ -66,6 +97,18 @@ public class Sheep : Minion {
 		}else{
 			driveBehavior = DriveBehavior.Brake;
 		}
+	}
+	
+	private void DeterminePersonality(){
+		enemyPlayer = GetComponent<Entity>().EnemyPlayer();
+		
+		float personalityFactor = Random.value;
+		if(personalityFactor <= 0.5f){
+			personality = Personality.Passive;
+		}else{
+			personality = Personality.Aggressive;
+		}
+		
 	}
 	
 	private void ManageDrivingBehavior(){
@@ -129,4 +172,5 @@ public class Sheep : Minion {
 			upgradeCount++;
 		}
 	}
+	
 }
