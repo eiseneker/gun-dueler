@@ -153,6 +153,10 @@ public class VehicleControls : MonoBehaviour {
 		}
 	}
 	
+	public void ResetChargeDelay(){
+		currentChargeDelay = maxChargeDelay;
+	}
+	
 	public bool IsCharging(){
 		return(currentChargeDuration <= maxChargeDuration);
 	}

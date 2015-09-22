@@ -37,8 +37,11 @@ public class Player : Agent, IAttacker {
 	private Truck lastTruck;
 	private float z = 1;
 	private GameObject healthMeter;
+	private float currentStunDuration = 0;
+	private float maxStunDuration = 1;
 	
 	void Start(){
+		currentStunDuration = maxStunDuration;
 		myRigidbody = GetComponent<Rigidbody2D>();
 		players.Add (gameObject);
 		playerHitState = gameObject.AddComponent<PlayerHitState>() as PlayerHitState;
@@ -89,7 +92,15 @@ public class Player : Agent, IAttacker {
 	}
 		
 	void Update () {
+		currentStunDuration += Time.deltaTime;
 		ShredderContainer.ReportPosition(transform.position.x);
+		
+		if(currentStunDuration < maxStunDuration){
+			LockInputs();
+		}else{
+			UnlockInputs();
+		}
+		
 	
 		if(enemyPlayerNumber == 0){
 			FetchEnemyPlayer();
@@ -119,6 +130,7 @@ public class Player : Agent, IAttacker {
 		}else{
 			body.GetComponent<SpriteRenderer>().color = Color.white;
 		}
+		
 	}
 	
 	void ManageActionInputs(){
@@ -149,6 +161,14 @@ public class Player : Agent, IAttacker {
 		if(!deferHit) deferHit = HandledByCharging(attack);
 		
 		if(!deferHit){
+			Player attackingPlayer = attack.GetComponent<Player>();
+			if(attackingPlayer && attackingPlayer.vehicleControls.IsCharging ()){
+				if(currentStunDuration < maxStunDuration){
+					damage = 0;
+				}else{
+					Stun();
+				}
+			}
 			if(!playerHitState.isHit){
 				if(attacker != null) attacker.RegisterSuccessfulAttack(5);
 			}
@@ -164,6 +184,7 @@ public class Player : Agent, IAttacker {
 				DestroyMe();
 				if(attacker != null) attacker.RegisterSuccessfulDestroy(15);
 			}
+			
 		}
 		
 	}
@@ -190,7 +211,7 @@ public class Player : Agent, IAttacker {
 		float damage = 1;
 		if(harmedObject != null){
 			if(vehicleControls.IsCharging()){
-				damage = 20;
+				damage = 5;
 			}
 			harmedObject.ReceiveHit(damage, gameObject, gameObject);
 		}
@@ -372,5 +393,9 @@ public class Player : Agent, IAttacker {
 				vehicleControls.Idle ();
 			}
 		}
+	}
+	
+	private void Stun(){
+		currentStunDuration = 0;
 	}
 }

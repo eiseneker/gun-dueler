@@ -61,6 +61,11 @@ public class Minion : Agent, IAttacker, IShreddable {
 			explosion.GetComponent<Explosion>().hazardous = true;
 			explosion.transform.localScale *= 2;
 		}else{
+			Player player = attack.GetComponent<Player>();
+			if(player && player.vehicleControls.IsCharging ()){
+				print ("charge bonus");
+				player.vehicleControls.ResetChargeDelay();
+			}
 			explosion.transform.localScale /= 2;
 		}
 	}
