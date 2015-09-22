@@ -99,6 +99,7 @@ public class Chaingun : Weapon {
 			float bulletMagnitude = 1;
 			bullet.yVector = bulletMagnitude;
 			bullet.transform.position = origin;
+			bullet.GetComponent<Rigidbody2D>().velocity = player.GetComponent<Rigidbody2D>().velocity;
 			RegisterBullet ();
 			currentAmmoCount--;
 		}

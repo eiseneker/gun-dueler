@@ -16,7 +16,6 @@ public class BulletProjectile : Projectile, IShreddable {
 		bodySprite = body.GetComponent<SpriteRenderer>();
 		bodySprite.color = GetTeamColor();
 		transform.parent = owner.transform.root.Find ("Bullets");
-		GetComponent<Rigidbody2D>().velocity = owner.GetComponent<Rigidbody2D>().velocity;
 		GetComponent<Rigidbody2D>().AddRelativeForce (new Vector2(0, yVector));
 	}
 	
