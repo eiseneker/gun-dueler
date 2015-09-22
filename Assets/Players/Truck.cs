@@ -7,6 +7,7 @@ public class Truck : MonoBehaviour {
 	private ArrayList structureList = new ArrayList();
 	private float structureSpacing = 2;
 	private Rigidbody2D myRigidbody;
+	private float reverseFactor = 1;
 	
 	public bool reversePosition;
 	public GameObject[] structures;
@@ -32,6 +33,7 @@ public class Truck : MonoBehaviour {
 		myRigidbody = GetComponent<Rigidbody2D>();
 		transform.Find ("Body").localScale = new Vector3(1, (structuresInPlay.Count * 2), 0);
 		transform.Find ("Body").localPosition = new Vector3(0, structuresInPlay.Count - 1, 0);
+		if(!reversePosition) reverseFactor = -1;
 	}
 	
 	// Update is called once per frame
