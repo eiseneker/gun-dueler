@@ -57,8 +57,7 @@ public class VehicleControls : MonoBehaviour {
 			float xVelocity = myRigidbody.velocity.x;
 			if(steering){
 				yVelocity *= 3f;
-			}
-			if(accelerating){
+			}else if(accelerating){
 				xVelocity *= 1.5f;
 			}
 			print ("memoizing " + xVelocity + " , " + yVelocity);
