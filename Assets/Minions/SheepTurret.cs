@@ -21,7 +21,7 @@ public class SheepTurret : MonoBehaviour {
 		bullet.speed = bulletSpeed;
 		bullet.owner = owner;
 		bullet.GetComponent<Rigidbody2D>().velocity = owner.GetComponent<Rigidbody2D>().velocity;
-		Physics2D.IgnoreCollision(GetComponent<Collider2D>(), owner.GetComponent<Collider2D>());
+		Physics2D.IgnoreCollision(bullet.GetComponent<Collider2D>(), owner.GetComponent<Collider2D>());
 		float bulletMagnitude = .25f;
 		bullet.yVector = bulletMagnitude;
 		bullet.GetComponent<Rigidbody2D>().velocity = owner.GetComponent<Rigidbody2D>().velocity;

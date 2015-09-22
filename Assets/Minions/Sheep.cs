@@ -45,7 +45,6 @@ public class Sheep : Minion {
 		if(reversePosition){
 			reverseFactor *= -1;
 		}
-		OrientationHelper.RotateTransform(turretTransform, 90 * reverseFactor);
 		acceleration = Random.value;
 		
 		enemyPlayer = GetComponent<Entity>().EnemyPlayer();
