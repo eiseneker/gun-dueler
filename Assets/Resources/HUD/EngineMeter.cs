@@ -26,8 +26,9 @@ public class EngineMeter : MonoBehaviour {
 	}
 	
 	private Engine GetEngine() {
-		GameObject engineObject = GameObject.Find ("Player "+playerNumber+" Fleet/Truck/Engine(Clone)");
+		GameObject engineObject = GameObject.Find ("Game Root/Players/Player "+playerNumber+" Fleet/Truck(Clone)/Engine(Clone)");
 		if(engineObject){
+			print ("engine found");
 			return(engineObject.GetComponent<Engine>());
 		}else{
 			return(null);
