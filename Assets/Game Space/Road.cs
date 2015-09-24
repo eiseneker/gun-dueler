@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Road : MonoBehaviour {
+public class Road : MonoBehaviour, IShreddable {
 
 	private LoadMarker loadMarker;
 	
@@ -16,6 +16,14 @@ public class Road : MonoBehaviour {
 			32,
 			transform.eulerAngles.y,
 			transform.eulerAngles.z);
+		foreach(Transform child in transform.Find ("Hazards")){
+			if(Random.value > .5f){
+				float yPosition = Random.Range (-5.5f, 5.5f);
+				Vector3 position = new Vector3(child.transform.position.x, yPosition, child.transform.position.z);
+				GameObject rock = Instantiate(Resources.Load ("Rock"), position, Quaternion.identity) as GameObject;
+				rock.transform.localScale = rock.transform.localScale * .1f;
+			}
+		}
 	}
 	
 	
@@ -30,5 +38,9 @@ public class Road : MonoBehaviour {
 			roads.Remove(road);
 			Destroy (road.gameObject);
 		}
+	}
+	
+	public void DestroyMe(){
+		Destroy(gameObject);
 	}
 }
