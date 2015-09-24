@@ -8,6 +8,7 @@ public class BulletProjectile : Projectile, IShreddable {
 	
 	private Transform body;
 	private SpriteRenderer bodySprite;
+	private Rigidbody2D myRigidbody;
 	
 	public override void Start(){
 		base.Start();
@@ -17,10 +18,14 @@ public class BulletProjectile : Projectile, IShreddable {
 		bodySprite.color = GetTeamColor();
 		transform.parent = owner.transform.root.Find ("Bullets");
 		GetComponent<Rigidbody2D>().AddRelativeForce (new Vector2(0, yVector));
+		myRigidbody = GetComponent<Rigidbody2D>();
 	}
 	
 	public override void Update () {
 		base.Update ();
+		if(myRigidbody.velocity.magnitude < 1){
+			DestroyMe ();
+		}		
 	}
 	
 	void OnTriggerEnter2D (Collider2D collider) {
