@@ -39,6 +39,7 @@ public class Player : Agent, IAttacker {
 	private GameObject healthMeter;
 	private float currentStunDuration = 0;
 	private float maxStunDuration = 1;
+	private Color defaultColor;
 	
 	void Start(){
 		currentStunDuration = maxStunDuration;
@@ -88,6 +89,13 @@ public class Player : Agent, IAttacker {
 		GameObject playerHud = Instantiate (Resources.Load ("HUD/PlayerHUD"), transform.position, Quaternion.identity) as GameObject;
 		playerHud.transform.parent = GameObject.Find ("HUD").transform;
 		playerHud.GetComponent<PlayerHUD>().player = this;
+		defaultColor = body.GetComponent<SpriteRenderer>().color;
+		foreach(Transform child in body.transform){
+			CarWheel wheel = child.GetComponent<CarWheel>();
+			if(wheel){
+				wheel.vehicleControls = vehicleControls;
+			}
+		}
 	}
 		
 	void Update () {
@@ -127,7 +135,7 @@ public class Player : Agent, IAttacker {
 		if(vehicleControls.IsCharging()){
 			body.GetComponent<SpriteRenderer>().color = Color.red;
 		}else{
-			body.GetComponent<SpriteRenderer>().color = Color.white;
+			body.GetComponent<SpriteRenderer>().color = defaultColor;
 		}
 		
 	}

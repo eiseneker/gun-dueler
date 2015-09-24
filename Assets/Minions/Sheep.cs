@@ -54,6 +54,12 @@ public class Sheep : Minion {
 		if(reversePosition){
 			OrientationHelper.RotateTransform(turretTransform, 180);
 		}
+		foreach(Transform child in transform.Find ("Body").transform){
+			CarWheel wheel = child.GetComponent<CarWheel>();
+			if(wheel){
+				wheel.vehicleControls = vehicleControls;
+			}
+		}
 	}
 
 	public override void Update () {

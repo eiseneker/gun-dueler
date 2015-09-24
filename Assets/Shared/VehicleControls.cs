@@ -3,7 +3,7 @@ using System.Collections;
 
 public class VehicleControls : MonoBehaviour {
 
-	private Rigidbody2D myRigidbody;
+	public Rigidbody2D myRigidbody;
 	public bool steering;
 	public bool accelerating;
 	
