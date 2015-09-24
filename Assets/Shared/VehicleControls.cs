@@ -147,10 +147,8 @@ public class VehicleControls : MonoBehaviour {
 	}
 	
 	public void Charge(){
-		if(currentChargeDelay >= maxChargeDelay){
-			currentChargeDuration = 0;
-			currentChargeDelay = 0;
-		}
+		currentChargeDuration = 0;
+		currentChargeDelay = 0;
 	}
 	
 	public void ResetChargeDelay(){
@@ -159,6 +157,10 @@ public class VehicleControls : MonoBehaviour {
 	
 	public bool IsCharging(){
 		return(currentChargeDuration <= maxChargeDuration);
+	}
+	
+	public bool CanCharge(){
+		return(currentChargeDelay >= maxChargeDelay);
 	}
 	
 }

@@ -4,7 +4,6 @@ using System.Collections;
 public class BombLauncher : Weapon {
 	private int maxBombCount = 3;
 	public int currentBombCount;
-	private GameObject bombMeter;
 	
 	public BombLauncher() {
 		fireDelay = 3f;
@@ -13,11 +12,6 @@ public class BombLauncher : Weapon {
 	
 	public override void Start(){
 		base.Start ();
-		if(bombMeter == null){
-			bombMeter = Instantiate ( Resources.Load ("HUD/Bomb Meter"), transform.position, Quaternion.identity) as GameObject;
-			bombMeter.GetComponent<BombMeter>().player = player;
-			bombMeter.GetComponent<BombMeter>().weapon = this;
-		}	
 	}
 
 	public void Fire(){

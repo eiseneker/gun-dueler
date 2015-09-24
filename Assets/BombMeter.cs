@@ -3,34 +3,32 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class BombMeter : MonoBehaviour {
-	public Player player;
 	public BombLauncher weapon;
 	
+	private int count;
+	private GameObject icon_1;
+	private GameObject icon_2;
+	private GameObject icon_3;
+	private GameObject icon_4;
+	private GameObject icon_5;
+	private GameObject icon_6;
+	
 	void Start () {
-		transform.parent = GameObject.Find ("HUD").transform;
+		icon_1 = transform.Find ("Icon 1").gameObject;
+		icon_2 = transform.Find ("Icon 2").gameObject;
+		icon_3 = transform.Find ("Icon 3").gameObject;
+		icon_4 = transform.Find ("Icon 4").gameObject;
+		icon_5 = transform.Find ("Icon 5").gameObject;
+		icon_6 = transform.Find ("Icon 6").gameObject;
 	}
 	
 	void Update () {
-		transform.Find ("Text").GetComponent<Text>().text = weapon.currentBombCount.ToString ();
-		transform.position = player.transform.position;
-		Camera camera = GameObject.Find ("Cameras/HUD Camera").GetComponent<Camera>();
-		
-		
-		//this is the ui element
-		RectTransform UI_Element = this.GetComponent<RectTransform>();
-		
-		//first you need the RectTransform component of your canvas
-		RectTransform CanvasRect=GameObject.Find ("HUD").GetComponent<RectTransform>();
-		
-		//then you calculate the position of the UI element
-		//0,0 for the canvas is at the center of the screen, whereas WorldToViewPortPoint treats the lower left corner as 0,0. Because of this, you need to subtract the height / width of the canvas * 0.5 to get the correct position.
-		
-		Vector2 ViewportPosition = camera.WorldToViewportPoint(player.gameObject.transform.position);
-		Vector2 WorldObject_ScreenPosition=new Vector2(
-			((ViewportPosition.x*CanvasRect.sizeDelta.x)-(CanvasRect.sizeDelta.x*0.5f)) + 40,
-			((ViewportPosition.y*CanvasRect.sizeDelta.y)-(CanvasRect.sizeDelta.y*0.5f)) - 100);
-		
-		
-		UI_Element.anchoredPosition=WorldObject_ScreenPosition;
+		count = weapon.currentBombCount;
+		icon_1.SetActive(count >= 1);
+		icon_2.SetActive(count >= 2);
+		icon_3.SetActive(count >= 3);
+		icon_4.SetActive(count >= 4);
+		icon_5.SetActive(count >= 5);
+		icon_6.SetActive(count >= 6);
 	}
 }

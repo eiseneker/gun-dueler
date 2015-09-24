@@ -13,7 +13,7 @@ public class Player : Agent, IAttacker {
 	public static List<GameObject> players = new List<GameObject>();
 	
 	private Vulcan vulcan;
-	private BombLauncher bombLauncher;
+	public BombLauncher bombLauncher;
 	private Chaingun chaingun;
 	private Shotgun shotgun;
 	private MagnetMissile magnetMissile;
@@ -85,10 +85,9 @@ public class Player : Agent, IAttacker {
 		truck = GetComponent<Entity>().affinity.GetComponent<Fleet>().truck;
 		if(reversePosition) reverseIndex *= -1;
 		transform.position = new Vector3(truck.transform.position.x + 6, truck.transform.position.y + (3 * reverseIndex));
-		if(healthMeter == null){
-			healthMeter = Instantiate ( Resources.Load ("HUD/Health Meter"), transform.position, Quaternion.identity) as GameObject;
-			healthMeter.GetComponent<HealthMeter>().player = this;
-		}	
+		GameObject playerHud = Instantiate (Resources.Load ("HUD/PlayerHUD"), transform.position, Quaternion.identity) as GameObject;
+		playerHud.transform.parent = GameObject.Find ("HUD").transform;
+		playerHud.GetComponent<PlayerHUD>().player = this;
 	}
 		
 	void Update () {
@@ -218,7 +217,9 @@ public class Player : Agent, IAttacker {
 	}
 	
 	private void Charge(){
-		vehicleControls.Charge();
+		if(vehicleControls.CanCharge () && SpendEx (25)){
+			vehicleControls.Charge();
+		}
 	}	
 	
 	public bool IsCritical(){
