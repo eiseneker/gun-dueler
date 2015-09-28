@@ -5,8 +5,8 @@ public class Truck : MonoBehaviour {
 
 	private ArrayList structurePositions = new ArrayList();
 	private ArrayList structureList = new ArrayList();
-	private float structureSpacing = 2;
-	private Rigidbody2D myRigidbody;
+	private float structureSpacing = 3;
+	public Rigidbody2D myRigidbody;
 	private float reverseFactor = 1;
 	
 	public bool reversePosition;
@@ -16,6 +16,7 @@ public class Truck : MonoBehaviour {
 	public GameObject headElement;
 	public GameObject lastElement;
 	public VehicleControls vehicleControls;
+	private GameObject enemyTruck;
 
 	// Use this for initialization
 	void Start () {
@@ -40,7 +41,12 @@ public class Truck : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		vehicleControls.Accelerate ();
+		if(enemyTruck == null) enemyTruck = GetEnemyTruck();
+		if(headElement.transform.position.x <= enemyTruck.GetComponent<Truck>().lastElement.transform.position.x){
+			myRigidbody.velocity = enemyTruck.GetComponent<Truck>().myRigidbody.velocity;
+		}else{
+			vehicleControls.Accelerate ();
+		}
 	}
 	
 	void AddStructure(Vector3 structurePosition, GameObject structurePrefab){
@@ -61,6 +67,15 @@ public class Truck : MonoBehaviour {
 			AddStructure (position, structure);
 			index++;
 		}
+	}
+	
+	private GameObject GetEnemyTruck(){
+		foreach(GameObject truck in Truck.trucks){
+			if(truck != gameObject) {
+				return(truck);
+			}
+		}
+		return(null);
 	}
 	
 	public Vector3 Velocity(){
