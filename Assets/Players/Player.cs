@@ -87,7 +87,7 @@ public class Player : Agent, IAttacker {
 		if(reversePosition) reverseIndex *= -1;
 		transform.position = new Vector3(truck.transform.position.x + 6, truck.transform.position.y + (3 * reverseIndex));
 		GameObject playerHud = Instantiate (Resources.Load ("HUD/PlayerHUD"), transform.position, Quaternion.identity) as GameObject;
-		playerHud.transform.parent = GameObject.Find ("HUD").transform;
+		playerHud.transform.parent = GameObject.Find ("WorldspaceHUD").transform;
 		playerHud.GetComponent<PlayerHUD>().player = this;
 		defaultColor = body.GetComponent<SpriteRenderer>().color;
 		foreach(Transform child in body.transform){

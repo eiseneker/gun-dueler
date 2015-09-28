@@ -6,6 +6,8 @@ public class Road : MonoBehaviour, IShreddable {
 	private LoadMarker loadMarker;
 	
 	private static ArrayList roads = new ArrayList();
+	
+	private float hazardChance = .15f;
 
 	// Use this for initialization
 	void Start () {
@@ -16,8 +18,8 @@ public class Road : MonoBehaviour, IShreddable {
 			32,
 			transform.eulerAngles.y,
 			transform.eulerAngles.z);
-		foreach(Transform child in transform.Find ("Hazards")){
-			if(Random.value < .99f){
+		foreach(Transform child in transform.Find ("Spawns")){
+			if(Random.value < .15f){
 				float yPosition = Random.Range (-5.5f, 5.5f);
 				Vector3 position = new Vector3(child.transform.position.x, yPosition, child.transform.position.z);
 				GameObject rock = Instantiate(Resources.Load ("Rock"), position, Quaternion.identity) as GameObject;
