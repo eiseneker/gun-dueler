@@ -19,17 +19,19 @@ public class Road : MonoBehaviour, IShreddable {
 			32,
 			transform.eulerAngles.y,
 			transform.eulerAngles.z);
-		foreach(Transform child in transform.Find ("Spawns")){
-			float randomValue = Random.value;
-		
-			if(randomValue <= hazardChance){
-				GameObject rock = Instantiate(Resources.Load ("Rock"), SpawnPosition (child.transform.position), Quaternion.identity) as GameObject;
-				rock.transform.localScale = rock.transform.localScale * .1f;
-			}else if(randomValue <= hazardChance + neutralChance){
-				GameObject neutralContainer = Instantiate(Resources.Load ("Minions/Neutral Container"), SpawnPosition (child.transform.position), Quaternion.identity) as GameObject;
-				Transform neutralBody = neutralContainer.transform.Find("Ship").transform;
-				neutralBody.GetComponent<Entity>().neutral = true;
-				OrientationHelper.RotateTransform(neutralBody.transform, -90);
+		if(GameController.gameStarted){
+			foreach(Transform child in transform.Find ("Spawns")){
+				float randomValue = Random.value;
+			
+				if(randomValue <= hazardChance){
+					GameObject rock = Instantiate(Resources.Load ("Rock"), SpawnPosition (child.transform.position), Quaternion.identity) as GameObject;
+					rock.transform.localScale = rock.transform.localScale * .1f;
+				}else if(randomValue <= hazardChance + neutralChance){
+					GameObject neutralContainer = Instantiate(Resources.Load ("Minions/Neutral Container"), SpawnPosition (child.transform.position), Quaternion.identity) as GameObject;
+					Transform neutralBody = neutralContainer.transform.Find("Ship").transform;
+					neutralBody.GetComponent<Entity>().neutral = true;
+					OrientationHelper.RotateTransform(neutralBody.transform, -90);
+				}
 			}
 		}
 	}
