@@ -96,6 +96,7 @@ public class Player : Agent, IAttacker {
 				wheel.vehicleControls = vehicleControls;
 			}
 		}
+		currentExValue = maxExValue;
 	}
 		
 	void Update () {
@@ -197,7 +198,7 @@ public class Player : Agent, IAttacker {
 	}
 	
 	private bool HandledByCharging(GameObject attack){
-		bool handledByCharging = vehicleControls.IsCharging() && (attack.GetComponent<Projectile>() || attack.GetComponent<Minion>());
+		bool handledByCharging = vehicleControls.IsCharging() && (attack.GetComponent<Projectile>() || attack.GetComponent<Minion>() || attack.GetComponent<Rock>());
 		if(handledByCharging){
 			currentExValue += 1;
 		}
