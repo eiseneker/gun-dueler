@@ -60,7 +60,6 @@ public class VehicleControls : MonoBehaviour {
 			}else if(accelerating){
 				xVelocity *= 1.5f;
 			}
-			print ("memoizing " + xVelocity + " , " + yVelocity);
 			capturedChargeVelocity = new Vector2(xVelocity, yVelocity);
 			capturedChargeVelocityValid = true;
 		}
@@ -86,12 +85,12 @@ public class VehicleControls : MonoBehaviour {
 	public void Steer(float movement){
 		if(!lockedControls){
 			float velocityRange = (maxXVelocity * maxVelocityModifier) - minVelocity;
-			float adjustedVelocity = myRigidbody.velocity.magnitude;
+			float adjustedVelocity = myRigidbody.velocity.x;
 			float velocityRatio = adjustedVelocity/velocityRange;
 			yMovement = movement;
-			float yVelocity = Mathf.Clamp (steerSpeed * velocityRatio * speedMultiplier, 0, maxYVelocity * maxVelocityModifier);
+			float yVelocity = Mathf.Clamp (steerSpeed * velocityRatio * speedMultiplier, 0.5f, maxYVelocity * maxVelocityModifier);
 			myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, yVelocity * yMovement);
-			
+			print ("yVelocity:" + yVelocity);
 			steering = true;
 		}
 	}
@@ -120,10 +119,12 @@ public class VehicleControls : MonoBehaviour {
 	public void Brake(){
 		if(!lockedControls){
 		accelerating = false;
-			if(myRigidbody.velocity.magnitude < minVelocity){
+			if(myRigidbody.velocity.x < minVelocity){
+				print ("case 1");
 				myRigidbody.AddRelativeForce (Vector3.up * accelerationFactor * Time.deltaTime * speedMultiplier);
 				myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, minVelocity);
 			}else{
+				print ("case 2");
 				myRigidbody.AddRelativeForce (Vector3.up * brakeFactor * -1 * Time.deltaTime);
 			}
 		}

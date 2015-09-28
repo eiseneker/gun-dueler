@@ -41,8 +41,6 @@ public class Projectile : MonoBehaviour, IProjectilePassable {
 	}
 	
 	protected void DetermineHit(Collider2D collision, bool destroysSelfOnHit){
-		print ("hit?");		
-	
 		Entity hitEntity = collision.gameObject.GetComponent<Entity>();
 		if(hitEntity && hitEntity.affinity != affinity){
 			IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;
