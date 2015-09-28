@@ -16,7 +16,7 @@ public class PlayerCamera : MonoBehaviour {
 	void LateUpdate () {
 		if(player){
 			Vector3 destination = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
-			transform.position = Vector3.SmoothDamp(transform.position, destination, ref currentVelocity, 0.1f);
+			transform.position = Vector3.SmoothDamp(transform.position, destination, ref currentVelocity, 0.5f);
 		}else{
 			player = GetPlayer();
 		}
@@ -57,5 +57,38 @@ public class PlayerCamera : MonoBehaviour {
 //			GL.SetRevertBackfacing (false);
 //		}
 //	}
-	
+
+
+//	EXAMPLE WITH CAMERA UPSIDEDOWN
+//	void OnPreCull () {
+//		if(playerNumber == 2){
+//			camera.ResetWorldToCameraMatrix ();
+//			camera.ResetProjectionMatrix ();
+//			camera.projectionMatrix = camera.projectionMatrix * Matrix4x4.Scale(new Vector3 (1, -1, 1));
+//			
+//			foreach(GameObject player in Player.players){
+//				player.GetComponent<Player>().SayCheese();
+//			}
+//		}
+//	}
+//	
+//	void OnPreRender () {
+//		if(playerNumber == 2){
+////			GL.SetRevertBackfacing (true);
+//			GL.SetRevertBackfacing (true);
+//
+//		}
+//	}
+////	
+//	void OnPostRender () {
+////		print ("postrender");
+//		if(playerNumber == 2){
+//			foreach(GameObject player in Player.players){
+//				player.GetComponent<Player>().ResetCheese();
+//			}
+//			GL.SetRevertBackfacing (false);
+//
+//		}
+//	}
+//	
 }

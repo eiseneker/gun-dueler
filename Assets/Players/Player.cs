@@ -40,6 +40,8 @@ public class Player : Agent, IAttacker {
 	private float currentStunDuration = 0;
 	private float maxStunDuration = 1;
 	private Color defaultColor;
+	private bool saidCheese = false;
+	private bool resetCheese = false;
 	
 	void Start(){
 		currentStunDuration = maxStunDuration;
@@ -63,12 +65,7 @@ public class Player : Agent, IAttacker {
 		magnetMissile.player = this;
 		reversePosition = GetComponent<Entity>().affinity.GetComponent<Fleet>().reversePosition;
 		body = transform.Find ("Body").gameObject;
-		foreach(Transform child in body.transform){
-			Exhaust exhaust = child.GetComponent<Exhaust>();
-			if(exhaust){
-				exhaust.SetColor(GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor);
-			}
-		}
+		body.GetComponent<SpriteRenderer>().color = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
 		shieldObject = Instantiate (shieldPrefab, transform.position, Quaternion.identity) as GameObject;
 		shieldObject.transform.parent = gameObject.transform;
 		shield = shieldObject.GetComponent<Shield>();

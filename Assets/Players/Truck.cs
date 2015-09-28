@@ -34,6 +34,8 @@ public class Truck : MonoBehaviour {
 		transform.Find ("Body").localScale = new Vector3(1, (structuresInPlay.Count * 2), 0);
 		transform.Find ("Body").localPosition = new Vector3(0, structuresInPlay.Count - 1, 0);
 		if(!reversePosition) reverseFactor = -1;
+		GameObject body = transform.Find ("Body").gameObject;
+		body.GetComponent<MeshRenderer>().material.color = GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor;
 	}
 	
 	// Update is called once per frame
