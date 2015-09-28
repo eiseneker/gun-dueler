@@ -21,13 +21,6 @@ public class BulletProjectile : Projectile, IShreddable {
 		myRigidbody = GetComponent<Rigidbody2D>();
 	}
 	
-	public override void Update () {
-		base.Update ();
-		if(myRigidbody.velocity.magnitude < 1){
-			DestroyMe ();
-		}		
-	}
-	
 	void OnTriggerEnter2D (Collider2D collider) {
 		DetermineHit (collider, true);
 	}

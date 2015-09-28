@@ -6,7 +6,7 @@ public class Projectile : MonoBehaviour, IProjectilePassable {
 	public Weapon weapon;
 	
 	protected GameObject affinity;
-	protected float maxLifespan = 5;
+	protected float maxLifespan = 2;
 	
 	private float currentLifespan;
 
@@ -25,7 +25,7 @@ public class Projectile : MonoBehaviour, IProjectilePassable {
 	public virtual void Update(){
 		currentLifespan += Time.deltaTime;
 		if(currentLifespan >= maxLifespan){
-			Destroy (gameObject);
+			DestroyMe ();
 		}
 	}
 	
@@ -41,6 +41,8 @@ public class Projectile : MonoBehaviour, IProjectilePassable {
 	}
 	
 	protected void DetermineHit(Collider2D collision, bool destroysSelfOnHit){
+		print ("hit?");		
+	
 		Entity hitEntity = collision.gameObject.GetComponent<Entity>();
 		if(hitEntity && hitEntity.affinity != affinity){
 			IHarmable harmedObject = collision.gameObject.GetComponent(typeof(IHarmable)) as IHarmable;

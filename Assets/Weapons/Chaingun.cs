@@ -84,6 +84,7 @@ public class Chaingun : Weapon {
 		bullet.yVector = bulletMagnitude;
 		bullet.transform.position = origin;
 		bullet.GetComponent<Rigidbody2D>().velocity = player.GetComponent<Rigidbody2D>().velocity;
+		Physics2D.IgnoreCollision(bullet.GetComponent<Collider2D>(), player.GetComponent<Collider2D>());
 		RegisterBullet ();
 	}
 	
