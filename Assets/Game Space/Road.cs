@@ -7,7 +7,8 @@ public class Road : MonoBehaviour, IShreddable {
 	
 	private static ArrayList roads = new ArrayList();
 	
-	private float hazardChance = .15f;
+	private float hazardChance = 0f;
+	private float neutralChance = 1f;
 
 	// Use this for initialization
 	void Start () {
@@ -19,11 +20,16 @@ public class Road : MonoBehaviour, IShreddable {
 			transform.eulerAngles.y,
 			transform.eulerAngles.z);
 		foreach(Transform child in transform.Find ("Spawns")){
-			if(Random.value < .15f){
-				float yPosition = Random.Range (-5.5f, 5.5f);
-				Vector3 position = new Vector3(child.transform.position.x, yPosition, child.transform.position.z);
-				GameObject rock = Instantiate(Resources.Load ("Rock"), position, Quaternion.identity) as GameObject;
+			float randomValue = Random.value;
+		
+			if(randomValue <= hazardChance){
+				GameObject rock = Instantiate(Resources.Load ("Rock"), SpawnPosition (child.transform.position), Quaternion.identity) as GameObject;
 				rock.transform.localScale = rock.transform.localScale * .1f;
+			}else if(randomValue <= hazardChance + neutralChance){
+				GameObject neutralContainer = Instantiate(Resources.Load ("Minions/Neutral Container"), SpawnPosition (child.transform.position), Quaternion.identity) as GameObject;
+				Transform neutralBody = neutralContainer.transform.Find("Ship").transform;
+				neutralBody.GetComponent<Entity>().neutral = true;
+				OrientationHelper.RotateTransform(neutralBody.transform, -90);
 			}
 		}
 	}
@@ -44,5 +50,10 @@ public class Road : MonoBehaviour, IShreddable {
 	
 	public void DestroyMe(){
 		Destroy(gameObject);
+	}
+	
+	private Vector3 SpawnPosition(Vector3 rungPosition){
+		float yPosition = Random.Range (-5.5f, 5.5f);
+		return(new Vector3(rungPosition.x, yPosition, rungPosition.z));
 	}
 }

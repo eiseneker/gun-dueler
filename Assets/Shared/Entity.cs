@@ -5,6 +5,7 @@ public class Entity : MonoBehaviour {
 
 	public GameObject affinity;
 	public bool reversePosition;
+	public bool neutral;
 	
 	private GameObject enemyPlayer;
 	

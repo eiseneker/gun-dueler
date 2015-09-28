@@ -142,18 +142,18 @@ public class Player : Agent, IAttacker {
 	}
 	
 	void ManageActionInputs(){
-		if(Input.GetAxis ("Player"+playerNumber+"_Ex") == 1){
+		if(Input.GetAxis ("Player"+playerNumber+"_Bomb") == 1){
 			bombLauncher.Fire ();
-		}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon1") == 1){
+		}else if(Input.GetAxis ("Player"+playerNumber+"_ShootRight") == 1){
 			chaingun.Fire(IsInExMode(), 180);
-		}else if(Input.GetAxis ("Player"+playerNumber+"_SpecialWeapon2") == 1){
+		}else if(Input.GetAxis ("Player"+playerNumber+"_ShootLeft") == 1){
 			chaingun.Fire(IsInExMode(), 0);
-		}else if(Input.GetAxis ("Player"+playerNumber+"_SuperWeapon") == 1){
+		}else if(Input.GetAxis ("Player"+playerNumber+"_ShootForward") == 1){
 			chaingun.Fire(IsInExMode(), 270);
-		}else if(Input.GetAxis ("Player"+playerNumber+"_Defensive") == 1){
+		}else if(Input.GetAxis ("Player"+playerNumber+"_Charge") == 1){
 			Charge ();
 			chaingun.Release();
-		}else if(Input.GetAxis ("Player"+playerNumber+"_PrimaryWeapon") == 1){
+		}else if(Input.GetAxis ("Player"+playerNumber+"_ShootBackward") == 1){
 			chaingun.Fire(IsInExMode(), 90);
 		}else{
 			chaingun.Release();

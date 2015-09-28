@@ -44,7 +44,7 @@ public class Minion : Agent, IAttacker, IShreddable {
 		GameObject body = transform.Find ("Body").gameObject;
 		foreach(Transform child in body.transform){
 			Exhaust exhaust = child.GetComponent<Exhaust>();
-			if(exhaust){
+			if(!GetComponent<Entity>().neutral && exhaust){
 				exhaust.SetColor(GetComponent<Entity>().affinity.GetComponent<Fleet>().teamColor);
 			}
 		}

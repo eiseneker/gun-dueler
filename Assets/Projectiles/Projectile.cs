@@ -17,7 +17,7 @@ public class Projectile : MonoBehaviour, IProjectilePassable {
 			}
 		}
 		affinity = owner.GetComponent<Entity>().affinity;
-		if(weapon == null){
+		if(weapon == null && affinity){
 			transform.Find ("Body").gameObject.layer = LayerMask.NameToLayer("Player " + (3 - affinity.GetComponent<Fleet>().playerNumber) + " Visible");
 		}
 	}
@@ -37,7 +37,9 @@ public class Projectile : MonoBehaviour, IProjectilePassable {
 	}
 	
 	protected Color GetTeamColor(){
-		return(affinity.GetComponent<Fleet>().teamColor);
+		Color color = Color.red;
+		if(affinity) color = affinity.GetComponent<Fleet>().teamColor;
+		return(color);
 	}
 	
 	protected void DetermineHit(Collider2D collision, bool destroysSelfOnHit){
