@@ -47,12 +47,10 @@ public class Player : Agent, IAttacker {
 		players.Add (gameObject);
 		playerHitState = gameObject.AddComponent<PlayerHitState>() as PlayerHitState;
 		playerHitState.player = gameObject;
-		vulcan = gameObject.AddComponent<Vulcan>() as Vulcan;
+		GameObject vulcanObject = Instantiate (Resources.Load ("Vulcan"), transform.position, Quaternion.identity) as GameObject;
+		vulcanObject.transform.parent = transform;
+		vulcan = vulcanObject.GetComponent<Vulcan>() as Vulcan;
 		vulcan.player = this;
-		GameObject chaingunObject = Instantiate (Resources.Load ("Chaingun"), transform.position, Quaternion.identity) as GameObject;
-		chaingunObject.transform.parent = transform;
-		chaingun = chaingunObject.GetComponent<Chaingun>() as Chaingun;
-		chaingun.player = this;
 		GameObject bombLauncherObject = Instantiate (Resources.Load ("Bomb Launcher"), transform.position, Quaternion.identity) as GameObject;
 		bombLauncherObject.transform.parent = transform;
 		bombLauncher = bombLauncherObject.GetComponent<BombLauncher>() as BombLauncher;
@@ -145,18 +143,18 @@ public class Player : Agent, IAttacker {
 		if(Input.GetAxis ("Player"+playerNumber+"_Bomb") == 1){
 			bombLauncher.Fire ();
 		}else if(Input.GetAxis ("Player"+playerNumber+"_ShootRight") == 1){
-			chaingun.Fire(IsInExMode(), 180);
+			vulcan.Fire(IsInExMode(), 180);
 		}else if(Input.GetAxis ("Player"+playerNumber+"_ShootLeft") == 1){
-			chaingun.Fire(IsInExMode(), 0);
+			vulcan.Fire(IsInExMode(), 0);
 		}else if(Input.GetAxis ("Player"+playerNumber+"_ShootForward") == 1){
-			chaingun.Fire(IsInExMode(), 270);
+			vulcan.Fire(IsInExMode(), 270);
 		}else if(Input.GetAxis ("Player"+playerNumber+"_Charge") == 1){
 			Charge ();
-			chaingun.Release();
+			vulcan.Release();
 		}else if(Input.GetAxis ("Player"+playerNumber+"_ShootBackward") == 1){
-			chaingun.Fire(IsInExMode(), 90);
+			vulcan.Fire(IsInExMode(), 90);
 		}else{
-			chaingun.Release();
+			vulcan.Release();
 		}
 	}
 	

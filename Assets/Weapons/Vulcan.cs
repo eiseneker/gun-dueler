@@ -2,13 +2,19 @@
 using System.Collections;
 
 public class Vulcan : Weapon {
-	private float defaultSpeed = 7;
-	private float defaultFireDelay = 0.10f;
-	private int defaultMaxBulletsInPlay = 8;
+	private float defaultSpeed = 5;
+	private float defaultFireDelay = 0.05f;
+	private int defaultMaxBulletsInPlay = 100;
 	
 	private GameObject bulletPrefab;
 	private float speed;
 	private AudioClip soundClip;
+	private float currentReloadInterval;
+	private float maxReloadInterval = 0.2f;
+	private GameObject ammoMeter;
+	private float currentAngle;
+	private float currentWindupTime;
+	private float maxWindupTime = 0;
 	
 	
 	public Vulcan(){
@@ -17,11 +23,22 @@ public class Vulcan : Weapon {
 		speed = defaultSpeed;
 		bulletPrefab = Resources.Load ("bullet") as GameObject;
 		soundClip = Resources.Load<AudioClip>("Vulcan");
+		currentAngle = 0;
+	}
+	
+	protected override void Update(){
+		base.Update ();
+		OrientationHelper.RotateTransform(transform, currentAngle, 1);
+	}
+	
+	public void Release(){
+		currentWindupTime = Mathf.Clamp(currentWindupTime - Time.deltaTime, 0, maxWindupTime * 1.5f);
 	}
  
-	public void Fire (bool exAttempt) {
-		if(CanFire ()){
-			AudioSource.PlayClipAtPoint(soundClip, transform.position);
+	public void Fire (bool exAttempt, float angle) {
+		currentAngle = angle;
+		currentWindupTime = Mathf.Clamp(currentWindupTime + Time.deltaTime, 0, maxWindupTime * 1.5f);
+		if(CanFire () && currentWindupTime >= maxWindupTime){
 			bool ex = exAttempt;
 			
 			speed = defaultSpeed;
@@ -40,32 +57,39 @@ public class Vulcan : Weapon {
 //			}
 			
 			if(ex){
-				CreateBullet (0.2f);
-				CreateBullet (-0.2f);
+//				CreateBullet (0.2f);
+//				CreateBullet (-0.2f);
 			}else{
-				CreateBullet (0);
+				foreach(Transform child in transform){
+					CreateBullet (child.position);
+				}
 			}
 			timeSinceLastFire = 0f;
 		}
 	}
 	
 	private BulletProjectile newProjectile(){
-		GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity) as GameObject;
+		GameObject bulletObject = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
 		BulletProjectile bullet = bulletObject.GetComponent<BulletProjectile>();
 		return(bullet);
 	}
 	
-	private void CreateBullet(float xOffset){
+	private void CreateBullet(Vector3 origin){
+		AudioSource.PlayClipAtPoint(soundClip, transform.position);
 		BulletProjectile bullet = newProjectile();
-		
 		bullet.speed = speed;
 		bullet.weapon = this;
-		bullet.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
-		float xMovement = player.GetComponent<Rigidbody2D>().velocity.magnitude;
-		bullet.yVector = 1;
-		bullet.xVector = Mathf.Round (xMovement);
-		bullet.transform.position = new Vector3((Mathf.Round(transform.position.x * 100f) / 100f), transform.position.y, 0);
+		bullet.GetComponent<Entity>().affinity = player.GetComponent<Entity>().affinity;
+		float bulletMagnitude = .5f;
+		bullet.yVector = bulletMagnitude;
+		bullet.transform.position = origin;
+		bullet.GetComponent<Rigidbody2D>().velocity = player.GetComponent<Rigidbody2D>().velocity;
+		Physics2D.IgnoreCollision(bullet.GetComponent<Collider2D>(), player.GetComponent<Collider2D>());
 		RegisterBullet ();
-		OrientProjectile(bullet);
 	}
+	
+	protected override int MaxAmmoCount(){
+		return(100);
+	}
+	
 }

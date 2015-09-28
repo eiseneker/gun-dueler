@@ -7,8 +7,8 @@ public class Road : MonoBehaviour, IShreddable {
 	
 	private static ArrayList roads = new ArrayList();
 	
-	private float hazardChance = 0f;
-	private float neutralChance = 1f;
+	private float hazardChance = .15f;
+	private float neutralChance = .25f;
 
 	// Use this for initialization
 	void Start () {

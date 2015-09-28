@@ -56,9 +56,9 @@ public class VehicleControls : MonoBehaviour {
 			float yVelocity = myRigidbody.velocity.y;
 			float xVelocity = myRigidbody.velocity.x;
 			if(steering){
-				yVelocity *= 3f;
+				yVelocity *= 2f;
 			}else if(accelerating){
-				xVelocity *= 1.5f;
+				xVelocity *= 2.5f;
 			}
 			capturedChargeVelocity = new Vector2(xVelocity, yVelocity);
 			capturedChargeVelocityValid = true;
