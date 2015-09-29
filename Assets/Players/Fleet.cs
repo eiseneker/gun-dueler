@@ -25,11 +25,8 @@ public class Fleet : MonoBehaviour {
 	private float currentPlayerRespawnTime;
 
 	void Start () {
-		
-		
 		AddMinionsObject ();
 		AddPlayer();
-		AddTruck();
 	}
 	
 	void Update() {
@@ -63,25 +60,6 @@ public class Fleet : MonoBehaviour {
 		currentPlayerRespawnTime = 0;
 		ResetPlayerRespawn();
 		return(player);
-	}
-	
-	public void AddTruck(){
-		GameObject truckObject = Instantiate (Resources.Load ("Truck"), transform.position, Quaternion.identity) as GameObject;
-		truckObject.transform.parent = transform;
-		truck = transform.Find ("Truck(Clone)").GetComponent<Truck>();
-		truck.structures = structures;
-		
-		currentHealth = maxHealth;
-		
-		GetComponent<Entity>().affinity = gameObject;
-		truck.GetComponent<Entity>().affinity = GetComponent<Entity>().affinity;
-		truck.reversePosition = reversePosition;
-		OrientationHelper.RotateTransform(truck.transform, 270);
-		if(reversePosition){
-			truck.transform.Translate (Vector3.right * .5f);
-		}else{
-			truck.transform.Translate (Vector3.left * .5f);
-		}
 	}
 	
 	public bool PlayerCanRespawn(){

@@ -90,7 +90,6 @@ public class VehicleControls : MonoBehaviour {
 			yMovement = movement;
 			float yVelocity = Mathf.Clamp (steerSpeed * velocityRatio * speedMultiplier, 0.5f, maxYVelocity * maxVelocityModifier);
 			myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, yVelocity * yMovement);
-			print ("yVelocity:" + yVelocity);
 			steering = true;
 		}
 	}
@@ -120,11 +119,9 @@ public class VehicleControls : MonoBehaviour {
 		if(!lockedControls){
 		accelerating = false;
 			if(myRigidbody.velocity.x < minVelocity){
-				print ("case 1");
 				myRigidbody.AddRelativeForce (Vector3.up * accelerationFactor * Time.deltaTime * speedMultiplier);
 				myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, minVelocity);
 			}else{
-				print ("case 2");
 				myRigidbody.AddRelativeForce (Vector3.up * brakeFactor * -1 * Time.deltaTime);
 			}
 		}

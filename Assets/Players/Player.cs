@@ -42,8 +42,10 @@ public class Player : Agent, IAttacker {
 	private Color defaultColor;
 	private bool saidCheese = false;
 	private bool resetCheese = false;
+	private GameObject gameMarker;
 	
 	void Start(){
+		gameMarker = GameObject.Find("Game Root/GameMarker");
 		currentStunDuration = maxStunDuration;
 		myRigidbody = GetComponent<Rigidbody2D>();
 		players.Add (gameObject);
@@ -78,9 +80,7 @@ public class Player : Agent, IAttacker {
 			gameObject.transform.eulerAngles.y,
 			gameObject.transform.eulerAngles.z - 90);
 		vehicleControls = GetComponent<VehicleControls>();
-		truck = GetComponent<Entity>().affinity.GetComponent<Fleet>().truck;
 		if(reversePosition) reverseIndex *= -1;
-		transform.position = new Vector3(truck.transform.position.x + 6, truck.transform.position.y + (3 * reverseIndex));
 		GameObject playerHud = Instantiate (Resources.Load ("HUD/PlayerHUD"), transform.position, Quaternion.identity) as GameObject;
 		playerHud.transform.parent = GameObject.Find ("WorldspaceHUD").transform;
 		playerHud.GetComponent<PlayerHUD>().player = this;
@@ -104,14 +104,7 @@ public class Player : Agent, IAttacker {
 			UnlockInputs();
 		}
 		
-	
-		if(enemyPlayerNumber == 0){
-			FetchEnemyPlayer();
-		}
-		
 //		ResolveDangerTime();
-		UpdateTruckOrder ();
-		ResolveBoundaryConditions();
 	
 		if(!IsInputLocked){
 			float xMovement = Input.GetAxis ("Player"+playerNumber+"_X");
@@ -322,61 +315,6 @@ public class Player : Agent, IAttacker {
 		return(exMode);
 	}
 	
-	private GameObject GetTruck(int index){
-		return(Truck.trucks[index] as GameObject);
-	}
-	
-	private void ResetDangerTimer(){
-		currentDangerTimer = 0;
-	}
-	
-	private void IncrementDangerTimer(){
-		currentDangerTimer += Time.deltaTime;
-	}
-	
-	private void FetchEnemyPlayer(){
-		GameObject enemyPlayer = GetComponent<Entity>().EnemyPlayer();
-		if(enemyPlayer){
-			enemyPlayerNumber = enemyPlayer.GetComponent<Entity>().affinity.GetComponent<Fleet>().playerNumber;
-		}
-	}
-	
-	private void UpdateTruckOrder(){
-		GameObject truck0 = GetTruck (0);
-		GameObject truck1 = GetTruck (1);
-		
-		if(truck0.transform.position.x > truck1.transform.position.x){
-			firstTruck = truck0.GetComponent<Truck>();
-			lastTruck = truck1.GetComponent<Truck>();
-		}else{
-			lastTruck = truck0.GetComponent<Truck>();
-			firstTruck = truck1.GetComponent<Truck>();
-		}
-	}
-	
-	private bool AheadOfFirstTruck(){
-		return(transform.position.x >= firstTruck.headElement.transform.position.x + 3);
-	}
-	
-	private void ResolveDangerTime(){
-		if(currentDangerTimer >= maxDangerTimer){
-			StateController.lastWinner = enemyPlayerNumber;
-			GameController.LoadWinScreen();
-		}
-	}
-	
-	private void ResolveBoundaryConditions(){
-		if(AheadOfFirstTruck()){
-			myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity, firstTruck.GetComponent<Rigidbody2D>().velocity.magnitude);
-			ResetDangerTimer();
-		}else if(transform.position.x <= lastTruck.lastElement.transform.position.x - 3){
-			vehicleControls.Accelerate();
-			IncrementDangerTimer();
-		}else{
-			ResetDangerTimer();
-		}
-	}
-	
 	private void ManageVehicleControls(float xMovement, float yMovement){
 		if((xMovement != 0 || yMovement != 0) && IsInExMode ()){
 			vehicleControls.speedMultiplier = 1.5f;
@@ -397,6 +335,22 @@ public class Player : Agent, IAttacker {
 			}else{
 				vehicleControls.Idle ();
 			}
+		}
+		
+		if((transform.position.x <= gameMarker.transform.position.x - 13.5f) && myRigidbody.velocity.x < gameMarker.GetComponent<GameMarker>().myRigidbody.velocity.x){
+			myRigidbody.velocity = new Vector3(gameMarker.GetComponent<GameMarker>().myRigidbody.velocity.x * 1.05f, myRigidbody.velocity.y);
+		}
+		
+		if((transform.position.x >= gameMarker.transform.position.x + 13.5f) && myRigidbody.velocity.x > gameMarker.GetComponent<GameMarker>().myRigidbody.velocity.x){
+			myRigidbody.velocity = new Vector3(gameMarker.GetComponent<GameMarker>().myRigidbody.velocity.x * .99f, myRigidbody.velocity.y);
+		}
+		
+		if((transform.position.y <= gameMarker.transform.position.y - 6.5) && myRigidbody.velocity.y < 0){
+			myRigidbody.velocity = new Vector3(myRigidbody.velocity.x, -myRigidbody.velocity.y, 0);
+		}
+		
+		if((transform.position.y >= gameMarker.transform.position.y + 6.5) && myRigidbody.velocity.y > 0){
+			myRigidbody.velocity = new Vector3(myRigidbody.velocity.x, -myRigidbody.velocity.y, 0);
 		}
 	}
 	

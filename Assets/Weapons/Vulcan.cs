@@ -22,7 +22,7 @@ public class Vulcan : Weapon {
 		fireDelay = defaultFireDelay;
 		speed = defaultSpeed;
 		bulletPrefab = Resources.Load ("bullet") as GameObject;
-		soundClip = Resources.Load<AudioClip>("Vulcan");
+//		soundClip = Resources.Load<AudioClip>("Vulcan");
 		currentAngle = 0;
 	}
 	
@@ -75,7 +75,7 @@ public class Vulcan : Weapon {
 	}
 	
 	private void CreateBullet(Vector3 origin){
-		AudioSource.PlayClipAtPoint(soundClip, transform.position);
+//		AudioSource.PlayClipAtPoint(soundClip, transform.position);
 		BulletProjectile bullet = newProjectile();
 		bullet.speed = speed;
 		bullet.weapon = this;

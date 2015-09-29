@@ -15,10 +15,10 @@ public class Road : MonoBehaviour, IShreddable {
 		loadMarker = transform.Find ("LoadMarker").GetComponent<LoadMarker>();
 		loadMarker.road = this;
 		roads.Add (this);
-		transform.eulerAngles = new Vector3(
-			32,
-			transform.eulerAngles.y,
-			transform.eulerAngles.z);
+//		transform.eulerAngles = new Vector3(
+//			1,
+//			transform.eulerAngles.y,
+//			transform.eulerAngles.z);
 		if(GameController.gameStarted){
 			foreach(Transform child in transform.Find ("Spawns")){
 				float randomValue = Random.value;
